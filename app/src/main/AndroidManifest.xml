@@ -20,7 +20,9 @@
         </activity>
 
         <!-- Trang đăng ký -->
-        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 
