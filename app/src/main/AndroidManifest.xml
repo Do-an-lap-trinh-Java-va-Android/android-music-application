@@ -21,7 +21,7 @@
 
         <!-- Trang đăng ký -->
         <activity
-            android:name=".RegisterActivity"
+            android:name=".RegisterMainActivity"
             android:screenOrientation="portrait" />
 
     </application>
