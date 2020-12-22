@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Music Application</string>
+    <string name="app_name">Ứng dụng nghe nhạc</string>
+    <string name="register">Đăng Ký</string>
+    <string name="already_have_an_account">Bạn đã có tài khoản?</string>
+    <string name="login_now">Đăng Nhập Ngay</string>
+    <string name="sign_up_with_google">Đăng ký bằng Google</string>
+    <string name="sign_up_with_facebook">Đăng ký bằng Facebook</string>
+    <string name="create_a_new_account">Tạo tài khoản mới</string>
 </resources>

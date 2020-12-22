@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_width_0dp">0dp</dimen>
+
+    <dimen name="margin_padding_8dp">8dp</dimen>
+    <dimen name="margin_padding_16dp">16dp</dimen>
+    <dimen name="margin_padding_24dp">24dp</dimen>
+    <dimen name="margin_padding_32dp">32dp</dimen>
+    <dimen name="margin_padding_40dp">40dp</dimen>
+    <dimen name="margin_padding_48dp">48dp</dimen>
+
+    <dimen name="icon_small_size">24dp</dimen>
+
+    <dimen name="font_size_40sp">40sp</dimen>
+
+    <dimen name="corner_radius_small">8dp</dimen>
+</resources>

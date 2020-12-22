@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="@dimen/layout_width_0dp"
+        android:layout_height="352dp"
+        android:layout_marginLeft="@dimen/margin_padding_32dp"
+        android:layout_marginTop="@dimen/margin_padding_32dp"
+        android:layout_marginRight="@dimen/margin_padding_32dp"
+        android:src="@drawable/antigravity_people"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:textSize="@dimen/font_size_40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_image" />
+
+    <TextView
+        android:id="@+id/tv_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_24dp"
+        android:fontFamily="@font/roboto_light"
+        android:text="@string/already_have_an_account"
+        app:layout_constraintEnd_toStartOf="@+id/tv_login"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_8dp"
+        android:layout_marginTop="@dimen/margin_padding_24dp"
+        android:layout_marginBottom="@dimen/margin_padding_32dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/login_now"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_question"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Theme.CustomMaterialButton"
+        android:layout_width="@dimen/layout_width_0dp"
+        android:layout_height="@dimen/margin_padding_48dp"
+        android:layout_marginLeft="@dimen/margin_padding_32dp"
+        android:layout_marginRight="@dimen/margin_padding_32dp"
+        android:layout_marginBottom="@dimen/margin_padding_16dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="start|center"
+        android:paddingStart="@dimen/margin_padding_24dp"
+        android:paddingEnd="@dimen/margin_padding_24dp"
+        android:stateListAnimator="@null"
+        android:text="@string/sign_up_with_google"
+        app:icon="@drawable/ic_google_icon"
+        app:iconPadding="@dimen/margin_padding_24dp"
+        app:iconSize="@dimen/icon_small_size"
+        app:iconTint="@android:color/transparent"
+        app:iconTintMode="add"
+        app:layout_constraintBottom_toTopOf="@+id/materialButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialButton"
+        style="@style/Theme.CustomMaterialButton"
+        android:layout_width="@dimen/layout_width_0dp"
+        android:layout_height="@dimen/margin_padding_48dp"
+        android:layout_marginLeft="@dimen/margin_padding_32dp"
+        android:layout_marginRight="@dimen/margin_padding_32dp"
+        android:layout_marginBottom="@dimen/margin_padding_32dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="start|center"
+        android:paddingStart="@dimen/margin_padding_24dp"
+        android:paddingEnd="@dimen/margin_padding_24dp"
+        android:stateListAnimator="@null"
+        android:text="@string/sign_up_with_facebook"
+        app:icon="@drawable/ic_facebook_icon"
+        app:iconPadding="@dimen/margin_padding_24dp"
+        app:iconSize="@dimen/icon_small_size"
+        app:iconTint="@android:color/transparent"
+        app:iconTintMode="add"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_padding_32dp"
+        android:fontFamily="@font/roboto"
+        android:letterSpacing="0.016"
+        android:text="@string/create_a_new_account"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:targetApi="lollipop" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
