@@ -12,4 +12,9 @@
     <string name="email">Địa chỉ email</string>
     <string name="enter_email_address">Nhập địa chỉ email của bạn</string>
     <string name="next">Tiếp tục</string>
+    <string name="step_2">Bước 2</string>
+    <string name="password">Mật khẩu</string>
+    <string name="enter_your_password">Nhập mật khẩu của bạn</string>
+    <string name="confirm_password">Nhập lại mật khẩu</string>
+    <string name="reenter_your_password">Nhập lại mật khẩu đã nhập</string>
 </resources>

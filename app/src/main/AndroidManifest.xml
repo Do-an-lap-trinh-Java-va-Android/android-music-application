@@ -29,6 +29,11 @@
             android:name=".RegisterFirstStepActivity"
             android:screenOrientation="portrait" />
 
+        <!-- Trang đăng ký - Bước 2 -->
+        <activity
+            android:name=".RegisterSecondStepActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
