@@ -19,6 +19,12 @@ public class RegisterFirstStepActivity extends AppCompatActivity {
 
         binding.btnNext.setOnClickListener(view -> {
             Intent registerSecondStepIntent = new Intent(this, RegisterSecondStepActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("fullName", binding.edtFullName.getText().toString());
+            bundle.putString("email", binding.edtEmail.getText().toString());
+            registerSecondStepIntent.putExtras(bundle);
+
             startActivity(registerSecondStepIntent);
         });
     }
