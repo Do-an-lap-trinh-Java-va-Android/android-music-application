@@ -1,21 +1,28 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Giao diện sáng -->
     <style name="Theme.MusicApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Font chữ mặc định -->
+        <item name="fontFamily">@font/roboto</item>
+        <!-- Màu chữ mặc định -->
+        <item name="android:textColor">@color/black</item>
+        <!-- Kích thước chữ mặc định -->
+        <item name="android:textSize">@dimen/font_size_medium</item>
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/gray_200</item>
         <item name="colorOnPrimary">@color/black</item>
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
+
+        <!-- Chỉnh màu status bar -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
-        <!-- Chỉnh màu chữ -->
-        <item name="android:textColor">@color/black</item>
-        <!-- Chỉnh kích thước chữ -->
-        <item name="android:textSize">16sp</item>
+        <!-- EditText -->
+        <item name="android:editTextBackground">@drawable/background_edit_text</item>
     </style>
 
     <!-- Tùy biến lại Material Button cho phù hợp với giao diện SÁNG -->

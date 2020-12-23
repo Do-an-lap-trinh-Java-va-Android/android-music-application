@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:letterSpacing="0.016"
         android:text="@string/register"
-        android:textSize="@dimen/font_size_40sp"
+        android:textSize="@dimen/font_size_extra_extra_large"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -112,20 +112,22 @@
         app:iconSize="@dimen/icon_small_size"
         app:iconTint="@android:color/transparent"
         app:iconTintMode="add"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/tv_create_a_new_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_create_a_new_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_padding_32dp"
+        android:clickable="true"
         android:fontFamily="@font/roboto"
         android:letterSpacing="0.016"
         android:text="@string/create_a_new_account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
