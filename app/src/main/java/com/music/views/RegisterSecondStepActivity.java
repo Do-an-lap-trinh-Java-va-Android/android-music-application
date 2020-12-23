@@ -1,4 +1,4 @@
-package com.music;
+package com.music.views;
 
 import android.os.Bundle;
 import android.widget.Toast;

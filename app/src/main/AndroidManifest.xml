@@ -11,27 +11,26 @@
         android:theme="@style/Theme.MusicApplication">
 
         <!-- Trang chính -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".views.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Trang đăng ký -->
         <activity
-            android:name=".RegisterMainActivity"
+            android:name=".views.RegisterMainActivity"
             android:screenOrientation="portrait" />
 
         <!-- Trang đăng ký - Bước 1 -->
         <activity
-            android:name=".RegisterFirstStepActivity"
+            android:name=".views.RegisterFirstStepActivity"
             android:screenOrientation="portrait" />
 
         <!-- Trang đăng ký - Bước 2 -->
         <activity
-            android:name=".RegisterSecondStepActivity"
+            android:name=".views.RegisterSecondStepActivity"
             android:screenOrientation="portrait" />
 
     </application>
