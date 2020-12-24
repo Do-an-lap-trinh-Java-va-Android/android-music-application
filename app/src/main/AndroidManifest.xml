@@ -20,17 +20,12 @@
 
         <!-- Trang đăng ký -->
         <activity
-            android:name=".views.RegisterMainActivity"
+            android:name=".views.RegisterControlActivity"
             android:screenOrientation="portrait" />
 
-        <!-- Trang đăng ký - Bước 1 -->
+        <!-- Trang tạo tài khoản -->
         <activity
-            android:name=".views.RegisterFirstStepActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- Trang đăng ký - Bước 2 -->
-        <activity
-            android:name=".views.RegisterSecondStepActivity"
+            android:name=".views.RegisterActivity"
             android:screenOrientation="portrait" />
 
     </application>
