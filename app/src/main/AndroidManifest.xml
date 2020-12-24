@@ -7,20 +7,31 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="false"
+        android:supportsRtl="true"
         android:theme="@style/Theme.MusicApplication">
 
         <!-- Trang chính -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".views.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Trang đăng ký -->
-        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".views.RegisterMainActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Trang đăng ký - Bước 1 -->
+        <activity
+            android:name=".views.RegisterFirstStepActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Trang đăng ký - Bước 2 -->
+        <activity
+            android:name=".views.RegisterSecondStepActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

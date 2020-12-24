@@ -1,21 +1,28 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Giao diện tối -->
     <style name="Theme.MusicApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Font chữ mặc định -->
+        <item name="fontFamily">@font/roboto</item>
+        <!-- Màu chữ mặc định -->
+        <item name="android:textColor">@color/white</item>
+        <!-- Kích thước chữ mặc định -->
+        <item name="android:textSize">@dimen/font_size_medium</item>
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black_200</item>
         <item name="colorPrimaryVariant">@color/black_200</item>
         <item name="colorOnPrimary">@color/white</item>
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
+
+        <!-- Chỉnh màu status bar -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
-        <!-- Chỉnh màu chữ -->
-        <item name="android:textColor">@color/white</item>
-        <!-- Chỉnh kích thước chữ -->
-        <item name="android:textSize">16sp</item>
+        <!-- EditText -->
+        <item name="android:editTextBackground">@drawable/background_edit_text_dark</item>
     </style>
 
     <!-- Tùy biến lại Material Button cho phù hợp với giao diện TỐI -->
@@ -23,6 +30,5 @@
         <item name="cornerRadius">@dimen/corner_radius_small</item>
         <item name="rippleColor">@color/gray_100</item>
         <item name="strokeColor">@color/gray</item>
-        <item name="strokeWidth">0dp</item>
     </style>
 </resources>
