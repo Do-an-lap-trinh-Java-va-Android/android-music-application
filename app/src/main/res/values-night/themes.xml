@@ -22,8 +22,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
         <!-- EditText -->
-        <item name="editTextBackground">@drawable/background_edit_text</item>
-        <item name="android:editTextBackground">@drawable/background_edit_text_dark</item>
+        <item name="editTextBackground">@drawable/rounded_edit_text_background</item>
+        <item name="android:editTextBackground">@drawable/rounded_edit_text_dark_background</item>
     </style>
 
     <!-- Tùy biến lại Material Button cho phù hợp với giao diện TỐI -->
