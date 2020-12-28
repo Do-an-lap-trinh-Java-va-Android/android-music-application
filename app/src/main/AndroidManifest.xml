@@ -9,25 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApplication">
-
+        <activity android:name=".views.LoginActivity"></activity>
         <!-- Trang chính -->
         <activity android:name=".views.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Trang đăng ký -->
+        </activity> <!-- Trang đăng ký -->
         <activity
             android:name=".views.RegisterControlActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- Trang tạo tài khoản -->
+            android:screenOrientation="portrait" /> <!-- Trang tạo tài khoản -->
         <activity
             android:name=".views.RegisterActivity"
             android:screenOrientation="portrait" />
-
     </application>
 
 </manifest>
