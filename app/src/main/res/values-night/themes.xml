@@ -2,7 +2,7 @@
     <!-- Giao diện tối -->
     <style name="Theme.MusicApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Font chữ mặc định -->
-        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <!-- Màu chữ mặc định -->
         <item name="android:textColor">@color/white</item>
         <!-- Kích thước chữ mặc định -->
