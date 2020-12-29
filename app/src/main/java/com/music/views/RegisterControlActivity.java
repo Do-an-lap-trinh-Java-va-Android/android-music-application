@@ -9,15 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.music.databinding.ActivityRegisterControlBinding;
 
 public class RegisterControlActivity extends AppCompatActivity {
-    private ActivityRegisterControlBinding binding;
+    private ActivityRegisterControlBinding mBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRegisterControlBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mBinding = ActivityRegisterControlBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        binding.tvCreateANewAccount.setOnClickListener(v -> {
+        mBinding.tvCreateANewAccount.setOnClickListener(v -> {
             Intent registerFirstStepIntent = new Intent(this, RegisterActivity.class);
             startActivity(registerFirstStepIntent);
         });
