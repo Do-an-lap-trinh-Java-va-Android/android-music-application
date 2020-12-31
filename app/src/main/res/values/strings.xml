@@ -6,13 +6,10 @@
     <string name="sign_up_with_google">Đăng ký bằng Google</string>
     <string name="sign_up_with_facebook">Đăng ký bằng Facebook</string>
     <string name="create_a_new_account">Tạo tài khoản mới</string>
-    <string name="step_1">Bước 1</string>
     <string name="full_name">Họ tên</string>
     <string name="enter_your_full_name">Nhập họ tên của bạn</string>
     <string name="email">Địa chỉ email</string>
     <string name="enter_email_address">Nhập địa chỉ email của bạn</string>
-    <string name="next">Tiếp tục</string>
-    <string name="step_2">Bước 2</string>
     <string name="password">Mật khẩu</string>
     <string name="enter_your_password">Nhập mật khẩu của bạn</string>
     <string name="confirm_password">Nhập lại mật khẩu</string>
