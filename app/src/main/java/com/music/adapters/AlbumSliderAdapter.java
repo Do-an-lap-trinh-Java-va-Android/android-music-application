@@ -12,18 +12,18 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.music.R;
-import com.music.models.Song;
+import com.music.models.Album;
 
 import java.util.List;
 
-public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ImageSliderViewHolder> {
-    private final List<Song> mSongs;
+public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.ImageSliderViewHolder> {
+    private final List<Album> mAlbums;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ViewPager2 mViewPager;
 
-    public ImageSliderAdapter(List<Song> songs, ViewPager2 viewPager) {
-        mSongs = songs;
+    public AlbumSliderAdapter(List<Album> albums, ViewPager2 viewPager) {
+        mAlbums = albums;
         mViewPager = viewPager;
     }
 
@@ -38,12 +38,12 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ImageSliderViewHolder holder, int position) {
-        holder.setData(mSongs.get(position));
+        holder.setData(mAlbums.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mSongs.size();
+        return mAlbums.size();
     }
 
     static class ImageSliderViewHolder extends RecyclerView.ViewHolder {
@@ -59,10 +59,10 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
             mPosterImageView = itemView.findViewById(R.id.iv_poster);
         }
 
-        private void setData(Song song) {
-            mTitleTextView.setText(song.getName());
-            mDescriptionTextView.setText(song.getName());
-            Glide.with(itemView).load(song.getImage()).into(mPosterImageView);
+        private void setData(Album album) {
+            mTitleTextView.setText(album.getName());
+            mDescriptionTextView.setText(album.getDescription());
+            Glide.with(itemView).load(album.getCover()).into(mPosterImageView);
         }
     }
 }

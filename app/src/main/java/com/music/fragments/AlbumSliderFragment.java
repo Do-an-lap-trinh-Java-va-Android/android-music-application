@@ -16,15 +16,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.music.R;
-import com.music.adapters.ImageSliderAdapter;
-import com.music.models.Song;
+import com.music.adapters.AlbumSliderAdapter;
+import com.music.models.Album;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSliderFragment extends Fragment {
+public class AlbumSliderFragment extends Fragment {
     @SuppressWarnings("FieldCanBeLocal")
     private FirebaseFirestore mFirestore;
 
@@ -33,21 +32,19 @@ public class ImageSliderFragment extends Fragment {
 
     private ViewPager2 mViewPager;
 
-    private final List<Song> mSongs = new ArrayList<>();
+    private final List<Album> mAlbums = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mFirestore = FirebaseFirestore.getInstance();
-        mCollection = mFirestore.collection("songs");
+        mCollection = mFirestore.collection("albums");
 
-        // TODO: Đoạn code bên dưới chỉ mới demo, bắt buộc viết lại
-        // noinspection CodeBlock2Expr
-        mCollection.orderBy("views", Query.Direction.DESCENDING).limit(6).get()
+        mCollection.whereEqualTo("recommend", true).get()
                 .addOnSuccessListener(query -> {
                     for (DocumentSnapshot document : query.getDocuments()) {
-                        mSongs.add(document.toObject(Song.class));
+                        mAlbums.add(document.toObject(Album.class));
                     }
 
                     if (mViewPager.getAdapter() != null) {
@@ -55,7 +52,7 @@ public class ImageSliderFragment extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getActivity(), "Không thể lấy dữ liệu", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Không thể tải album bài hát.", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -70,7 +67,7 @@ public class ImageSliderFragment extends Fragment {
 
         mViewPager = view.findViewById(R.id.image_slider);
 
-        mViewPager.setAdapter(new ImageSliderAdapter(mSongs, mViewPager));
+        mViewPager.setAdapter(new AlbumSliderAdapter(mAlbums, mViewPager));
 
         // Thêm hiệu ứng chuyển cảnh khi cuộn hình ảnh
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragments.ImageSliderFragment">
+    tools:context=".fragments.AlbumSliderFragment">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/image_slider"
