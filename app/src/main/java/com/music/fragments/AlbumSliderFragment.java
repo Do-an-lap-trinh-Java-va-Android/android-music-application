@@ -12,12 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.music.adapters.AlbumSliderAdapter;
 import com.music.databinding.FragmentImageSliderBinding;
 import com.music.models.Album;
+import com.music.repositories.AlbumRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,14 +24,17 @@ import java.util.stream.Collectors;
 public class AlbumSliderFragment extends Fragment {
     private FragmentImageSliderBinding mBinding;
 
+    private final AlbumRepository mAlbumRepository;
+
+    public AlbumSliderFragment() {
+        mAlbumRepository = new AlbumRepository();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-        CollectionReference mCollection = mFirestore.collection("albums");
-
-        mCollection.whereEqualTo("recommend", true).get()
+        mAlbumRepository.getRecommendAlbums()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         QuerySnapshot query = task.getResult();
