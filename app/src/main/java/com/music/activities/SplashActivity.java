@@ -1,4 +1,4 @@
-package com.music.views;
+package com.music.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

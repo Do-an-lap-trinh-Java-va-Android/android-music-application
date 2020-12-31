@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/margin_padding_16dp"
     android:paddingEnd="@dimen/margin_padding_16dp"
-    tools:context=".views.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <EditText
         android:layout_width="match_parent"
