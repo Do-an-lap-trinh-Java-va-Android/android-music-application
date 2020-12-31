@@ -13,14 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApplication">
 
-        <!-- Trang chính -->
-        <activity android:name=".views.MainActivity">
+        <activity
+            android:name=".views.SplashActivity"
+            android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Trang chính -->
+        <activity android:name=".views.MainActivity" />
 
         <!-- Trang đăng nhập -->
         <activity
