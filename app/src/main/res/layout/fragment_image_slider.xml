@@ -6,6 +6,12 @@
     android:orientation="vertical"
     tools:context=".fragments.AlbumSliderFragment">
 
+    <ProgressBar
+        android:id="@+id/prb_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/image_slider"
         android:layout_width="match_parent"
