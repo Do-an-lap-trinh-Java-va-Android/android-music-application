@@ -1,17 +1,14 @@
 package com.music.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.music.R;
+import com.music.databinding.SlideImageContainerBinding;
 import com.music.models.Album;
 
 import java.util.List;
@@ -31,8 +28,11 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
     @Override
     public ImageSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ImageSliderViewHolder(
-                LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.slide_image_container, parent, false)
+                SlideImageContainerBinding.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        parent,
+                        false
+                )
         );
     }
 
@@ -47,22 +47,18 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
     }
 
     static class ImageSliderViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mTitleTextView;
-        private final TextView mDescriptionTextView;
-        private final ImageView mPosterImageView;
+        private final SlideImageContainerBinding mBinding;
 
-        private ImageSliderViewHolder(@NonNull View itemView) {
-            super(itemView);
+        private ImageSliderViewHolder(@NonNull SlideImageContainerBinding binding) {
+            super(binding.getRoot());
 
-            mTitleTextView = itemView.findViewById(R.id.tv_title);
-            mDescriptionTextView = itemView.findViewById(R.id.tv_description);
-            mPosterImageView = itemView.findViewById(R.id.iv_poster);
+            mBinding = binding;
         }
 
         private void setData(Album album) {
-            mTitleTextView.setText(album.getName());
-            mDescriptionTextView.setText(album.getDescription());
-            Glide.with(itemView).load(album.getCover()).into(mPosterImageView);
+            mBinding.tvTitle.setText(album.getName());
+            mBinding.tvDescription.setText(album.getDescription());
+            Glide.with(itemView).load(album.getCover()).into(mBinding.ivCover);
         }
     }
 }
