@@ -1,4 +1,4 @@
-package com.music.views;
+package com.music.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/ranking_fragment"
-        android:name="com.music.views.ImageSliderFragment"
+        android:name="com.music.fragments.ImageSliderFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

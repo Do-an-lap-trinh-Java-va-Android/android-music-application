@@ -1,4 +1,4 @@
-package com.music.views;
+package com.music.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.music.R;
+import com.music.adapters.ImageSliderAdapter;
 import com.music.models.Song;
 
 import java.util.ArrayList;
