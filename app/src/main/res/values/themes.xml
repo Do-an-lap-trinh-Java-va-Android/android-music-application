@@ -1,12 +1,9 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
+
     <!-- Giao diện sáng -->
-    <style name="Theme.MusicApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Font chữ mặc định -->
-        <item name="android:fontFamily">@font/roboto</item>
+    <style name="Theme.MusicApplication" parent="Theme.Base">
         <!-- Màu chữ mặc định -->
         <item name="android:textColor">@color/black</item>
-        <!-- Kích thước chữ mặc định -->
-        <item name="android:textSize">@dimen/font_size_medium</item>
 
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
@@ -17,9 +14,6 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
-
-        <!-- Chỉnh màu status bar -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
         <!-- EditText -->
         <item name="editTextBackground">@drawable/rounded_edit_text_background</item>
@@ -33,4 +27,5 @@
         <item name="strokeColor">@color/gray</item>
         <item name="strokeWidth">1dp</item>
     </style>
+
 </resources>

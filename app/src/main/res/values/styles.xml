@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Background Splash Screen -->
     <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
+
+    <!-- Base -->
+    <style name="Theme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Font chữ mặc định -->
+        <item name="android:fontFamily">@font/roboto</item>
+
+        <!-- Kích thước chữ mặc định -->
+        <item name="android:textSize">@dimen/font_size_medium</item>
+
+        <!-- Chỉnh màu status bar -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Chỉnh màu cursor và màu bôi đen -->
+        <item name="colorAccent">@color/purple_400</item>
+        <item name="android:textColorHighlight">@color/purple_400</item>
+    </style>
+
 </resources>
