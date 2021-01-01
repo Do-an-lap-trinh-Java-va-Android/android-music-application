@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.PropertyName;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +41,7 @@ public class Song {
      * Đường dẫn hình ảnh
      */
     @NonNull
-    private String image = StringUtils.EMPTY;
+    private String thumbnail = StringUtils.EMPTY;
 
     /**
      * Lượt nghe của bài hát
@@ -53,7 +52,7 @@ public class Song {
      * Danh sách nghệ sĩ
      */
     @NonNull
-    private List<DocumentReference> artists = new ArrayList<>();
+    private List<String> artists = new ArrayList<>();
 
     /**
      * Viết hoa ký tự đầu của mỗi từ trong tên bài hát

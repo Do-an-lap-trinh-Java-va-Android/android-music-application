@@ -19,7 +19,7 @@ public class AlbumRepository extends Repository {
                         return new Collection();
                     }
 
-                    return result.getDocuments().get(0).toObject(Collection.class);
+                    return result.toObjects(Collection.class).get(0);
                 });
     }
 }

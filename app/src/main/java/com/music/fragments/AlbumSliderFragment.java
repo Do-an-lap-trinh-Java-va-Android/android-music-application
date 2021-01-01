@@ -12,15 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 
-import com.google.firebase.firestore.DocumentReference;
 import com.music.adapters.AlbumSliderAdapter;
 import com.music.databinding.FragmentImageSliderBinding;
-import com.music.models.Album;
 import com.music.models.Collection;
 import com.music.repositories.AlbumRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AlbumSliderFragment extends Fragment {
     @SuppressWarnings("NotNullFieldNotInitialized")
@@ -29,9 +24,6 @@ public class AlbumSliderFragment extends Fragment {
 
     @NonNull
     private final AlbumRepository albumRepository = new AlbumRepository();
-
-    @NonNull
-    private final List<Album> albums = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,32 +53,12 @@ public class AlbumSliderFragment extends Fragment {
             page.setScaleY(0.85f + r * 0.15f);
         });
         binding.imageSlider.setPageTransformer(compositePageTransformer);
-        binding.imageSlider.setAdapter(new AlbumSliderAdapter(albums, binding.imageSlider));
 
         return binding.getRoot();
     }
 
-    /**
-     * Lấy thông tin các album trong bộ sưu tập và thêm vào {@link #albums}
-     * Sau đó nó sẽ báo cho adapter rằng dữ liệu đã được thêm vào và phải render lại giao diện
-     *
-     * @param collection Bộ sưu tập chứa tên bộ sưu tập và các album
-     */
     public void onSuccess(@NonNull Collection collection) {
-        for (DocumentReference albumReference : collection.getAlbums()) {
-            albumReference.get().addOnCompleteListener(task -> {
-                if (!task.isSuccessful() || task.getResult() == null) {
-                    onFailure(task.getException());
-                    return;
-                }
-
-                albums.add(task.getResult().toObject(Album.class));
-
-                if (binding.imageSlider.getAdapter() != null) {
-                    binding.imageSlider.getAdapter().notifyDataSetChanged();
-                }
-            });
-        }
+        binding.imageSlider.setAdapter(new AlbumSliderAdapter(collection.getAlbums(), binding.imageSlider));
     }
 
     public void onFailure(@Nullable Exception e) {

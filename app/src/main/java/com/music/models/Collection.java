@@ -3,7 +3,6 @@ package com.music.models;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.DocumentReference;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -34,7 +33,7 @@ public class Collection {
      * Danh sách albums của bộ sưu tập
      */
     @NonNull
-    private List<DocumentReference> albums = new ArrayList<>();
+    private List<Album> albums = new ArrayList<>();
 
     /**
      * Viết hoa tên bộ sưu tập khi gán tên

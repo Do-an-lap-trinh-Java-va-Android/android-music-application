@@ -3,13 +3,9 @@ package com.music.models;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.DocumentReference;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,12 +37,6 @@ public class Album {
      */
     @NonNull
     private String cover = StringUtils.EMPTY;
-
-    /**
-     * Danh sách nghệ sĩ
-     */
-    @NonNull
-    private List<DocumentReference> songs = new ArrayList<>();
 
     /**
      * Viết hoa ký tự đầu của mỗi từ trong tên album

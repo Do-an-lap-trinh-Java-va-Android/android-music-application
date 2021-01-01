@@ -10,16 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.DocumentReference;
 import com.music.databinding.CardBinding;
-import com.music.models.Artist;
 import com.music.models.Song;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private final List<Song> songs;
@@ -60,21 +56,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
         public void setSong(@NonNull Song song) {
             binding.tvTitle.setText(song.getName());
+            binding.tvDescription.setText(StringUtils.join(song.getArtists(), ", "));
 
-            List<Artist> artists = new ArrayList<>();
-
-            for (DocumentReference artist : song.getArtists()) {
-                artist.get().addOnSuccessListener(documentSnapshot -> {
-                    artists.add(documentSnapshot.toObject(Artist.class));
-
-                    binding.tvDescription.setText(StringUtils.join(
-                            artists.stream().map(Artist::getName).collect(Collectors.toList()),
-                            ", "
-                    ));
-                });
-            }
-
-            Glide.with(itemView).load(song.getImage()).into(binding.ivImage);
+            Glide.with(itemView).load(song.getThumbnail()).into(binding.ivImage);
         }
     }
 
