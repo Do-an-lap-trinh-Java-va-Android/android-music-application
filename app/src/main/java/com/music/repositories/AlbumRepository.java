@@ -10,10 +10,10 @@ public class AlbumRepository {
 
     public AlbumRepository() {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        collection = database.collection("albums");
+        collection = database.collection("collections");
     }
 
     public Task<QuerySnapshot> getRecommendAlbums() {
-        return collection.whereEqualTo("recommend", true).get();
+        return collection.whereEqualTo("name", "Album Slider").get();
     }
 }
