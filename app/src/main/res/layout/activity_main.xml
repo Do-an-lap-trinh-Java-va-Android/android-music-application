@@ -24,8 +24,8 @@
         android:paddingRight="@dimen/margin_padding_16dp"
         android:textAlignment="textStart" />
 
-    <fragment
-        android:id="@+id/ranking_fragment"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/frg_album_slider"
         android:name="com.music.fragments.AlbumSliderFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
