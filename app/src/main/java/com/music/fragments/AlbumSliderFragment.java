@@ -13,7 +13,6 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.music.adapters.AlbumSliderAdapter;
 import com.music.databinding.FragmentImageSliderBinding;
 import com.music.models.Album;
@@ -41,9 +40,7 @@ public class AlbumSliderFragment extends Fragment {
         albumRepository.getRecommendAlbums()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        QuerySnapshot query = task.getResult();
-
-                        List<Collection> collections = query.toObjects(Collection.class);
+                        List<Collection> collections = task.getResult().toObjects(Collection.class);
 
                         for (Collection collection : collections) {
                             for (DocumentReference album : collection.getAlbums()) {
