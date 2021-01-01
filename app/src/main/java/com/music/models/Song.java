@@ -7,8 +7,10 @@ import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.PropertyName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -20,14 +22,15 @@ public class Song {
     /**
      * ID bài hát
      */
+    @NonNull
     @DocumentId
-    private String id;
+    private String id = StringUtils.EMPTY;
 
     /**
      * Tên bài hát
      */
     @NonNull
-    private String name;
+    private String name = StringUtils.EMPTY;
 
     /**
      * Tên khác của bài hát
@@ -39,7 +42,7 @@ public class Song {
      * Đường dẫn hình ảnh
      */
     @NonNull
-    private String image;
+    private String image = StringUtils.EMPTY;
 
     /**
      * Lượt nghe của bài hát
@@ -50,7 +53,7 @@ public class Song {
      * Danh sách nghệ sĩ
      */
     @NonNull
-    private List<DocumentReference> artists;
+    private List<DocumentReference> artists = new ArrayList<>();
 
     /**
      * Viết hoa ký tự đầu của mỗi từ trong tên bài hát
