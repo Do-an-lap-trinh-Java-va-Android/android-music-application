@@ -9,15 +9,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.music.databinding.ActivityRegisterControlBinding;
 
 public class RegisterControlActivity extends AppCompatActivity {
-    private ActivityRegisterControlBinding mBinding;
+    @SuppressWarnings("FieldCanBeLocal")
+    private ActivityRegisterControlBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = ActivityRegisterControlBinding.inflate(getLayoutInflater());
-        setContentView(mBinding.getRoot());
+        binding = ActivityRegisterControlBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        mBinding.tvCreateANewAccount.setOnClickListener(v -> {
+        binding.tvCreateANewAccount.setOnClickListener(v -> {
             Intent registerFirstStepIntent = new Intent(this, RegisterActivity.class);
             startActivity(registerFirstStepIntent);
         });

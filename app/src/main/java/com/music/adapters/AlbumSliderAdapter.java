@@ -14,14 +14,14 @@ import com.music.models.Album;
 import java.util.List;
 
 public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.ImageSliderViewHolder> {
-    private final List<Album> mAlbums;
+    private final List<Album> albums;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final ViewPager2 mViewPager;
+    private final ViewPager2 viewPager;
 
-    public AlbumSliderAdapter(List<Album> albums, ViewPager2 viewPager) {
-        mAlbums = albums;
-        mViewPager = viewPager;
+    public AlbumSliderAdapter(@NonNull List<Album> albums, @NonNull ViewPager2 viewPager) {
+        this.albums = albums;
+        this.viewPager = viewPager;
     }
 
     @NonNull
@@ -38,27 +38,27 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ImageSliderViewHolder holder, int position) {
-        holder.setData(mAlbums.get(position));
+        holder.setData(albums.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mAlbums.size();
+        return albums.size();
     }
 
     static class ImageSliderViewHolder extends RecyclerView.ViewHolder {
-        private final SlideImageContainerBinding mBinding;
+        private final SlideImageContainerBinding binding;
 
         private ImageSliderViewHolder(@NonNull SlideImageContainerBinding binding) {
             super(binding.getRoot());
 
-            mBinding = binding;
+            this.binding = binding;
         }
 
         private void setData(Album album) {
-            mBinding.tvTitle.setText(album.getName());
-            mBinding.tvDescription.setText(album.getDescription());
-            Glide.with(itemView).load(album.getCover()).into(mBinding.ivCover);
+            binding.tvTitle.setText(album.getName());
+            binding.tvDescription.setText(album.getDescription());
+            Glide.with(itemView).load(album.getCover()).into(binding.ivCover);
         }
     }
 }

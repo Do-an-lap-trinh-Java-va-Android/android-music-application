@@ -18,25 +18,25 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.music.databinding.ActivityRegisterBinding;
 
 public class RegisterActivity extends AppCompatActivity {
-    private ActivityRegisterBinding mBinding;
-    private FirebaseAuth mAuth;
+    private ActivityRegisterBinding binding;
+    private FirebaseAuth auth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        setContentView(mBinding.getRoot());
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        mAuth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        mBinding.btnRegister.setOnClickListener(this::onClickBtnRegister);
+        binding.btnRegister.setOnClickListener(this::onClickBtnRegister);
     }
 
     private boolean validateFullName() {
-        final String fullName = mBinding.edtFullName.getText().toString().trim();
+        final String fullName = binding.edtFullName.getText().toString().trim();
 
         if (fullName.isEmpty()) {
-            mBinding.edtFullName.setError("Không được để trống");
+            binding.edtFullName.setError("Không được để trống");
             return false;
         }
 
@@ -44,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validateEmail() {
-        final EditText edtEmail = mBinding.edtEmail;
+        final EditText edtEmail = binding.edtEmail;
         final String email = edtEmail.getText().toString().trim();
 
         if (email.isEmpty()) {
@@ -61,8 +61,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validatePassword() {
-        final EditText edtPassword = mBinding.edtPassword;
-        final EditText edtConfirmPassword = mBinding.edtConfirmPassword;
+        final EditText edtPassword = binding.edtPassword;
+        final EditText edtConfirmPassword = binding.edtConfirmPassword;
         final String password = edtPassword.getText().toString();
         final String confirmPassword = edtConfirmPassword.getText().toString();
 
@@ -89,9 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        register(mBinding.edtEmail.getText().toString(), mBinding.edtPassword.getText().toString())
+        register(binding.edtEmail.getText().toString(), binding.edtPassword.getText().toString())
                 .addOnSuccessListener(authResult -> {
-                    updateUserProfile(mBinding.edtFullName.getText().toString())
+                    updateUserProfile(binding.edtFullName.getText().toString())
                             .addOnSuccessListener(aVoid -> {
                                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                                 alert.setMessage("Đăng ký thành công");
@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private Task<AuthResult> register(@NonNull String email, @NonNull String password) {
-        return mAuth.createUserWithEmailAndPassword(email, password);
+        return auth.createUserWithEmailAndPassword(email, password);
     }
 
     private Task<Void> updateUserProfile(@Nullable String displayName) {
@@ -112,6 +112,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .setDisplayName(displayName)
                 .build();
 
-        return mAuth.getCurrentUser().updateProfile(profile);
+        return auth.getCurrentUser().updateProfile(profile);
     }
 }

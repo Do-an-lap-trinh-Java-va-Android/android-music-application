@@ -22,19 +22,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AlbumSliderFragment extends Fragment {
-    private FragmentImageSliderBinding mBinding;
+    private FragmentImageSliderBinding binding;
 
-    private final AlbumRepository mAlbumRepository;
+    private final AlbumRepository albumRepository;
 
     public AlbumSliderFragment() {
-        mAlbumRepository = new AlbumRepository();
+        albumRepository = new AlbumRepository();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAlbumRepository.getRecommendAlbums()
+        albumRepository.getRecommendAlbums()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         QuerySnapshot query = task.getResult();
@@ -43,19 +43,19 @@ public class AlbumSliderFragment extends Fragment {
                                 .map(document -> document.toObject(Album.class))
                                 .collect(Collectors.toList());
 
-                        mBinding.imageSlider.setAdapter(new AlbumSliderAdapter(albums, mBinding.imageSlider));
+                        binding.imageSlider.setAdapter(new AlbumSliderAdapter(albums, binding.imageSlider));
                     } else {
                         Toast.makeText(getActivity(), "Không thể tải album bài hát.", Toast.LENGTH_SHORT).show();
                     }
 
-                    mBinding.prbLoading.setVisibility(View.GONE);
+                    binding.prbLoading.setVisibility(View.GONE);
                 });
     }
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = FragmentImageSliderBinding.inflate(inflater, container, false);
+        binding = FragmentImageSliderBinding.inflate(inflater, container, false);
 
         // Thêm hiệu ứng khi cuộn album
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
@@ -64,8 +64,8 @@ public class AlbumSliderFragment extends Fragment {
             float r = 1 - Math.abs(position);
             page.setScaleY(0.85f + r * 0.15f);
         });
-        mBinding.imageSlider.setPageTransformer(compositePageTransformer);
+        binding.imageSlider.setPageTransformer(compositePageTransformer);
 
-        return mBinding.getRoot();
+        return binding.getRoot();
     }
 }
