@@ -14,9 +14,11 @@ import com.music.models.Album;
 import java.util.List;
 
 public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.ImageSliderViewHolder> {
+    @NonNull
     private final List<Album> albums;
 
     @SuppressWarnings("FieldCanBeLocal")
+    @NonNull
     private final ViewPager2 viewPager;
 
     public AlbumSliderAdapter(@NonNull List<Album> albums, @NonNull ViewPager2 viewPager) {
@@ -55,7 +57,7 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
             this.binding = binding;
         }
 
-        private void setData(Album album) {
+        private void setData(@NonNull Album album) {
             binding.tvTitle.setText(album.getName());
             binding.tvDescription.setText(album.getDescription());
             Glide.with(itemView).load(album.getCover()).into(binding.ivCover);

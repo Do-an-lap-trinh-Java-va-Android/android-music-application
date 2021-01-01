@@ -3,13 +3,15 @@ package com.music.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.music.databinding.ActivityRegisterControlBinding;
 
 public class RegisterControlActivity extends AppCompatActivity {
-    @SuppressWarnings("FieldCanBeLocal")
+    @SuppressWarnings({"FieldCanBeLocal", "NotNullFieldNotInitialized"})
+    @NonNull
     private ActivityRegisterControlBinding binding;
 
     @Override

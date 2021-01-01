@@ -23,10 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumSliderFragment extends Fragment {
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
     private FragmentImageSliderBinding binding;
 
+    @NonNull
     private final AlbumRepository albumRepository = new AlbumRepository();
 
+    @NonNull
     private final List<Album> albums = new ArrayList<>();
 
     @Override
@@ -46,7 +50,7 @@ public class AlbumSliderFragment extends Fragment {
 
     @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentImageSliderBinding.inflate(inflater, container, false);
 
         // Thêm hiệu ứng khi cuộn album
@@ -68,10 +72,10 @@ public class AlbumSliderFragment extends Fragment {
      *
      * @param collection Bộ sưu tập chứa tên bộ sưu tập và các album
      */
-    public void onSuccess(Collection collection) {
+    public void onSuccess(@NonNull Collection collection) {
         for (DocumentReference albumReference : collection.getAlbums()) {
             albumReference.get().addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
+                if (!task.isSuccessful() || task.getResult() == null) {
                     onFailure(task.getException());
                     return;
                 }
@@ -85,7 +89,7 @@ public class AlbumSliderFragment extends Fragment {
         }
     }
 
-    public void onFailure(@NonNull Exception e) {
+    public void onFailure(@Nullable Exception e) {
         Toast.makeText(getActivity(), "Không thể tải album bài hát.", Toast.LENGTH_SHORT).show();
     }
 }

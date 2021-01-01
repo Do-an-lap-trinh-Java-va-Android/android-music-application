@@ -17,17 +17,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.music.databinding.ActivityRegisterBinding;
 
+import java.util.Objects;
+
 public class RegisterActivity extends AppCompatActivity {
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
     private ActivityRegisterBinding binding;
-    private FirebaseAuth auth;
+
+    @NonNull
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        auth = FirebaseAuth.getInstance();
 
         binding.btnRegister.setOnClickListener(this::onClickBtnRegister);
     }
@@ -103,15 +107,17 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    @NonNull
     private Task<AuthResult> register(@NonNull String email, @NonNull String password) {
         return auth.createUserWithEmailAndPassword(email, password);
     }
 
+    @NonNull
     private Task<Void> updateUserProfile(@Nullable String displayName) {
         UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                 .setDisplayName(displayName)
                 .build();
 
-        return auth.getCurrentUser().updateProfile(profile);
+        return Objects.requireNonNull(auth.getCurrentUser()).updateProfile(profile);
     }
 }

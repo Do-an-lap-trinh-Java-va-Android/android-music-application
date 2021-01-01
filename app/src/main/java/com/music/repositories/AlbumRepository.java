@@ -9,6 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.music.models.Collection;
 
 public class AlbumRepository {
+    @NonNull
     private final CollectionReference collection;
 
     public AlbumRepository() {
@@ -23,7 +24,7 @@ public class AlbumRepository {
                 .continueWith(task -> {
                     QuerySnapshot result = task.getResult();
 
-                    if (!task.isSuccessful() || result.isEmpty()) {
+                    if (!task.isSuccessful() || result == null || result.isEmpty()) {
                         return new Collection();
                     }
 
