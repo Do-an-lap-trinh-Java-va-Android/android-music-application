@@ -57,21 +57,15 @@ public class AlbumSliderFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = FragmentImageSliderBinding.inflate(inflater, container, false);
 
-        return mBinding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Thêm hiệu ứng chuyển cảnh khi cuộn hình ảnh
+        // Thêm hiệu ứng khi cuộn album
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(30));
         compositePageTransformer.addTransformer((page, position) -> {
             float r = 1 - Math.abs(position);
             page.setScaleY(0.85f + r * 0.15f);
         });
-
         mBinding.imageSlider.setPageTransformer(compositePageTransformer);
+
+        return mBinding.getRoot();
     }
 }
