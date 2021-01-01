@@ -32,3 +32,8 @@
 -keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
   *** rewind();
 }
+
+# Hỗ trợ Firebase
+# Xem thêm: https://firebase.google.com/docs/database/android/start#proguard
+-keepattributes Signature
+-keepclassmembers class com.music.models.* { *; }
