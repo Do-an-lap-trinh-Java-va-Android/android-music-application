@@ -5,6 +5,10 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -16,18 +20,28 @@ public class Collection {
     /**
      * ID bộ sưu tập
      */
+    @NonNull
     @DocumentId
-    private String id;
+    private String id = StringUtils.EMPTY;
 
     /**
      * Tên bộ sưu tập
      */
     @NonNull
-    private String name;
+    private String name = StringUtils.EMPTY;
 
     /**
      * Danh sách albums của bộ sưu tập
      */
     @NonNull
-    private List<DocumentReference> albums;
+    private List<DocumentReference> albums = new ArrayList<>();
+
+    /**
+     * Viết hoa tên bộ sưu tập khi gán tên
+     *
+     * @param name Tên bộ sưu tập
+     */
+    public void setName(@NonNull String name) {
+        this.name = WordUtils.capitalize(name);
+    }
 }

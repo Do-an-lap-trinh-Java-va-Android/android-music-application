@@ -25,40 +25,23 @@ import java.util.List;
 public class AlbumSliderFragment extends Fragment {
     private FragmentImageSliderBinding binding;
 
-    private final AlbumRepository albumRepository;
+    private final AlbumRepository albumRepository = new AlbumRepository();
 
     private final List<Album> albums = new ArrayList<>();
-
-    public AlbumSliderFragment() {
-        albumRepository = new AlbumRepository();
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        albumRepository.getRecommendAlbums()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        List<Collection> collections = task.getResult().toObjects(Collection.class);
+        albumRepository.getRecommendAlbums().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                onSuccess(task.getResult());
+            } else {
+                onFailure(task.getException());
+            }
 
-                        for (Collection collection : collections) {
-                            for (DocumentReference album : collection.getAlbums()) {
-                                album.get().addOnSuccessListener(documentSnapshot -> {
-                                    albums.add(documentSnapshot.toObject(Album.class));
-
-                                    if (binding.imageSlider.getAdapter() != null) {
-                                        binding.imageSlider.getAdapter().notifyDataSetChanged();
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Không thể tải album bài hát.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    binding.prbLoading.setVisibility(View.GONE);
-                });
+            binding.prbLoading.setVisibility(View.GONE);
+        });
     }
 
     @NonNull
@@ -77,5 +60,32 @@ public class AlbumSliderFragment extends Fragment {
         binding.imageSlider.setAdapter(new AlbumSliderAdapter(albums, binding.imageSlider));
 
         return binding.getRoot();
+    }
+
+    /**
+     * Lấy thông tin các album trong bộ sưu tập và thêm vào {@link #albums}
+     * Sau đó nó sẽ báo cho adapter rằng dữ liệu đã được thêm vào và phải render lại giao diện
+     *
+     * @param collection Bộ sưu tập chứa tên bộ sưu tập và các album
+     */
+    public void onSuccess(Collection collection) {
+        for (DocumentReference albumReference : collection.getAlbums()) {
+            albumReference.get().addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    onFailure(task.getException());
+                    return;
+                }
+
+                albums.add(task.getResult().toObject(Album.class));
+
+                if (binding.imageSlider.getAdapter() != null) {
+                    binding.imageSlider.getAdapter().notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    public void onFailure(@NonNull Exception e) {
+        Toast.makeText(getActivity(), "Không thể tải album bài hát.", Toast.LENGTH_SHORT).show();
     }
 }
