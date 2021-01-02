@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -17,14 +18,10 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
     @NonNull
     private final List<Album> albums;
 
-    @SuppressWarnings("FieldCanBeLocal")
-    @NonNull
-    private final ViewPager2 viewPager;
-
-    public AlbumSliderAdapter(@NonNull List<Album> albums, @NonNull ViewPager2 viewPager) {
+    public AlbumSliderAdapter(@NonNull List<Album> albums) {
         this.albums = albums;
-        this.viewPager = viewPager;
     }
+
 
     @NonNull
     @Override

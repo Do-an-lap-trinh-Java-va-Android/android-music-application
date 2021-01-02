@@ -7,6 +7,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.music.models.Collection;
 
 public class AlbumRepository extends Repository {
+    private static class SingletonHelper {
+        private final static AlbumRepository INSTANCE = new AlbumRepository();
+    }
+
+    private AlbumRepository() { }
+
+    public static AlbumRepository getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
+
     @NonNull
     public Task<Collection> getRecommendAlbums() {
         return database.collection("collections")

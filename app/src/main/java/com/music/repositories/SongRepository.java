@@ -7,8 +7,23 @@ import com.google.firebase.firestore.Query;
 import com.music.models.Song;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SongRepository extends Repository {
+    private static class SingletonHelper {
+        @NonNull
+        private static final SongRepository INSTANCE = new SongRepository();
+    }
+
+    private SongRepository() {
+
+    }
+
+    @NonNull
+    public static SongRepository getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
+
     @NonNull
     public Task<List<Song>> getTopSongs() {
         return database.collection("songs")
@@ -16,7 +31,7 @@ public class SongRepository extends Repository {
                 .limit(6)
                 .get()
                 .continueWith(task -> {
-                    return task.getResult().toObjects(Song.class);
+                    return Objects.requireNonNull(task.getResult()).toObjects(Song.class);
                 });
     }
 }

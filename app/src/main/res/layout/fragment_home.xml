@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.home.HomeFragment">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/input_height"
+        android:layout_marginTop="@dimen/margin_padding_16dp"
+        android:layout_marginBottom="@dimen/margin_padding_16dp"
+        android:drawableStart="@drawable/ic_outline_search_gray_24"
+        android:drawablePadding="@dimen/margin_padding_8dp"
+        android:ellipsize="end"
+        android:hint="@string/input_search_placehodler"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/margin_padding_16dp"
+        android:paddingRight="@dimen/margin_padding_16dp"
+        android:textAlignment="textStart" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="@dimen/margin_padding_16dp">
+
+        <ProgressBar
+            android:id="@+id/prb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/image_slider"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_padding_16dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Bảng Xếp Hạng"
+        android:textSize="@dimen/font_size_extra_large" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_random_song"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-16dp"
+        android:layout_marginEnd="-16dp" />
+
+</LinearLayout>

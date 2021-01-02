@@ -5,24 +5,17 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
-import com.music.adapters.SongAdapter;
+import com.music.R;
 import com.music.databinding.ActivityMainBinding;
-import com.music.models.Song;
-import com.music.repositories.SongRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     @SuppressWarnings({"FieldCanBeLocal", "NotNullFieldNotInitialized"})
     @NonNull
     private ActivityMainBinding binding;
-
-    @NonNull
-    private final SongRepository songRepository = new SongRepository();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,19 +23,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        List<Song> songs = new ArrayList<>();
-
-        LinearLayoutManager linearLayoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
-        binding.rvRandomSong.setHasFixedSize(true);
-        binding.rvRandomSong.setLayoutManager(linearLayoutManager);
-        binding.rvRandomSong.setAdapter(new SongAdapter(songs));
-        binding.rvRandomSong.addItemDecoration(new SongAdapter.SongItemDecoration());
-
-        songRepository.getTopSongs().addOnSuccessListener(_songs -> {
-            songs.addAll(_songs);
-            Objects.requireNonNull(binding.rvRandomSong.getAdapter()).notifyDataSetChanged();
-        });
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(binding.navView, navController);
     }
 }
