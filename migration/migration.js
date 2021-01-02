@@ -63,6 +63,14 @@ const songs = [
         "views": 0,
         "artists": ["BLACKPINK"],
         "albums": [],
+    },
+    {
+        "name": "Em Gái Mưa",
+        "other_name": "",
+        "thumbnail": "https://photo-resize-zmp3.zadn.vn/w320_r1x1_jpeg/covers/e/4/e4ad98e7656f451b0c9eba0aa03c7ddb_1504595022.jpg",
+        "views": 0,
+        "artists": ["Hương Tràm"],
+        "albums": [],
     }
 ];
 
