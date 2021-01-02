@@ -9,19 +9,14 @@ import com.music.models.Song;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class SongRepository extends Repository {
-    private static class SingletonHelper {
-        @NonNull
-        private static final SongRepository INSTANCE = new SongRepository();
-    }
+    @Inject
+    public SongRepository() {
 
-    private SongRepository() {
-
-    }
-
-    @NonNull
-    public static SongRepository getInstance() {
-        return SingletonHelper.INSTANCE;
     }
 
     @NonNull

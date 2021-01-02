@@ -1,6 +1,7 @@
 package com.music.ui.home;
 
 import androidx.annotation.NonNull;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -21,17 +22,15 @@ public class HomeViewModel extends ViewModel {
     private final AlbumRepository albumRepository;
 
     @NonNull
-    private final MutableLiveData<List<Song>> topSongList;
+    private final MutableLiveData<List<Song>> topSongList = new MutableLiveData<>(Collections.emptyList());
 
     @NonNull
-    private final MutableLiveData<List<Album>> albumSlider;
+    private final MutableLiveData<List<Album>> albumSlider = new MutableLiveData<>(Collections.emptyList());
 
-
-    public HomeViewModel() {
-        songRepository = SongRepository.getInstance();
-        albumRepository = AlbumRepository.getInstance();
-        topSongList = new MutableLiveData<>(Collections.emptyList());
-        albumSlider = new MutableLiveData<>(Collections.emptyList());
+    @ViewModelInject
+    public HomeViewModel(@NonNull SongRepository songRepository, @NonNull AlbumRepository albumRepository) {
+        this.songRepository = songRepository;
+        this.albumRepository = albumRepository;
     }
 
     @NonNull

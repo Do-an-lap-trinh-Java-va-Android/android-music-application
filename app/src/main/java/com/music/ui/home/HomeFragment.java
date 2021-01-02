@@ -18,10 +18,16 @@ import com.music.adapters.song.SongAdapter;
 import com.music.adapters.song.SongItemDecoration;
 import com.music.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment {
-    private static final String TAG = "HomeFragment";
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class HomeFragment extends Fragment {
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
     private FragmentHomeBinding binding;
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
     private HomeViewModel homeViewModel;
 
     @Nullable

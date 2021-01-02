@@ -6,15 +6,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.music.models.Collection;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class AlbumRepository extends Repository {
-    private static class SingletonHelper {
-        private final static AlbumRepository INSTANCE = new AlbumRepository();
-    }
+    @Inject
+    public AlbumRepository() {
 
-    private AlbumRepository() { }
-
-    public static AlbumRepository getInstance() {
-        return SingletonHelper.INSTANCE;
     }
 
     @NonNull

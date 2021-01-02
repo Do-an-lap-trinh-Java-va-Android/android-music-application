@@ -12,6 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.music.R;
 import com.music.databinding.ActivityMainBinding;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
     @SuppressWarnings({"FieldCanBeLocal", "NotNullFieldNotInitialized"})
     @NonNull
