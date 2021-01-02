@@ -18,9 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
+    @NonNull
     private final List<Song> songs;
 
-    public SongAdapter(List<Song> songs) {
+    public SongAdapter(@NonNull List<Song> songs) {
         this.songs = songs;
     }
 
@@ -64,7 +65,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     public static class SongItemDecoration extends RecyclerView.ItemDecoration {
         @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
             final int position = parent.getChildAdapterPosition(view);
 
             if (position == RecyclerView.NO_POSITION) {

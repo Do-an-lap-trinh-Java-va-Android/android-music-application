@@ -14,6 +14,7 @@ import com.music.repositories.SongRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     @SuppressWarnings({"FieldCanBeLocal", "NotNullFieldNotInitialized"})
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         songRepository.getTopSongs().addOnSuccessListener(_songs -> {
             songs.addAll(_songs);
-            binding.rvRandomSong.getAdapter().notifyDataSetChanged();
+            Objects.requireNonNull(binding.rvRandomSong.getAdapter()).notifyDataSetChanged();
         });
     }
 }
