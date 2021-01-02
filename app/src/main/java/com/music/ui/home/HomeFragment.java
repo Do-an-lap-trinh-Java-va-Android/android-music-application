@@ -14,7 +14,8 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 
 import com.music.adapters.AlbumSliderAdapter;
-import com.music.adapters.SongAdapter;
+import com.music.adapters.song.SongAdapter;
+import com.music.adapters.song.SongItemDecoration;
 import com.music.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -58,7 +59,7 @@ public class HomeFragment extends Fragment {
 
         binding.rvRandomSong.setHasFixedSize(true);
         binding.rvRandomSong.setLayoutManager(linearLayoutManager);
-        binding.rvRandomSong.addItemDecoration(new SongAdapter.SongItemDecoration());
+        binding.rvRandomSong.addItemDecoration(new SongItemDecoration());
 
         // Tải bảng xếp hạng bài hát
         homeViewModel.fetchTopSongs();

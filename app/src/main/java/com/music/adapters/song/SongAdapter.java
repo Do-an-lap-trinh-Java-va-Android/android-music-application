@@ -1,9 +1,6 @@
-package com.music.adapters;
+package com.music.adapters.song;
 
-import android.graphics.Rect;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -27,8 +24,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @NonNull
     @Override
-    public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SongViewHolder(
+    public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new SongAdapter.SongViewHolder(
                 CardBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
@@ -36,7 +33,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SongAdapter.SongViewHolder holder, int position) {
         holder.setSong(songs.get(position));
     }
 
@@ -60,26 +57,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             binding.tvDescription.setText(StringUtils.join(song.getArtists(), ", "));
 
             Glide.with(itemView).load(song.getThumbnail()).into(binding.ivImage);
-        }
-    }
-
-    public static class SongItemDecoration extends RecyclerView.ItemDecoration {
-        @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
-                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            final int position = parent.getChildAdapterPosition(view);
-
-            if (position == RecyclerView.NO_POSITION) {
-                return;
-            }
-
-            if (position == 0) {
-                outRect.left = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                        parent.getContext().getResources().getDisplayMetrics());
-            }
-
-            outRect.right = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                    parent.getContext().getResources().getDisplayMetrics());
         }
     }
 }
