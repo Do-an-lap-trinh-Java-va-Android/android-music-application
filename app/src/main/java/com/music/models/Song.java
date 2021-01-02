@@ -9,7 +9,7 @@ import com.google.firebase.firestore.PropertyName;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import lombok.Data;
@@ -52,7 +52,13 @@ public class Song {
      * Danh sách nghệ sĩ
      */
     @NonNull
-    private List<String> artists = new ArrayList<>();
+    private List<String> artists = Collections.emptyList();
+
+    /**
+     * Danh sách album mà bài hát này thuộc về
+     */
+    @NonNull
+    private List<String> albums = Collections.emptyList();
 
     /**
      * Viết hoa ký tự đầu của mỗi từ trong tên bài hát
