@@ -3,6 +3,7 @@ package com.music.repositories;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.music.models.Song;
 
@@ -13,10 +14,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class SongRepository extends Repository {
-    @Inject
-    public SongRepository() {
+public class SongRepository {
+    @NonNull
+    private final FirebaseFirestore database;
 
+    @Inject
+    public SongRepository(@NonNull FirebaseFirestore database) {
+        this.database = database;
     }
 
     @NonNull
