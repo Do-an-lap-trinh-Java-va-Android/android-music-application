@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.music.models.Album;
 import com.music.models.Song;
+import com.music.network.Resource;
 import com.music.repositories.AlbumRepository;
 import com.music.repositories.SongRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 public class HomeViewModel extends ViewModel {
@@ -22,10 +22,10 @@ public class HomeViewModel extends ViewModel {
     private final AlbumRepository albumRepository;
 
     @NonNull
-    private final MutableLiveData<List<Song>> topSongList = new MutableLiveData<>(Collections.emptyList());
+    private MutableLiveData<Resource<List<Song>>> topSongList = new MutableLiveData<>();
 
     @NonNull
-    private final MutableLiveData<List<Album>> albumSlider = new MutableLiveData<>(Collections.emptyList());
+    private MutableLiveData<Resource<List<Album>>> albumSlider = new MutableLiveData<>();
 
     @ViewModelInject
     public HomeViewModel(@NonNull SongRepository songRepository, @NonNull AlbumRepository albumRepository) {
@@ -34,22 +34,20 @@ public class HomeViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<List<Song>> getTopSongList() {
+    public LiveData<Resource<List<Song>>> getTopSongList() {
         return topSongList;
     }
 
     @NonNull
-    public MutableLiveData<List<Album>> getAlbumSlider() {
+    public LiveData<Resource<List<Album>>> getAlbumSlider() {
         return albumSlider;
     }
 
     public void fetchTopSongs() {
-        songRepository.getTopSongs().addOnSuccessListener(topSongList::postValue);
+        topSongList = (MutableLiveData<Resource<List<Song>>>) songRepository.getTopSongs();
     }
 
     public void fetchCollectionAlbumSlider() {
-        albumRepository.getRecommendAlbums().addOnSuccessListener(collection -> {
-            albumSlider.postValue(collection.getAlbums());
-        });
+        albumSlider = (MutableLiveData<Resource<List<Album>>>) albumRepository.getRecommendAlbums();
     }
 }
