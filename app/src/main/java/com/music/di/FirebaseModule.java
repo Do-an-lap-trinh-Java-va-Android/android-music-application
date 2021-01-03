@@ -1,6 +1,7 @@
 package com.music.di;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,6 +13,13 @@ import dagger.hilt.components.SingletonComponent;
 public class FirebaseModule {
     @Provides
     public FirebaseFirestore provideFirebaseFirestore() {
-        return FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)   // Không cho phép Firebase truy cập offline
+                .build();
+
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        fireStore.setFirestoreSettings(settings);
+
+        return fireStore;
     }
 }
