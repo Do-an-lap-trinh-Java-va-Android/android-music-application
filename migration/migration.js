@@ -74,32 +74,32 @@ const songs = [
     }
 ];
 
-db.collection("collections").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
+db.collection("collections").get().then(function (querySnapshot) {
+    querySnapshot.forEach(function (doc) {
         doc.ref.delete();
     });
 });
 
-db.collection("songs").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
+db.collection("songs").get().then(function (querySnapshot) {
+    querySnapshot.forEach(function (doc) {
         doc.ref.delete();
     });
+});
 
-
-    collections.forEach(function (collection) {
-        db.collection("collections").add({...collection}).then(function (docRef) {
-            console.log("Đã thêm collection: ", docRef.id);
-        }).catch(function (error) {
-            console.error("Không thể thêm collection: ", error);
-        });
-    });
-    
-    songs.forEach(function (song) {
-        db.collection("songs").add({...song}).then(function (docRef) {
-            console.log("Đã thêm bài hát: ", docRef.id);
-        }).catch(function (error) {
-            console.error("Không thể thêm bài hát: ", error);
-        });
+collections.forEach(function (collection) {
+    db.collection("collections").add({ ...collection }).then(function (docRef) {
+        console.log("Đã thêm collection: ", docRef.id);
+    }).catch(function (error) {
+        console.error("Không thể thêm collection: ", error);
     });
 });
+
+songs.forEach(function (song) {
+    db.collection("songs").add({ ...song }).then(function (docRef) {
+        console.log("Đã thêm bài hát: ", docRef.id);
+    }).catch(function (error) {
+        console.error("Không thể thêm bài hát: ", error);
+    });
+});
+
 
