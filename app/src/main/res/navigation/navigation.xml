@@ -10,4 +10,10 @@
         android:name="com.music.ui.home.HomeFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_chart"
+        android:name="com.music.ui.chart.ChartFragment"
+        android:label="fragment_chart"
+        tools:layout="@layout/fragment_chart" />
 </navigation>

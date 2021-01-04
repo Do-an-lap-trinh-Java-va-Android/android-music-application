@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+        TODO:
+            1. Đưa text vào @string
+            2. Chỉnh sửa lại icon
+    -->
+
     <item
-        android:id="@+id/kham_pha"
-        android:enabled="true"
+        android:id="@+id/navigation_home"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Khám phá" />
+        android:title="Trang chủ" />
+
+    <!-- TODO: Sử dụng ID tiếng Anh -->
+    <item
+        android:id="@+id/navigation_chart"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="@string/chart" />
 </menu>
