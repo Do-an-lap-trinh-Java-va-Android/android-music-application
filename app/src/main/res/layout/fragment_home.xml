@@ -26,13 +26,14 @@
         android:paddingRight="@dimen/margin_padding_16dp"
         android:textAlignment="textStart" />
 
+    <!-- Album Slider -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginBottom="@dimen/margin_padding_16dp">
 
         <ProgressBar
-            android:id="@+id/prb_loading"
+            android:id="@+id/prb_album_slider_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -45,13 +46,21 @@
 
     </FrameLayout>
 
+    <!-- Bảng xếp hạng -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_padding_16dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Bảng Xếp Hạng"
+        android:text="@string/chart"
         android:textSize="@dimen/font_size_extra_large" />
+
+    <ProgressBar
+        android:id="@+id/prb_random_song_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="125dp"
+        android:layout_gravity="center"
+        android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_random_song"

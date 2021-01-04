@@ -15,4 +15,5 @@
     <string name="confirm_password">Nhập lại mật khẩu</string>
     <string name="reenter_your_password">Nhập lại mật khẩu đã nhập</string>
     <string name="input_search_placehodler">Nhập tên bài hát, ca sĩ bạn muốn tìm kiếm</string>
+    <string name="chart">Bảng Xếp Hạng</string>
 </resources>

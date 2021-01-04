@@ -48,14 +48,19 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+        fetchData();
+
         homeViewModel.getTopSongList().observe(getViewLifecycleOwner(), request -> {
             switch (request.status) {
                 case SUCCESS:
                     binding.rvRandomSong.setAdapter(new SongAdapter(request.data));
+                    binding.prbRandomSongLoading.setVisibility(View.GONE);
                     break;
                 case ERROR:
+                    binding.prbRandomSongLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
+                    binding.prbRandomSongLoading.setVisibility(View.VISIBLE);
                     break;
             }
         });
@@ -64,19 +69,22 @@ public class HomeFragment extends Fragment {
             switch (albums.status) {
                 case SUCCESS:
                     binding.imageSlider.setAdapter(new AlbumSliderAdapter(albums.data));
-                    binding.prbLoading.setVisibility(View.GONE);
+                    binding.prbAlbumSliderLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
-                    binding.prbLoading.setVisibility(View.VISIBLE);
+                    binding.prbAlbumSliderLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Toast.makeText(getActivity(), albums.message, Toast.LENGTH_SHORT).show();
-                    binding.prbLoading.setVisibility(View.GONE);
+                    binding.prbAlbumSliderLoading.setVisibility(View.GONE);
                     break;
             }
         });
     }
 
+    /**
+     * Cấu hình RecyclerView của bảng xếp hạng
+     */
     private void initTopSongRecyclerView() {
         final LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -84,13 +92,12 @@ public class HomeFragment extends Fragment {
         binding.rvRandomSong.setHasFixedSize(true);
         binding.rvRandomSong.setLayoutManager(linearLayoutManager);
         binding.rvRandomSong.addItemDecoration(new SongItemDecoration());
-
-        // Tải bảng xếp hạng bài hát
-        homeViewModel.fetchTopSongs();
     }
 
+    /**
+     * Cấu hình hiệu ứng cho ViewPager2 của album slider
+     */
     private void initAlbumSliderViewPager() {
-        // Thêm hiệu ứng khi cuộn album
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(30));
         compositePageTransformer.addTransformer((page, position) -> {
@@ -99,6 +106,14 @@ public class HomeFragment extends Fragment {
         });
 
         binding.imageSlider.setPageTransformer(compositePageTransformer);
+    }
+
+    /**
+     * Lấy dữ liệu từ Firebase
+     */
+    private void fetchData() {
+        // Tải bảng xếp hạng bài hát
+        homeViewModel.fetchTopSongs();
 
         // Tải danh sách album để làm slider
         homeViewModel.fetchCollectionAlbumSlider();
