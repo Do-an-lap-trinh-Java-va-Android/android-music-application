@@ -22,7 +22,8 @@ public class ChartFragment extends Fragment {
     private ChartViewModel chartViewModel;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater, container, false);
 
