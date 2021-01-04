@@ -10,9 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingStart="@dimen/margin_padding_16dp"
-        android:paddingEnd="@dimen/margin_padding_16dp">
+        android:layout_weight="1">
 
         <fragment
             android:id="@+id/nav_host_fragment"
