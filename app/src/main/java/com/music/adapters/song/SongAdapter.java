@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.music.databinding.CardBinding;
+import com.music.databinding.CardImageContainerBinding;
 import com.music.models.Song;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new SongAdapter.SongViewHolder(
-                CardBinding.inflate(
+                CardImageContainerBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
         );
@@ -44,9 +44,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     static class SongViewHolder extends RecyclerView.ViewHolder {
         @NonNull
-        private final CardBinding binding;
+        private final CardImageContainerBinding binding;
 
-        public SongViewHolder(@NonNull CardBinding binding) {
+        public SongViewHolder(@NonNull CardImageContainerBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;
