@@ -29,8 +29,24 @@ public class SongRepository {
         this.database = database;
     }
 
+    /**
+     * Lấy danh sách bảng xếp hạng bài hát có lượt nghe cao nhất
+     *
+     * @return 6 bài hát có lượt nghe cao nhất
+     */
     @NonNull
     public LiveData<Resource<List<Song>>> getTopSongs() {
+        return getTopSongs(6);
+    }
+
+    /**
+     * Lấy danh sách bảng xếp hạng bài hát có lượt nghe cao nhất
+     *
+     * @param limit Số bài hát tối thiểu cần lấy
+     * @return Danh sách bài hát
+     */
+    @NonNull
+    public LiveData<Resource<List<Song>>> getTopSongs(int limit) {
         final MutableLiveData<Resource<List<Song>>> resource = new MutableLiveData<>();
 
         Log.i(TAG, "getTopSongs: Đang tải bảng xếp hạng bài hát");
@@ -38,7 +54,7 @@ public class SongRepository {
 
         database.collection("songs")
                 .orderBy("views", Query.Direction.DESCENDING)
-                .limit(6)
+                .limit(limit)
                 .get()
                 .addOnCompleteListener(task -> {
                     QuerySnapshot result = task.getResult();

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingStart="@dimen/margin_padding_16dp"
     android:paddingTop="@dimen/margin_padding_16dp"
@@ -16,5 +17,13 @@
         android:fontFamily="@font/roboto_bold"
         android:text="@string/chart"
         android:textSize="@dimen/font_size_extra_large" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_song_chart_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="-16dp"
+        android:layout_marginEnd="-16dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
