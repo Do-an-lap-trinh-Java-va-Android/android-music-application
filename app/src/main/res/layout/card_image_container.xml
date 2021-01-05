@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="125dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_image"
         android:layout_width="match_parent"
         android:layout_height="125dp"
-        app:cardCornerRadius="@dimen/corner_radius_small"
-        app:cardElevation="0dp">
-
-        <ImageView
-            android:id="@+id/iv_image"
-            android:layout_width="match_parent"
-            android:layout_height="125dp"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
-
-    </androidx.cardview.widget.CardView>
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/Theme.Rounded.ShapeableImageView" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -34,9 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:fontFamily="@font/roboto_light"
-        android:textSize="@dimen/font_size_small"
         android:ellipsize="end"
-        android:maxLines="1" />
+        android:fontFamily="@font/roboto_light"
+        android:maxLines="1"
+        android:textSize="@dimen/font_size_small" />
 
 </LinearLayout>
