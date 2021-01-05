@@ -35,17 +35,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    packagingOptions {
-        exclude "META-INF/DEPENDENCIES"
-        exclude "META-INF/LICENSE"
-        exclude "META-INF/LICENSE.txt"
-        exclude "META-INF/license.txt"
-        exclude "META-INF/NOTICE"
-        exclude "META-INF/NOTICE.txt"
-        exclude "META-INF/notice.txt"
-        exclude "META-INF/ASL2.0"
-    }
 }
 
 dependencies {
@@ -57,9 +46,9 @@ dependencies {
 
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:26.2.0")
-    implementation "com.google.firebase:firebase-auth"
-    implementation "com.google.firebase:firebase-database"
-    implementation "com.google.firebase:firebase-firestore"
+    implementation 'com.google.firebase:firebase-auth:20.0.1'
+    implementation 'com.google.firebase:firebase-database:19.6.0'
+    implementation 'com.google.firebase:firebase-firestore:22.0.1'
 
     // Lombok
     // noinspection AnnotationProcessorOnCompilePath
