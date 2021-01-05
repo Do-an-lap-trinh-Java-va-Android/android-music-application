@@ -20,7 +20,6 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
         this.albums = albums;
     }
 
-
     @NonNull
     @Override
     public ImageSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
