@@ -1,4 +1,8 @@
+const fs = require("fs");
+const { deleteCollection, insert } = require('./helpers');
 const firebase = require("firebase");
+const { exit } = require("process");
+const { info } = require("console");
 require("firebase/firestore");
 
 const firebaseConfig = {
@@ -39,66 +43,20 @@ const collections = [
     },
 ];
 
-const songs = [
-    {
-        "name": "Anh Ơi Ở Lại",
-        "other_name": "Cám Tấm",
-        "thumbnail": "https://photo-resize-zmp3.zadn.vn/w320_r1x1_jpeg/cover/3/f/b/e/3fbe71079a3c00cfeffc92de527571c7.jpg",
-        "views": 0,
-        "artists": ["Chi Pu"],
-        "albums": [],
-    },
-    {
-        "name": "Chắc Ai Đó Sẽ Về",
-        "other_name": "",
-        "thumbnail": "https://photo-resize-zmp3.zadn.vn/w320_r1x1_jpeg/cover/0/6/0/4/0604b2039e6be2b7c8d4f3243b24594d.jpg",
-        "views": 0,
-        "artists": ["Sơn Tùng MTP"],
-        "albums": [],
-    },
-    {
-        "name": "How You Like That",
-        "other_name": "",
-        "thumbnail": "https://photo-resize-zmp3.zadn.vn/w94_r1x1_jpeg/cover/0/0/4/1/0041083628270504efdb6499396aacea.jpg",
-        "views": 0,
-        "artists": ["BLACKPINK"],
-        "albums": [],
-    },
-    {
-        "name": "Em Gái Mưa",
-        "other_name": "",
-        "thumbnail": "https://photo-resize-zmp3.zadn.vn/w320_r1x1_jpeg/covers/e/4/e4ad98e7656f451b0c9eba0aa03c7ddb_1504595022.jpg",
-        "views": 0,
-        "artists": ["Hương Tràm"],
-        "albums": [],
-    }
-];
+const songs = JSON.parse(fs.readFileSync("./data/songs.json"));
 
-db.collection("collections").get().then(function (querySnapshot) {
-    querySnapshot.forEach(function (doc) {
-        doc.ref.delete();
-    });
-});
+(async () => {
+    await deleteCollection(db, "collections");
+    console.log("Xóa xong bảng collections");
 
-db.collection("songs").get().then(function (querySnapshot) {
-    querySnapshot.forEach(function (doc) {
-        doc.ref.delete();
-    });
+    await deleteCollection(db, "songs");
+    console.log("Xóa xong bảng songs");
 
-    // Sau khi xóa hết toàn bộ mới bắt đầu thực hiện insert vào csdl
-    collections.forEach(function (collection) {
-        db.collection("collections").add({ ...collection }).then(function (docRef) {
-            console.log("Đã thêm collection: ", docRef.id);
-        }).catch(function (error) {
-            console.error("Không thể thêm collection: ", error);
-        });
-    });
+    await insert(db, "collections", collections);
+    console.info("Đã tạo collection 'collections' thành công");
+
+    await insert(db, "songs", songs);
+    console.info("Đã tạo collection 'songs' thành công");
     
-    songs.forEach(function (song) {
-        db.collection("songs").add({ ...song }).then(function (docRef) {
-            console.log("Đã thêm bài hát: ", docRef.id);
-        }).catch(function (error) {
-            console.error("Không thể thêm bài hát: ", error);
-        });
-    });
-});
+    console.log("Hoàn tất");
+})();
