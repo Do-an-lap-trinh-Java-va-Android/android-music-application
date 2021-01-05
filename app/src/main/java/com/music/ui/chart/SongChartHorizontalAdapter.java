@@ -1,6 +1,7 @@
 package com.music.ui.chart;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -8,17 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.firebase.ui.firestore.paging.LoadingState;
 import com.music.databinding.ChartSongContainerBinding;
 import com.music.models.Song;
 
-import java.util.List;
+public class SongChartHorizontalAdapter extends FirestorePagingAdapter<Song, SongChartHorizontalAdapter.SongChartHorizontalViewHolder> {
+    private static final String TAG = "SongChartHorizontalAdap";
 
-public class SongChartHorizontalAdapter extends RecyclerView.Adapter<SongChartHorizontalAdapter.SongChartHorizontalViewHolder> {
-    @NonNull
-    private final List<Song> songs;
-
-    public SongChartHorizontalAdapter(@NonNull List<Song> songs) {
-        this.songs = songs;
+    public SongChartHorizontalAdapter(@NonNull FirestorePagingOptions<Song> options) {
+        super(options);
     }
 
     @NonNull
@@ -34,13 +35,29 @@ public class SongChartHorizontalAdapter extends RecyclerView.Adapter<SongChartHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongChartHorizontalViewHolder holder, int position) {
-        holder.bindData(songs.get(position));
+    protected void onBindViewHolder(@NonNull SongChartHorizontalViewHolder holder, int position, @NonNull Song model) {
+        holder.bindData(model);
     }
 
     @Override
-    public int getItemCount() {
-        return songs.size();
+    protected void onLoadingStateChanged(@NonNull LoadingState state) {
+        switch (state) {
+            case LOADING_INITIAL:
+                Log.i(TAG, "onLoadingStateChanged: Khởi tạo dữ liệu");
+                break;
+            case LOADING_MORE:
+                Log.i(TAG, "onLoadingStateChanged: Đang tải thêm dữ liệu");
+                break;
+            case LOADED:
+                Log.i(TAG, "onLoadingStateChanged: Đã tải: " + getItemCount() + " bài hát");
+                break;
+            case FINISHED:
+                Log.i(TAG, "onLoadingStateChanged: Đã tải tất cả bài hát");
+                break;
+            case ERROR:
+                Log.i(TAG, "onLoadingStateChanged: Đã xảy ra lỗi khi tải bài hát");
+                break;
+        }
     }
 
     static class SongChartHorizontalViewHolder extends RecyclerView.ViewHolder {
@@ -54,9 +71,9 @@ public class SongChartHorizontalAdapter extends RecyclerView.Adapter<SongChartHo
         }
 
         public void bindData(@NonNull Song song) {
-            Glide.with(itemView).load(song.getThumbnail()).into(binding.thumbnail);
             binding.name.setText(song.getName());
             binding.artists.setText(TextUtils.join(", ", song.getArtists()));
+            Glide.with(itemView).load(song.getThumbnail()).into(binding.thumbnail);
         }
     }
 }

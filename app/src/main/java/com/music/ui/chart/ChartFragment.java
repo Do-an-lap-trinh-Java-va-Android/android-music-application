@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.music.databinding.FragmentChartBinding;
+import com.music.models.Song;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -22,7 +25,7 @@ public class ChartFragment extends Fragment {
     @NonNull
     private FragmentChartBinding binding;
 
-    @SuppressWarnings("NotNullFieldNotInitialized")
+    @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
     @NonNull
     private ChartViewModel viewModel;
 
@@ -45,18 +48,16 @@ public class ChartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(ChartViewModel.class);
 
-        viewModel.fetchTopSongList();
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setInitialLoadSizeHint(20)
+                .setPageSize(10)
+                .build();
 
-        viewModel.getTopSongList().observe(getViewLifecycleOwner(), request -> {
-            switch (request.status) {
-                case SUCCESS:
-                    binding.rvSongChartHorizontal.setAdapter(new SongChartHorizontalAdapter(request.data));
-                    break;
-                case LOADING:
-                    break;
-                case ERROR:
-                    break;
-            }
-        });
+        FirestorePagingOptions<Song> options = new FirestorePagingOptions.Builder<Song>()
+                .setLifecycleOwner(getViewLifecycleOwner())
+                .setQuery(viewModel.getQueryFetchTopSongs(), config, Song.class)
+                .build();
+
+        binding.rvSongChartHorizontal.setAdapter(new SongChartHorizontalAdapter(options));
     }
 }

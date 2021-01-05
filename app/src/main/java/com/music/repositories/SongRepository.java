@@ -70,4 +70,15 @@ public class SongRepository {
 
         return resource;
     }
+
+    /**
+     * Trả về câu query để hỗ trợ cho Firebase phân trang
+     *
+     * @return Câu truy vấn đến collection songs và sắp xếp theo lượt nghe cao nhất
+     */
+    @NonNull
+    public Query getQueryFetchTopSongs() {
+        return database.collection("songs")
+                .orderBy("views", Query.Direction.DESCENDING);
+    }
 }
