@@ -32,16 +32,6 @@ public class SongRepository {
     /**
      * Lấy danh sách bảng xếp hạng bài hát có lượt nghe cao nhất
      *
-     * @return 6 bài hát có lượt nghe cao nhất
-     */
-    @NonNull
-    public LiveData<Resource<List<Song>>> getTopSongs() {
-        return getTopSongs(6);
-    }
-
-    /**
-     * Lấy danh sách bảng xếp hạng bài hát có lượt nghe cao nhất
-     *
      * @param limit Số bài hát tối thiểu cần lấy
      * @return Danh sách bài hát
      */
@@ -78,7 +68,6 @@ public class SongRepository {
      */
     @NonNull
     public Query getQueryFetchTopSongs() {
-        return database.collection("songs")
-                .orderBy("views", Query.Direction.DESCENDING);
+        return database.collection("songs").orderBy("views", Query.Direction.DESCENDING);
     }
 }

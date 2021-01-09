@@ -16,21 +16,18 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
     @NonNull
-    private final SongRepository songRepository;
+    private final MutableLiveData<Resource<List<Album>>> albumSlider;
 
     @NonNull
-    private final AlbumRepository albumRepository;
-
-    @NonNull
-    private MutableLiveData<Resource<List<Song>>> topSongList = new MutableLiveData<>();
-
-    @NonNull
-    private MutableLiveData<Resource<List<Album>>> albumSlider = new MutableLiveData<>();
+    private final MutableLiveData<Resource<List<Song>>> topSongList;
 
     @ViewModelInject
     public HomeViewModel(@NonNull SongRepository songRepository, @NonNull AlbumRepository albumRepository) {
-        this.songRepository = songRepository;
-        this.albumRepository = albumRepository;
+        // Lấy danh album để làm slider
+        albumSlider = (MutableLiveData<Resource<List<Album>>>) albumRepository.getRecommendAlbums();
+
+        // Lấy 6 bài hát có lượt nghe cao nhất
+        topSongList = (MutableLiveData<Resource<List<Song>>>) songRepository.getTopSongs(6);
     }
 
     @NonNull
@@ -41,13 +38,5 @@ public class HomeViewModel extends ViewModel {
     @NonNull
     public LiveData<Resource<List<Album>>> getAlbumSlider() {
         return albumSlider;
-    }
-
-    public void fetchTopSongs() {
-        topSongList = (MutableLiveData<Resource<List<Song>>>) songRepository.getTopSongs();
-    }
-
-    public void fetchCollectionAlbumSlider() {
-        albumSlider = (MutableLiveData<Resource<List<Album>>>) albumRepository.getRecommendAlbums();
     }
 }

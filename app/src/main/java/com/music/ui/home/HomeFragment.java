@@ -19,6 +19,8 @@ import com.music.adapters.song.SongAdapter;
 import com.music.adapters.song.SongItemDecoration;
 import com.music.databinding.FragmentHomeBinding;
 
+import java.util.Objects;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -27,7 +29,7 @@ public class HomeFragment extends Fragment {
     @NonNull
     private FragmentHomeBinding binding;
 
-    @SuppressWarnings("NotNullFieldNotInitialized")
+    @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
     @NonNull
     private HomeViewModel homeViewModel;
 
@@ -48,34 +50,33 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        fetchData();
-
-        homeViewModel.getTopSongList().observe(getViewLifecycleOwner(), request -> {
-            switch (request.status) {
+        homeViewModel.getTopSongList().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
                 case SUCCESS:
-                    binding.rvRandomSong.setAdapter(new SongAdapter(request.data));
-                    binding.prbRandomSongLoading.setVisibility(View.GONE);
-                    break;
-                case ERROR:
+                    binding.rvRandomSong.setAdapter(new SongAdapter(Objects.requireNonNull(response.data)));
                     binding.prbRandomSongLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
                     binding.prbRandomSongLoading.setVisibility(View.VISIBLE);
                     break;
+                case ERROR:
+                    Toast.makeText(getActivity(), response.message, Toast.LENGTH_SHORT).show();
+                    binding.prbRandomSongLoading.setVisibility(View.GONE);
+                    break;
             }
         });
 
-        homeViewModel.getAlbumSlider().observe(getViewLifecycleOwner(), albums -> {
-            switch (albums.status) {
+        homeViewModel.getAlbumSlider().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
                 case SUCCESS:
-                    binding.imageSlider.setAdapter(new AlbumSliderAdapter(albums.data));
+                    binding.imageSlider.setAdapter(new AlbumSliderAdapter(Objects.requireNonNull(response.data)));
                     binding.prbAlbumSliderLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
                     binding.prbAlbumSliderLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
-                    Toast.makeText(getActivity(), albums.message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), response.message, Toast.LENGTH_SHORT).show();
                     binding.prbAlbumSliderLoading.setVisibility(View.GONE);
                     break;
             }
@@ -98,7 +99,7 @@ public class HomeFragment extends Fragment {
      * Cấu hình hiệu ứng cho ViewPager2 của album slider
      */
     private void initAlbumSliderViewPager() {
-        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        final CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(30));
         compositePageTransformer.addTransformer((page, position) -> {
             float r = 1 - Math.abs(position);
@@ -106,16 +107,5 @@ public class HomeFragment extends Fragment {
         });
 
         binding.imageSlider.setPageTransformer(compositePageTransformer);
-    }
-
-    /**
-     * Lấy dữ liệu từ Firebase
-     */
-    private void fetchData() {
-        // Tải bảng xếp hạng bài hát
-        homeViewModel.fetchTopSongs();
-
-        // Tải danh sách album để làm slider
-        homeViewModel.fetchCollectionAlbumSlider();
     }
 }
