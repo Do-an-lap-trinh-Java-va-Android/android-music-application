@@ -1,7 +1,6 @@
 package com.music.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -93,16 +92,24 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        binding.layoutLoading.frmLoading.setVisibility(View.VISIBLE);
+
         register(binding.edtEmail.getText().toString(), binding.edtPassword.getText().toString())
                 .addOnSuccessListener(authResult -> {
                     updateUserProfile(binding.edtFullName.getText().toString())
-                            .addOnSuccessListener(aVoid -> {
-                                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                                alert.setMessage("Đăng ký thành công");
-                                alert.show();
-                            });
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                                    alert.setMessage("Đăng ký thành công");
+                                    alert.show();
+                                } else {
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                                    alert.setMessage("Tài khoản hoặc mật khẩu không đúng");
+                                    alert.show();
+                                }
 
-                    Log.d("Info", "Đăng ký thành công");
+                                binding.layoutLoading.frmLoading.setVisibility(View.GONE);
+                            });
                 });
 
     }
