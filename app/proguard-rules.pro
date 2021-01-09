@@ -36,4 +36,5 @@
 # Hỗ trợ Firebase
 # Xem thêm: https://firebase.google.com/docs/database/android/start#proguard
 -keepattributes Signature
+-keepattributes *Annotation*
 -keepclassmembers class com.music.models.* { *; }
