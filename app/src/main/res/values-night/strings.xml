@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login">Đăng nhập</string>
+    <string name="hint_username">Tài khoản</string>
+    <string name="hint_password">Mật khẩu</string>
+    <string name="save_account">Lưu tài khoản</string>
+    <string name="register_now">Đắng ký ngay!</string>
+</resources>
