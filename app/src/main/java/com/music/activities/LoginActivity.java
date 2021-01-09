@@ -25,11 +25,11 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         binding.btnLogin.setOnClickListener(v -> {
-            String email = binding.edtFullName.getText().toString().trim();
+            String email = binding.edtFullname.getText().toString().trim();
             String password = binding.edtPassword.getText().toString().trim();
 
             if (TextUtils.isEmpty(email)) {
-                binding.edtFullName.setError("không được bỏ trống");
+                binding.edtFullname.setError("không được bỏ trống");
                 return;
             }
 
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
-                            binding.edtFullName.setError("Tài khoản hoặc mật khẩu không đúng");
+                            binding.edtFullname.setError("Tài khoản hoặc mật khẩu không đúng");
                         }
                     });
         });
