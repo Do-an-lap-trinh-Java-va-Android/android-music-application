@@ -65,5 +65,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         });
+
+        binding.tvCreateANewAccount.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+        });
     }
 }

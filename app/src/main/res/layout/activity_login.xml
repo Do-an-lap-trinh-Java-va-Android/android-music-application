@@ -9,11 +9,10 @@
     tools:context=".ui.login.LoginActivity">
 
 
-
     <ImageView
-        android:layout_marginTop="@dimen/margin_padding_16dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_padding_16dp"
         android:layout_weight="1"
         android:scaleType="centerCrop"
         android:src="@drawable/pack_musical_notes_with_color"
@@ -22,35 +21,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="@dimen/margin_padding_32dp"
-        android:layout_marginRight="@dimen/margin_padding_32dp">
+        android:layout_marginRight="@dimen/margin_padding_32dp"
+        android:orientation="vertical">
 
 
         <TextView
             android:id="@+id/tv_login"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_16dp"
             android:layout_marginBottom="@dimen/margin_padding_8dp"
-            android:textSize="@dimen/font_size_extra_extra_large"
+            android:gravity="center"
             android:text="@string/login"
-            android:layout_marginTop="@dimen/margin_padding_16dp" />
+            android:textSize="@dimen/font_size_extra_extra_large" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="2"
             android:layout_marginTop="@dimen/margin_padding_8dp"
-            android:layout_marginBottom="@dimen/margin_padding_32dp">
+            android:layout_marginBottom="@dimen/margin_padding_32dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Theme.CustomMaterialButton"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_padding_8dp"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:stateListAnimator="@null"
@@ -63,10 +62,10 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Theme.CustomMaterialButton"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_8dp"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:stateListAnimator="@null"
@@ -78,36 +77,29 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/edtFullname"
+            android:id="@+id/edt_fullname"
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_padding_40dp"
-            android:paddingLeft="@dimen/margin_padding_16dp"
-            android:paddingRight="@dimen/margin_padding_16dp"
+            android:autofillHints=""
+            android:drawableEnd="@drawable/ic_username"
+            android:fontFamily="@font/roboto"
             android:hint="@string/hint_username"
             android:inputType="textEmailAddress"
-            android:fontFamily="@font/roboto"
-            android:drawableEnd="@drawable/ic_username"
-            android:autofillHints="" />
+            android:paddingLeft="@dimen/margin_padding_16dp"
+            android:paddingRight="@dimen/margin_padding_16dp" />
 
         <EditText
-            android:id="@+id/edtPassword"
+            android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_padding_40dp"
             android:layout_marginTop="@dimen/margin_padding_16dp"
-            android:paddingLeft="@dimen/margin_padding_16dp"
-            android:paddingRight="@dimen/margin_padding_16dp"
+            android:layout_marginBottom="@dimen/margin_padding_16dp"
+            android:autofillHints=""
+            android:drawableEnd="@drawable/ic_outline_lock_24"
             android:hint="@string/hint_password"
             android:inputType="textPassword"
-            android:drawableEnd="@drawable/ic_outline_lock_24"
-            android:autofillHints="" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save_account"
-            android:textSize="@dimen/margin_padding_16dp"
-            tools:ignore="SpUsage">
-        </CheckBox>
+            android:paddingLeft="@dimen/margin_padding_16dp"
+            android:paddingRight="@dimen/margin_padding_16dp" />
 
         <Button
             android:id="@+id/btn_login"
@@ -122,13 +114,12 @@
             app:backgroundTint="@null"
             tools:ignore="SpUsage" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginTop="@dimen/margin_padding_8dp"
-            android:layout_marginBottom="@dimen/margin_padding_8dp">
+            android:layout_marginBottom="@dimen/margin_padding_32dp"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/tv_question"
@@ -147,14 +138,6 @@
                 android:text="@string/register_now"
                 android:textSize="@dimen/font_size_large" />
         </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_padding_32dp"/>
-
     </LinearLayout>
 
 </LinearLayout>
