@@ -6,14 +6,13 @@ const { info } = require("console");
 require("firebase/firestore");
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB_uoTpYyjvh6358poZDR5A2bdhR5jqMvw",
-    authDomain: "do-an-android-java.firebaseapp.com",
-    databaseURL: "https://do-an-android-java-default-rtdb.firebaseio.com",
-    projectId: "do-an-android-java",
-    storageBucket: "do-an-android-java.appspot.com",
-    messagingSenderId: "796931684678",
-    appId: "1:796931684678:web:2bd3aa6adf3d92a1d0cd47",
-    measurementId: "G-YQJEKJZMPZ"
+    apiKey: "AIzaSyB7BTkV7sFIqy2nQf5j8TxnhaI1s40Qw8w",
+    authDomain: "do-an-android-java-2372b.firebaseapp.com",
+    projectId: "do-an-android-java-2372b",
+    storageBucket: "do-an-android-java-2372b.appspot.com",
+    messagingSenderId: "3442333075",
+    appId: "1:3442333075:web:c1ba6ae24b1e8fa79fc466",
+    measurementId: "G-Z0VN0BJNX4"
 };
 
 firebase.initializeApp(firebaseConfig);

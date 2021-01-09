@@ -1,39 +1,39 @@
 {
-  "project_info": {
-    "project_number": "796931684678",
-    "project_id": "do-an-android-java",
-    "storage_bucket": "do-an-android-java.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:796931684678:android:49d49851278c8fdad0cd47",
-        "android_client_info": {
-          "package_name": "com.music"
-        }
-      },
-      "oauth_client": [
+    "project_info": {
+        "project_number": "3442333075",
+        "project_id": "do-an-android-java-2372b",
+        "storage_bucket": "do-an-android-java-2372b.appspot.com"
+    },
+    "client": [
         {
-          "client_id": "796931684678-38diugflr6v0h49dtdltibrb8f6u4qie.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD6G3RVCrq21VwlqJ3FaQmWsk2EVMZ2jYM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "796931684678-38diugflr6v0h49dtdltibrb8f6u4qie.apps.googleusercontent.com",
-              "client_type": 3
+            "client_info": {
+                "mobilesdk_app_id": "1:3442333075:android:0f3fa64697aea0539fc466",
+                "android_client_info": {
+                    "package_name": "com.music"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "3442333075-tjbup36lboftua5vktp4c87ftg939hpb.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyDgnqXr14sSosSNHBYRsm7BuDLi4rv62sE"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "3442333075-tjbup36lboftua5vktp4c87ftg939hpb.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
             }
-          ]
         }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    ],
+    "configuration_version": "1"
 }
