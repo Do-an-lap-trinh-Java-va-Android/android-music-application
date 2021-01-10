@@ -1,6 +1,7 @@
 package com.music.ui.register;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.music.databinding.ActivityRegisterBinding;
 import com.music.network.Status;
+import com.music.ui.main.MainActivity;
 import com.music.utils.ToolbarHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -149,6 +151,13 @@ public class RegisterActivity extends AppCompatActivity {
                                     binding.layoutLoading.frmLoading.setVisibility(View.GONE);
                                     alert.setMessage(responseCreateUser.message);
                                     alert.show();
+
+                                    if (responseUpdateProfile.status == Status.SUCCESS) {
+                                        startActivity(new Intent(this, MainActivity.class).addFlags(
+                                                Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                                Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    }
                                 }
                             });
                     break;
