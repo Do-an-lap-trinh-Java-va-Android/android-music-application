@@ -49,8 +49,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:20.0.1"
     implementation "com.google.firebase:firebase-database:19.6.0"
     implementation "com.google.firebase:firebase-firestore:22.0.1"
-    implementation 'com.google.firebase:firebase-analytics'
-    
+
     // Hỗ trợ phân trang của Firebase
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
     implementation "androidx.paging:paging-runtime:2.1.2"
@@ -84,8 +83,8 @@ dependencies {
     annotationProcessor "androidx.hilt:hilt-compiler:1.0.0-alpha02"
 
     // LifeCycle
-    implementation 'androidx.lifecycle:lifecycle-livedata:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
     testImplementation "junit:junit:4.13.1"
     androidTestImplementation "androidx.test.ext:junit:1.1.2"
