@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!--
         TODO:
             1. Đưa text vào @string
@@ -9,11 +10,17 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Trang chủ" />
+        android:title="Trang chủ"
+        tools:ignore="HardcodedText" />
 
-    <!-- TODO: Sử dụng ID tiếng Anh -->
     <item
         android:id="@+id/navigation_chart"
         android:icon="@drawable/ic_launcher_background"
         android:title="@string/chart" />
+
+    <item
+        android:id="@+id/navigation_account_fragment"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Cá Nhân"
+        tools:ignore="HardcodedText" />
 </menu>

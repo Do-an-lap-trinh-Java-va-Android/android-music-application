@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
@@ -33,6 +34,8 @@ public class ChartFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater, container, false);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
