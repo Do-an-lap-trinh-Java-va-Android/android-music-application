@@ -5,28 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.chart.ChartFragment">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_song_chart_vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/margin_padding_16dp"
-        android:paddingEnd="@dimen/margin_padding_16dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_song_chart_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="-16dp"
-            android:layout_marginEnd="-16dp"
-            android:layout_weight="1" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/prb_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@drawable/purple_circle_transparent_background" />
 
 </FrameLayout>
