@@ -22,4 +22,6 @@
     <string name="save_account">Lưu tài khoản</string>
     <string name="already_havent_an_account">Bạn chưa có tài khoản?</string>
     <string name="register_now">Đăng ký ngay!</string>
+    <string name="the_email_address_is_already_in_use_by_another_account">Địa chỉ email này đã được
+        sử dụng bởi một tài khoản khác</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.music.di;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
@@ -24,5 +25,11 @@ public class FirebaseModule {
         fireStore.setFirestoreSettings(settings);
 
         return fireStore;
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseAuth provideFirebaseAuth() {
+        return FirebaseAuth.getInstance();
     }
 }
