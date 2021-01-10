@@ -7,7 +7,7 @@
     </style>
 
     <!-- Base -->
-    <style name="Theme.Base" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Font chữ mặc định -->
         <item name="android:fontFamily">@font/roboto</item>
 
@@ -20,11 +20,6 @@
         <!-- Chỉnh màu cursor và màu bôi đen -->
         <item name="colorAccent">@color/purple_400</item>
         <item name="android:textColorHighlight">@color/purple_400</item>
-
-        <!-- Chỉnh màu chữ ToolBar -->
-        <item name="toolbarStyle">@style/Theme.CustomToolbar</item>
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="subtitleTextColor">?attr/colorOnPrimary</item>
     </style>
 
     <!-- Bo tròn hình ảnh -->
@@ -33,18 +28,10 @@
         <item name="cornerSize">@dimen/corner_radius_small</item>
     </style>
 
-    <!-- Tùy chỉnh màu cho ToolBar -->
-    <style name="Theme.CustomToolbar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <!-- Used to for the title of the Toolbar -->
-        <item name="android:textColorPrimary">?attr/colorOnPrimary</item>
-        <!-- Used to for the title of the Toolbar when parent is Theme.AppCompat.Light -->
-        <item name="android:textColorPrimaryInverse">?attr/colorOnPrimary</item>
-        <!-- Used to color the text of the action menu icons -->
-        <item name="android:textColorSecondary">?attr/colorOnPrimary</item>
-        <!-- Used to color the overflow menu icon -->
-        <item name="actionMenuTextColor">?attr/colorOnPrimary</item>
-        <!-- Color of the Toolbar -->
-        <item name="android:background">@android:color/transparent</item>
+    <!-- Chỉnh phông chữ tiêu đề của ToolBar -->
+    <style name="Theme.CustomTextAppearance.ExtraLarge" parent="@android:style/TextAppearance.Medium">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">@dimen/font_size_extra_large</item>
     </style>
 
 </resources>

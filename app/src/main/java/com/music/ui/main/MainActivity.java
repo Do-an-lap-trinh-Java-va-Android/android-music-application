@@ -16,9 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-    @SuppressWarnings({"FieldCanBeLocal"})
     @Nullable
     private ActivityMainBinding binding;
+
+    @Nullable
+    private NavController navController;
+
+    @Nullable
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,14 +31,31 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home,
-                R.id.navigation_chart,
-                R.id.navigation_account_fragment
-        ).build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        setupActionBar();
+        setupNavigation();
+    }
+
+    private void setupActionBar() {
+        setSupportActionBar(binding.toolbar);
+
+        // Tùy chỉnh phông chữ của tiêu đề
+        binding.toolbar.setTitleTextAppearance(this, R.style.Theme_CustomTextAppearance_ExtraLarge);
+    }
+
+    private void setupNavigation() {
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (navController != null && appBarConfiguration != null) {
+            return NavigationUI.navigateUp(navController, appBarConfiguration);
+        }
+
+        return super.onSupportNavigateUp();
     }
 
     @Override
