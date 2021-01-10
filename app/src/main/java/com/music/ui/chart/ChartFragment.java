@@ -21,8 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChartFragment extends Fragment {
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
+    @Nullable
     private FragmentChartBinding binding;
 
     @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
@@ -59,5 +58,11 @@ public class ChartFragment extends Fragment {
                 .build();
 
         binding.rvSongChartVertical.setAdapter(new SongChartVerticalAdapter(options, binding.prbLoading));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

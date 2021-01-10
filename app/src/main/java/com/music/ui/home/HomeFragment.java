@@ -25,8 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
+    @Nullable
     private FragmentHomeBinding binding;
 
     @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
@@ -107,5 +106,11 @@ public class HomeFragment extends Fragment {
         });
 
         binding.imageSlider.setPageTransformer(compositePageTransformer);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
