@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.music.databinding.ActivityLoginBinding;
 import com.music.ui.main.MainActivity;
+import com.music.ui.register.RegisterControlActivity;
 import com.music.utils.ToolbarHelper;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,6 +28,10 @@ public class LoginActivity extends AppCompatActivity {
         ToolbarHelper.hideToolbar(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        binding.tvCreateANewAccount.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisterControlActivity.class));
+        });
 
         binding.btnLogin.setOnClickListener(v -> {
             String email = binding.edtFullname.getText().toString().trim();

@@ -23,6 +23,10 @@ public class RegisterControlActivity extends AppCompatActivity {
 
         ToolbarHelper.hideToolbar(this);
 
+        binding.tvLogin.setOnClickListener(v -> {
+            finish();
+        });
+
         binding.tvCreateANewAccount.setOnClickListener(v -> {
             Intent registerFirstStepIntent = new Intent(this, RegisterActivity.class);
             startActivity(registerFirstStepIntent);

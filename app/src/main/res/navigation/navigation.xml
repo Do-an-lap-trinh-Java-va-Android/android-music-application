@@ -22,10 +22,4 @@
         android:name="com.music.ui.account.AccountFragment"
         android:label="Cá Nhân"
         tools:layout="@layout/fragment_account" />
-
-    <activity
-        android:id="@+id/navigation_register_activity"
-        android:name="com.music.ui.register.RegisterActivity"
-        android:label="Đăng Ký"
-        tools:layout="@layout/activity_register" />
 </navigation>
