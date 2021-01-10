@@ -38,8 +38,8 @@ public class ChartFragment extends Fragment {
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
 
-        binding.rvSongChartHorizontal.setHasFixedSize(true);
-        binding.rvSongChartHorizontal.setLayoutManager(linearLayoutManager);
+        binding.rvSongChartVertical.setHasFixedSize(true);
+        binding.rvSongChartVertical.setLayoutManager(linearLayoutManager);
 
         return binding.getRoot();
     }
@@ -58,6 +58,6 @@ public class ChartFragment extends Fragment {
                 .setQuery(viewModel.getQueryFetchTopSongs(), config, Song.class)
                 .build();
 
-        binding.rvSongChartHorizontal.setAdapter(new SongChartHorizontalAdapter(options));
+        binding.rvSongChartVertical.setAdapter(new SongChartVerticalAdapter(options, binding.prbLoading));
     }
 }
