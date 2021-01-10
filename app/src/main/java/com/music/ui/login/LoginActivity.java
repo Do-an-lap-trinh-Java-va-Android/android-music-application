@@ -1,4 +1,4 @@
-package com.music.activities;
+package com.music.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;

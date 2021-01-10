@@ -1,4 +1,4 @@
-package com.music.activities;
+package com.music.ui.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.music.ui.login.LoginActivity;
 import com.music.ui.main.MainActivity;
 
 import javax.inject.Inject;

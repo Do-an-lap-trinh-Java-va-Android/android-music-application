@@ -15,7 +15,7 @@
         android:theme="@style/Theme.MusicApplication">
 
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Splash">
             <intent-filter>
@@ -32,7 +32,7 @@
 
         <!-- Trang đăng nhập -->
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:screenOrientation="portrait" />
 
         <!-- Trang đăng ký -->
