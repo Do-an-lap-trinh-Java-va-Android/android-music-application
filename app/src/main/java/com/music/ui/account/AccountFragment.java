@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.music.activities.MainActivity;
 import com.music.databinding.FragmentAccountBinding;
+import com.music.utils.ToolbarHelper;
 
 public class AccountFragment extends Fragment {
     @Nullable
     private FragmentAccountBinding binding;
 
+    @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
+    @NonNull
     private AccountViewModel viewModel;
 
     @Override
@@ -25,7 +26,7 @@ public class AccountFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        ToolbarHelper.showToolbar(getActivity());
 
         return binding.getRoot();
     }

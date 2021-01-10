@@ -1,4 +1,4 @@
-package com.music.adapters.song;
+package com.music.ui.home.adapters.song;
 
 import android.graphics.Rect;
 import android.util.TypedValue;
@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SongItemDecoration extends RecyclerView.ItemDecoration {
+public class SongChartVerticalItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
                                @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {

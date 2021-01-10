@@ -1,4 +1,4 @@
-package com.music.adapters.song;
+package com.music.ui.home.adapters.song;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -14,18 +14,18 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
+public class SongChartVerticalAdapter extends RecyclerView.Adapter<SongChartVerticalAdapter.SongChartVerticalViewHolder> {
     @NonNull
     private final List<Song> songs;
 
-    public SongAdapter(@NonNull List<Song> songs) {
+    public SongChartVerticalAdapter(@NonNull List<Song> songs) {
         this.songs = songs;
     }
 
     @NonNull
     @Override
-    public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SongAdapter.SongViewHolder(
+    public SongChartVerticalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new SongChartVerticalViewHolder(
                 CardImageContainerBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
@@ -33,7 +33,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongAdapter.SongViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SongChartVerticalViewHolder holder, int position) {
         holder.setSong(songs.get(position));
     }
 
@@ -42,11 +42,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return songs.size();
     }
 
-    static class SongViewHolder extends RecyclerView.ViewHolder {
+    static class SongChartVerticalViewHolder extends RecyclerView.ViewHolder {
         @NonNull
         private final CardImageContainerBinding binding;
 
-        public SongViewHolder(@NonNull CardImageContainerBinding binding) {
+        public SongChartVerticalViewHolder(@NonNull CardImageContainerBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;

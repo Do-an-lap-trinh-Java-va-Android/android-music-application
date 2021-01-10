@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.music.databinding.ActivityRegisterControlBinding;
+import com.music.utils.ToolbarHelper;
 
 public class RegisterControlActivity extends AppCompatActivity {
     @SuppressWarnings({"FieldCanBeLocal", "NotNullFieldNotInitialized"})
@@ -19,6 +20,8 @@ public class RegisterControlActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterControlBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        ToolbarHelper.hideToolbar(this);
 
         binding.tvCreateANewAccount.setOnClickListener(v -> {
             Intent registerFirstStepIntent = new Intent(this, RegisterActivity.class);

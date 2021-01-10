@@ -8,17 +8,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 
-import com.music.adapters.AlbumSliderAdapter;
-import com.music.adapters.song.SongAdapter;
-import com.music.adapters.song.SongItemDecoration;
 import com.music.databinding.FragmentHomeBinding;
+import com.music.ui.home.adapters.AlbumSliderVerticalAdapter;
+import com.music.ui.home.adapters.song.SongChartVerticalAdapter;
+import com.music.ui.home.adapters.song.SongChartVerticalItemDecoration;
+import com.music.utils.ToolbarHelper;
 
 import java.util.Objects;
 
@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        ToolbarHelper.hideToolbar(getActivity());
 
         initAlbumSliderViewPager();
         initTopSongRecyclerView();
@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getTopSongList().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case SUCCESS:
-                    binding.rvRandomSong.setAdapter(new SongAdapter(Objects.requireNonNull(response.data)));
+                    binding.rvRandomSong.setAdapter(new SongChartVerticalAdapter(Objects.requireNonNull(response.data)));
                     binding.prbRandomSongLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getAlbumSlider().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case SUCCESS:
-                    binding.imageSlider.setAdapter(new AlbumSliderAdapter(Objects.requireNonNull(response.data)));
+                    binding.imageSlider.setAdapter(new AlbumSliderVerticalAdapter(Objects.requireNonNull(response.data)));
                     binding.prbAlbumSliderLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment {
 
         binding.rvRandomSong.setHasFixedSize(true);
         binding.rvRandomSong.setLayoutManager(linearLayoutManager);
-        binding.rvRandomSong.addItemDecoration(new SongItemDecoration());
+        binding.rvRandomSong.addItemDecoration(new SongChartVerticalItemDecoration());
     }
 
     /**

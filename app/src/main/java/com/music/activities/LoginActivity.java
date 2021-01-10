@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.music.databinding.ActivityLoginBinding;
+import com.music.ui.main.MainActivity;
+import com.music.utils.ToolbarHelper;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -21,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        ToolbarHelper.hideToolbar(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
 

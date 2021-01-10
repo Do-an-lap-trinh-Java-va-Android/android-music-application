@@ -1,4 +1,4 @@
-package com.music.adapters;
+package com.music.ui.home.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,18 +12,18 @@ import com.music.models.Album;
 
 import java.util.List;
 
-public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.ImageSliderViewHolder> {
+public class AlbumSliderVerticalAdapter extends RecyclerView.Adapter<AlbumSliderVerticalAdapter.AlbumSliderVerticalViewHolder> {
     @NonNull
     private final List<Album> albums;
 
-    public AlbumSliderAdapter(@NonNull List<Album> albums) {
+    public AlbumSliderVerticalAdapter(@NonNull List<Album> albums) {
         this.albums = albums;
     }
 
     @NonNull
     @Override
-    public ImageSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ImageSliderViewHolder(
+    public AlbumSliderVerticalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new AlbumSliderVerticalViewHolder(
                 SlideImageContainerBinding.inflate(
                         LayoutInflater.from(parent.getContext()),
                         parent,
@@ -33,7 +33,7 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageSliderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlbumSliderVerticalViewHolder holder, int position) {
         holder.setData(albums.get(position));
     }
 
@@ -42,10 +42,10 @@ public class AlbumSliderAdapter extends RecyclerView.Adapter<AlbumSliderAdapter.
         return albums.size();
     }
 
-    static class ImageSliderViewHolder extends RecyclerView.ViewHolder {
+    static class AlbumSliderVerticalViewHolder extends RecyclerView.ViewHolder {
         private final SlideImageContainerBinding binding;
 
-        private ImageSliderViewHolder(@NonNull SlideImageContainerBinding binding) {
+        private AlbumSliderVerticalViewHolder(@NonNull SlideImageContainerBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;

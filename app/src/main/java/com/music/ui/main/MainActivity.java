@@ -1,8 +1,7 @@
-package com.music.activities;
+package com.music.ui.main;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -17,8 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-    @SuppressWarnings({"FieldCanBeLocal", "NotNullFieldNotInitialized"})
-    @NonNull
+    @SuppressWarnings({"FieldCanBeLocal"})
+    @Nullable
     private ActivityMainBinding binding;
 
     @Override
@@ -35,5 +34,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

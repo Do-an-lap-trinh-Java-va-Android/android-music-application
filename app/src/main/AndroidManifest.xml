@@ -27,7 +27,7 @@
 
         <!-- Trang chính -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
 
         <!-- Trang đăng nhập -->

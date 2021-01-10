@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.music.databinding.ActivityRegisterBinding;
 import com.music.network.Status;
+import com.music.utils.ToolbarHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,9 +38,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
+        ToolbarHelper.hideToolbar(this);
+
         binding.btnRegister.setOnClickListener(this::onClickBtnRegister);
     }
 
+    /**
+     * Thực hiễn thao tác ẩn bàn phím khi nhấp ra ngoài EditText
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         View view = getCurrentFocus();
