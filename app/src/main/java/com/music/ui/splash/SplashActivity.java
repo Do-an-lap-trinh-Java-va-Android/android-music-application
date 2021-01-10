@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.music.ui.login.LoginActivity;
 import com.music.ui.main.MainActivity;
+import com.music.utils.NetworkHelper;
 
 import javax.inject.Inject;
 
@@ -19,9 +21,21 @@ public class SplashActivity extends AppCompatActivity {
     @Inject
     FirebaseAuth firebaseAuth;
 
+    @Inject
+    NetworkHelper networkHelper;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Kiểm tra kết nối Internet
+        if (networkHelper.isNetworkNotAvailable()) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setMessage("Để sử dụng ứng dụng bạn cần kết nối internet");
+            alertBuilder.setOnDismissListener(dialog -> finishAndRemoveTask());
+            alertBuilder.show();
+            return;
+        }
 
         /*
             Kiểm tra đã đăng nhập hay chưa, nếu chưa đăng nhập sẽ dẫn đến trang đăng nhập
