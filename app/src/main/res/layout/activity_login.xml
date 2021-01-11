@@ -8,7 +8,6 @@
     android:orientation="vertical"
     tools:context=".ui.login.LoginActivity">
 
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -24,7 +23,6 @@
         android:layout_marginLeft="@dimen/margin_padding_32dp"
         android:layout_marginRight="@dimen/margin_padding_32dp"
         android:orientation="vertical">
-
 
         <TextView
             android:id="@+id/tv_login"
@@ -138,6 +136,7 @@
                 android:text="@string/register_now"
                 android:textSize="@dimen/font_size_large" />
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
