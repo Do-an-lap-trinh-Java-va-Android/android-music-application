@@ -83,6 +83,22 @@ public class HomeFragment extends Fragment {
                     break;
             }
         });
+
+        homeViewModel.getNewSongReleased().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case SUCCESS:
+                    binding.rvNewReleasedSong.setAdapter(new SongChartVerticalAdapter(Objects.requireNonNull(response.data)));
+                    binding.prbNewReleasedLoading.setVisibility(View.GONE);
+                    break;
+                case LOADING:
+                    binding.prbNewReleasedLoading.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    Toast.makeText(getActivity(), response.message, Toast.LENGTH_SHORT).show();
+                    binding.prbNewReleasedLoading.setVisibility(View.GONE);
+                    break;
+            }
+        });
     }
 
     /**
@@ -95,6 +111,12 @@ public class HomeFragment extends Fragment {
         binding.rvRandomSong.setHasFixedSize(true);
         binding.rvRandomSong.setLayoutManager(linearLayoutManager);
         binding.rvRandomSong.addItemDecoration(new SongChartVerticalItemDecoration());
+
+        final LinearLayoutManager linearLayoutManager2 =
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        binding.rvNewReleasedSong.setHasFixedSize(true);
+        binding.rvNewReleasedSong.setLayoutManager(linearLayoutManager2);
+        binding.rvNewReleasedSong.addItemDecoration(new SongChartVerticalItemDecoration());
     }
 
     /**

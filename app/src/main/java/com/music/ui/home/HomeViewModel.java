@@ -21,6 +21,9 @@ public class HomeViewModel extends ViewModel {
     @NonNull
     private final MutableLiveData<Resource<List<Song>>> topSongList;
 
+    @NonNull
+    private final MutableLiveData<Resource<List<Song>>> newSongReleased;
+
     @ViewModelInject
     public HomeViewModel(@NonNull SongRepository songRepository, @NonNull AlbumRepository albumRepository) {
         // Lấy danh album để làm slider
@@ -28,6 +31,9 @@ public class HomeViewModel extends ViewModel {
 
         // Lấy 6 bài hát có lượt nghe cao nhất
         topSongList = (MutableLiveData<Resource<List<Song>>>) songRepository.getTopSongs(6);
+
+        // Lấy 6 bài hát mới phát hành
+        newSongReleased = (MutableLiveData<Resource<List<Song>>>) songRepository.getNewReleased(6);
     }
 
     @NonNull
@@ -38,5 +44,10 @@ public class HomeViewModel extends ViewModel {
     @NonNull
     public LiveData<Resource<List<Album>>> getAlbumSlider() {
         return albumSlider;
+    }
+
+    @NonNull
+    public LiveData<Resource<List<Song>>> getNewSongReleased() {
+        return newSongReleased;
     }
 }

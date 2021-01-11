@@ -70,4 +70,28 @@ public class SongRepository {
     public Query getQueryFetchTopSongs() {
         return database.collection("songs").orderBy("views", Query.Direction.DESCENDING);
     }
+
+    @NonNull
+    public LiveData<Resource<List<Song>>> getNewReleased(int limit) {
+        final MutableLiveData<Resource<List<Song>>> resource =
+                new MutableLiveData<>(Resource.loading("Đang tải danh sách bài hát mới phát hành"));
+
+        database.collection("songs")
+                .orderBy("year", Query.Direction.DESCENDING)
+                .limit(limit)
+                .get()
+                .addOnCompleteListener(task -> {
+                    QuerySnapshot result = task.getResult();
+
+                    if (!task.isSuccessful() || result == null || result.isEmpty()) {
+                        Log.e(TAG, "getNewReleased: Tải danh sách bài hát mới phát hành thất bại", task.getException());
+                        resource.postValue(Resource.error("Không thể tải danh sách bảng xếp hạng", null));
+                    } else {
+                        Log.i(TAG, "getTopSongs: Tải danh sách bài hát mới phát hành thành công");
+                        resource.postValue(Resource.success(result.toObjects(Song.class)));
+                    }
+                });
+
+        return resource;
+    }
 }
