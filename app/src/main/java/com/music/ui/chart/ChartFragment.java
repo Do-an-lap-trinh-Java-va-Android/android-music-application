@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.music.databinding.FragmentChartBinding;
 import com.music.models.Song;
-import com.music.utils.ToolbarHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,8 +33,6 @@ public class ChartFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater, container, false);
-
-        ToolbarHelper.showToolbar(getActivity());
 
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);

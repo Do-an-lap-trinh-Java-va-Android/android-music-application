@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.music.R;
 import com.music.databinding.FragmentAccountBinding;
-import com.music.utils.ToolbarHelper;
 
 public class AccountFragment extends Fragment {
     @Nullable
@@ -28,8 +27,6 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
-
-        ToolbarHelper.showToolbar(getActivity());
 
         setHasOptionsMenu(true);
 

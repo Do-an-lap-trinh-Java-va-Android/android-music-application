@@ -40,8 +40,6 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        ToolbarHelper.hideToolbar(getActivity());
-
         initAlbumSliderViewPager();
         initTopSongRecyclerView();
 
@@ -99,6 +97,18 @@ public class HomeFragment extends Fragment {
                     break;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ToolbarHelper.hideToolbar(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ToolbarHelper.showToolbar(getActivity());
     }
 
     /**
