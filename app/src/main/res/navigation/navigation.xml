@@ -22,4 +22,10 @@
         android:name="com.music.ui.account.AccountFragment"
         android:label="Cá Nhân"
         tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/navigation_setting_fragment"
+        android:name="com.music.ui.setting.SettingsFragment"
+        android:label="@string/setting" />
+
 </navigation>
