@@ -29,14 +29,14 @@ const collections = [
                 "cover": "https://photo-zmp3.zadn.vn/banner/3/d/8/d/3d8dc525338137f8408bec2b2101f6e4.jpg"
             },
             {
-                "name": "Tay Nắm Tay Rời",
-                "description": "Phạm Đình Thái Ngân và ca khúc dành cho những mối tình dở dang, chưa kịp nở đã vội úa tàn",
-                "cover": "https://photo-zmp3.zadn.vn/banner/5/c/1/4/5c147edff6eab95cf4f35af01fd7a5dc.jpg"
+                "name": "Tết Này Con Không Về",
+                "description": "Thanh Hưng như nói thay tâm sự của những đứa con xa quê chưa thể về nhà mùa Tết",
+                "cover": "https://photo-zmp3.zadn.vn/banner/6/3/3/c/633c7960ff66521f5192eb4d859920ea.jpg"
             },
             {
-                "name": "New Year Party",
-                "description": "Những ca khúc sôi động nhất dành cho các buổi tiệc, chắc chắn bạn không thể ngừng nhún nhẩy theo",
-                "cover": "https://photo-zmp3.zadn.vn/banner/d/9/d/b/d9dbd5ec33e60494982a0608744b0c49.jpg"
+                "name": "Hẹn Yêu",
+                "description": "Hẹn Yêu' qua phần thể hiện da diết của Minh Vương M4U và Thương Võ",
+                "cover": "https://photo-zmp3.zadn.vn/banner/1/4/f/a/14faef38388a4272ac9d3a116d703a6a.jpg"
             }
         ]
     },
