@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.music.R;
 import com.music.databinding.ActivityMainBinding;
+import com.music.utils.ToolbarHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupActionBar() {
         setSupportActionBar(binding.toolbar);
+
+        ToolbarHelper.hideToolbar(this);
 
         // Tùy chỉnh phông chữ của tiêu đề
         binding.toolbar.setTitleTextAppearance(this, R.style.Theme_CustomTextAppearance_ExtraLarge);
