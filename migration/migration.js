@@ -42,7 +42,8 @@ const collections = [
     },
 ];
 
-const songs = JSON.parse(fs.readFileSync("./data/songs.json"));
+let songs = JSON.parse(fs.readFileSync("./data/songs.json"));
+songs = [...songs].map(song => Object.assign({}, song, {year: 2019}));
 
 (async () => {
     await deleteCollection(db, "collections");
