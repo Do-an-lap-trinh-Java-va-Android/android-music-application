@@ -5,6 +5,7 @@
             app:defaultValue="auto"
             app:entries="@array/theme_value"
             app:entryValues="@array/theme_id"
+            app:icon="@drawable/ic_outline_brightness_4_dark_24"
             app:key="app_theme"
             app:title="Giao diện Sáng / Tối"
             app:useSimpleSummaryProvider="true" />

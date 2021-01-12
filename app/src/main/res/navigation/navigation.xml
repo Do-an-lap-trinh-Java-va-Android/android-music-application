@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_setting_fragment"
-        android:name="com.music.ui.setting.SettingsFragment"
+        android:name="com.music.ui.settings.SettingsFragment"
         android:label="@string/setting" />
 
 </navigation>
