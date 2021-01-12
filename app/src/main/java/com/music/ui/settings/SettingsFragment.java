@@ -39,6 +39,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         return true;
     }
 
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if ("logout".equals(preference.getKey())) {
+            preference.setOnPreferenceClickListener(_preference -> {
+                FirebaseAuth.getInstance().signOut();
+                return true;
+            });
+        }
+
+        return true;
+    }
+
     private void switchThemePreferenceChangeListener(@NonNull Preference preference,
                                                      @NonNull Object newValue) {
         String theme = newValue.toString();
@@ -54,17 +66,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 break;
         }
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        if ("logout".equals(preference.getKey())) {
-            preference.setOnPreferenceClickListener(_preference -> {
-                FirebaseAuth.getInstance().signOut();
-                return true;
-            });
-        }
-
-        return true;
     }
 }
