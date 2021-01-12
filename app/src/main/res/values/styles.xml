@@ -18,8 +18,8 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <!-- Chỉnh màu cursor và màu bôi đen -->
-        <item name="colorAccent">@color/purple_400</item>
-        <item name="android:textColorHighlight">@color/purple_400</item>
+        <item name="colorAccent">@color/deep_purple_400</item>
+        <item name="android:textColorHighlight">@color/deep_purple_400</item>
     </style>
 
     <!-- Bo tròn hình ảnh -->
