@@ -1,5 +1,7 @@
 package com.music.models;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -46,8 +48,21 @@ public class Song {
     /**
      * Lượt nghe của bài hát
      */
-    private long views;
+    private long listens;
 
+    /**
+     * Năm phát hành
+     */
+    private int year;
+
+    /**
+     * Lượt thích của bài hát
+     */
+    private long like;
+
+    /**
+     * Đường dẫn bài hát
+     */
     @NonNull
     private String mp3 = StringUtils.EMPTY;
 
@@ -91,5 +106,10 @@ public class Song {
     @PropertyName("other_name")
     public void setOtherName(@Nullable String otherName) {
         this.otherName = otherName;
+    }
+
+    @NonNull
+    public String getArtistsNames() {
+        return TextUtils.join(", ", artists);
     }
 }

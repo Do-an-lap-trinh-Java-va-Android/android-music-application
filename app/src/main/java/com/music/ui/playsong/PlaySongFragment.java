@@ -1,16 +1,15 @@
 package com.music.ui.playsong;
 
 import android.annotation.SuppressLint;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +21,7 @@ import com.music.R;
 import com.music.databinding.FragmentPlaySongBinding;
 import com.music.models.Song;
 
-import java.net.URI;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -31,23 +29,30 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class PlaySongFragment extends Fragment {
-    @SuppressWarnings("FieldCanBeLocal")
-    private PlaySongViewModel viewModel;
+    @Nullable
+    private FragmentPlaySongBinding binding;
 
     @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
     @NonNull
     private PlaySongFragmentArgs args;
 
-    @Nullable
-    private FragmentPlaySongBinding binding;
+    @SuppressWarnings("FieldCanBeLocal")
+    private PlaySongViewModel viewModel;
 
     @NonNull
-    public FragmentPlaySongBinding getBinding() {
-        return Objects.requireNonNull(binding);
-    }
+    private final MediaPlayer mediaPlayer = new MediaPlayer();
 
     @NonNull
     private final Handler handler = new Handler();
+
+    @Nullable
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            handler.postDelayed(this, 500);
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,19 +66,46 @@ public class PlaySongFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaySongBinding.inflate(inflater, container, false);
 
+        mediaPlayer.setOnBufferingUpdateListener((_mediaPlayer, percent) -> {
+            binding.seekBar.setSecondaryProgress(percent);
+        });
+
+        mediaPlayer.setOnPreparedListener(_mediaPlayer -> {
+            binding.seekBar.setMax(mediaPlayer.getDuration());
+            binding.tvLengthOfSong.setText(formatDuration(mediaPlayer.getDuration()));
+            binding.btnPlay.performClick();
+        });
+
+        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                binding.tvCurrentPosition.setText(formatDuration(mediaPlayer.getCurrentPosition()));
+
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        binding.btnPlay.setOnClickListener(v -> {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
+                handler.removeCallbacks(runnable);
+            } else {
+                mediaPlayer.start();
+                binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
+                handler.postDelayed(runnable, 0);
+            }
+        });
+
         return binding.getRoot();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -86,70 +118,32 @@ public class PlaySongFragment extends Fragment {
             switch (response.status) {
                 case SUCCESS:
                     Song song = Objects.requireNonNull(response.data);
-                    onSongInfoLoaded(song);
+                    Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).circleCrop().into(binding.ivThumbnail);
+                    binding.tvSongName.setText(song.getName());
+                    binding.tvSongArtists.setText(song.getArtistsNames());
+                    try {
+                        mediaPlayer.setDataSource(requireActivity(), Uri.parse(song.getMp3()));
+                        mediaPlayer.prepareAsync();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    binding.frmLoading.setVisibility(View.GONE);
                     break;
                 case LOADING:
+                    binding.frmLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
+                    Toast.makeText(requireActivity(), "Tải bài hát thất bại", Toast.LENGTH_SHORT).show();
+                    binding.frmLoading.setVisibility(View.GONE);
                     break;
             }
         });
     }
 
-    private void onSongInfoLoaded(@NonNull Song song) {
-        final FragmentPlaySongBinding binding = getBinding();
-
-        Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).into(binding.ivThumbnail);
-        binding.tvSongName.setText(song.getName());
-        binding.tvSongArtists.setText(TextUtils.join(", ", song.getArtists()));
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(song.getMp3()));
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                handler.postDelayed(this, 500);
-            }
-        };
-
-        binding.btnPlay.setOnClickListener(view -> {
-            if (!mediaPlayer.isPlaying()) {
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
-                mediaPlayer.start();
-                binding.seekBar.setMax(mediaPlayer.getDuration());
-                handler.postDelayed(runnable, 0);
-            } else {
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
-                mediaPlayer.pause();
-                handler.removeCallbacks(runnable);
-            }
-        });
-
-        mediaPlayer.setOnCompletionListener(mp -> mp.seekTo(0));
-
-        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    mediaPlayer.seekTo(progress);
-                }
-
-                binding.currentPosition.setText(formatDuration(mediaPlayer.getCurrentPosition()));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        binding.tvLengthOfSong.setText(formatDuration(mediaPlayer.getDuration()));
+    @Override
+    public void onStart() {
+        super.onStart();
+        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
     }
 
     @NonNull
@@ -159,6 +153,27 @@ public class PlaySongFragment extends Fragment {
         long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(minutues);
 
         return String.format("%02d:%02d", minutues, seconds);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable, 0);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mediaPlayer.release();
+        handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.VISIBLE);
+        mediaPlayer.setOnBufferingUpdateListener(null);
+        handler.removeCallbacks(runnable);
     }
 
     @Override

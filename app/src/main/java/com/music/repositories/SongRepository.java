@@ -44,7 +44,7 @@ public class SongRepository {
         resource.postValue(Resource.loading("Đang tải bảng xếp hạng bài hát"));
 
         database.collection("songs")
-                .orderBy("views", Query.Direction.DESCENDING)
+                .orderBy("listens", Query.Direction.DESCENDING)
                 .limit(limit)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -69,7 +69,7 @@ public class SongRepository {
      */
     @NonNull
     public Query getQueryFetchTopSongs() {
-        return database.collection("songs").orderBy("views", Query.Direction.DESCENDING);
+        return database.collection("songs").orderBy("listens", Query.Direction.DESCENDING);
     }
 
     @NonNull
