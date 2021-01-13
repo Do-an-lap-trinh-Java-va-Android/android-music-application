@@ -48,6 +48,9 @@ public class Song {
      */
     private long views;
 
+    @NonNull
+    private String mp3 = StringUtils.EMPTY;
+
     /**
      * Danh sách nghệ sĩ
      */

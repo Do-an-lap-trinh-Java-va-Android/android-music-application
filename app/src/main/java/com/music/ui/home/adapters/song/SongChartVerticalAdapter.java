@@ -4,11 +4,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.music.databinding.CardImageContainerBinding;
 import com.music.models.Song;
+import com.music.ui.home.HomeFragmentDirections;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +36,15 @@ public class SongChartVerticalAdapter extends RecyclerView.Adapter<SongChartVert
 
     @Override
     public void onBindViewHolder(@NonNull SongChartVerticalViewHolder holder, int position) {
-        holder.setSong(songs.get(position));
+        final Song song = songs.get(position);
+
+        holder.setSong(song);
+
+        holder.binding.songContainer.setOnClickListener(view -> {
+            HomeFragmentDirections.ActionNavigationHomeToPlaySongFragment action =
+                    HomeFragmentDirections.actionNavigationHomeToPlaySongFragment(song.getId());
+            Navigation.findNavController(view).navigate(action);
+        });
     }
 
     @Override

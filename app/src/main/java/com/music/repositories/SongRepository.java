@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -91,6 +92,30 @@ public class SongRepository {
                         resource.postValue(Resource.success(result.toObjects(Song.class)));
                     }
                 });
+
+        return resource;
+    }
+
+    @NonNull
+    public LiveData<Resource<Song>> getInfoOfSong(@NonNull String songId) {
+        final MutableLiveData<Resource<Song>> resource =
+                new MutableLiveData<>(Resource.loading("Đang tải thông tin bài hát: " + songId));
+
+        database.collection("songs").document(songId).get().addOnCompleteListener(task -> {
+            DocumentSnapshot result = task.getResult();
+
+            if (task.isSuccessful() && result != null) {
+                Log.i(TAG, "getInfoOfSong: Tải thông tin bài hát " + songId + " thành công");
+                resource.postValue(Resource.success(result.toObject(Song.class)));
+            } else {
+                Log.e(
+                        TAG,
+                        "getInfoOfSong: Tải thông tin bài hát " + songId + " thất bại",
+                        task.getException()
+                );
+                resource.postValue(Resource.error("Tải thông tin bài hát thất bại", null));
+            }
+        });
 
         return resource;
     }

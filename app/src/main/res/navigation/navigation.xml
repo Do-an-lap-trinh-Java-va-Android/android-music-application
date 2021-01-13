@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.music.ui.home.HomeFragment"
         android:label="Trang Chủ"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_play_song_fragment"
+            app:destination="@id/playSongFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_chart"
@@ -27,5 +31,15 @@
         android:id="@+id/navigation_setting_fragment"
         android:name="com.music.ui.settings.SettingsFragment"
         android:label="@string/setting" />
+
+    <fragment
+        android:id="@+id/playSongFragment"
+        android:name="com.music.ui.playsong.PlaySongFragment"
+        android:label=""
+        tools:layout="@layout/fragment_play_song" >
+        <argument
+            android:name="song_uid"
+            app:argType="string" />
+    </fragment>
 
 </navigation>
