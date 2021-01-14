@@ -12,6 +12,7 @@ import com.music.utils.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Song {
+public class Song implements Serializable {
     /**
      * ID bài hát
      */

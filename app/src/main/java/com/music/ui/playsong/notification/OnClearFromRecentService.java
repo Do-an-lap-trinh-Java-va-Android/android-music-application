@@ -1,4 +1,4 @@
-package com.music.ui.playsong;
+package com.music.ui.playsong.notification;
 
 import android.app.Service;
 import android.content.Intent;

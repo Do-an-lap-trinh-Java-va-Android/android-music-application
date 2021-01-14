@@ -14,8 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApplication">
 
-        <receiver android:name=".ui.playsong.NotificationActionService" />
-        <service android:name=".ui.playsong.OnClearFromRecentService" />
+        <!-- Media Player Notification -->
+        <receiver android:name=".ui.playsong.notification.MediaPlayerNotificationReceiver" />
+        <service android:name=".ui.playsong.notification.OnClearFromRecentService" />
+
+        <!-- Media Player Background -->
+        <receiver android:name=".ui.playsong.background.MediaPlayerReceiver" />
+        <service android:name=".ui.playsong.background.MediaPlayerService" />
+
+        <receiver android:name="androidx.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".ui.splash.SplashActivity"

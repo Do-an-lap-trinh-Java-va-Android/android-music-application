@@ -1,4 +1,4 @@
-package com.music.ui.playsong;
+package com.music.ui.playsong.notification;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -20,8 +20,8 @@ import com.bumptech.glide.request.transition.Transition;
 import com.music.R;
 import com.music.models.Song;
 
-public class MusicPlayerNotification {
-    private static final String TAG = "MusicPlayerNotification";
+public class MediaPlayerNotification {
+    private static final String TAG = "MediaPlayerNotification";
 
     public static final String CHANNEL_ID = "d6125a05-7632-409c-bf42-a17c18d9e97a";
 
@@ -37,15 +37,15 @@ public class MusicPlayerNotification {
                 new MediaMetadataCompat.Builder()
                         .putString(MediaMetadata.METADATA_KEY_TITLE, track.getName())
                         .putString(MediaMetadata.METADATA_KEY_ARTIST, track.getArtistsNames())
-                        .putString(MediaMetadata.METADATA_KEY_DATE, String.valueOf(track.getYear()))
                         .build()
         );
+        mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mediaSessionCompat.setActive(true);
 
-        Intent intentPlaySong = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
+        Intent intentPlaySong = new Intent(context, MediaPlayerNotificationReceiver.class).setAction(ACTION_PLAY);
         PendingIntent pendingIntentPlaySong = PendingIntent.getBroadcast(
-                context, 0,
-                intentPlaySong, PendingIntent.FLAG_UPDATE_CURRENT
+                context, 0, intentPlaySong, PendingIntent.FLAG_UPDATE_CURRENT
         );
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context, CHANNEL_ID)
