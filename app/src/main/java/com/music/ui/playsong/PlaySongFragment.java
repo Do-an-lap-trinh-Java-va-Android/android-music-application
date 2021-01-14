@@ -1,10 +1,19 @@
 package com.music.ui.playsong;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PlaySongFragment extends Fragment {
+public class PlaySongFragment extends Fragment implements Playable {
     @Nullable
     private FragmentPlaySongBinding binding;
 
@@ -40,10 +49,14 @@ public class PlaySongFragment extends Fragment {
     private PlaySongViewModel viewModel;
 
     @NonNull
-    private final MediaPlayer mediaPlayer = new MediaPlayer();
+    private MediaPlayer mediaPlayer = new MediaPlayer();
 
     @NonNull
-    private final Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.myLooper());
+
+    private NotificationManager notificationManager;
+
+    private Song song;
 
     @Nullable
     private final Runnable runnable = new Runnable() {
@@ -58,6 +71,22 @@ public class PlaySongFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         args = PlaySongFragmentArgs.fromBundle(requireArguments());
+
+        createChannel();
+        requireActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        requireActivity().startService(new Intent(requireActivity().getBaseContext(), OnClearFromRecentService.class));
+    }
+
+    private void createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CreateNotification.CHANNEL_ID,
+                    "KOD Dev", NotificationManager.IMPORTANCE_LOW);
+
+            notificationManager = requireActivity().getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
     @Override
@@ -65,6 +94,13 @@ public class PlaySongFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaySongBinding.inflate(inflater, container, false);
+
+        mediaPlayer.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );
 
         mediaPlayer.setOnBufferingUpdateListener((_mediaPlayer, percent) -> {
             binding.seekBar.setSecondaryProgress(percent);
@@ -94,6 +130,9 @@ public class PlaySongFragment extends Fragment {
         });
 
         binding.btnPlay.setOnClickListener(v -> {
+            CreateNotification.createNotification(requireActivity(),
+                    song,
+                    R.drawable.ic_outline_pause_circle_light_64, 1, 1);
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
                 binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
@@ -117,12 +156,13 @@ public class PlaySongFragment extends Fragment {
         viewModel.getSongMutableLiveData().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case SUCCESS:
+                    this.song = response.data;
                     Song song = Objects.requireNonNull(response.data);
                     Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).circleCrop().into(binding.ivThumbnail);
                     binding.tvSongName.setText(song.getName());
                     binding.tvSongArtists.setText(song.getArtistsNames());
                     try {
-                        mediaPlayer.setDataSource(requireActivity(), Uri.parse(song.getMp3()));
+                        mediaPlayer.setDataSource(requireActivity().getApplicationContext(), Uri.parse(song.getMp3()));
                         mediaPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -164,7 +204,6 @@ public class PlaySongFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mediaPlayer.release();
         handler.removeCallbacks(runnable);
     }
 
@@ -180,5 +219,62 @@ public class PlaySongFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+
+        if (notificationManager != null) {
+            notificationManager.cancelAll();
+        }
+
+        mediaPlayer.reset();
+        mediaPlayer.release();
+        mediaPlayer = null;
+
+        getContext().unregisterReceiver(broadcastReceiver);
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getExtras().getString("actionName");
+
+            switch (action) {
+                case CreateNotification.ACTION_PREVIUOS:
+                    onTrackPrevious();
+                    break;
+                case CreateNotification.ACTION_PLAY:
+                    if (mediaPlayer.isPlaying()) {
+                        onTrackPause();
+                    } else {
+                        onTrackPlay();
+                    }
+                    break;
+                case CreateNotification.ACTION_NEXT:
+                    onTrackNext();
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onTrackPrevious() {
+
+    }
+
+    @Override
+    public void onTrackPlay() {
+        CreateNotification.createNotification(requireActivity(), song,
+                R.drawable.ic_outline_pause_circle_light_64, 0, 1);
+        binding.btnPlay.performClick();
+    }
+
+    @Override
+    public void onTrackPause() {
+        CreateNotification.createNotification(requireActivity(), song,
+                R.drawable.ic_outline_play_circle_light_64, 0, 1);
+        binding.btnPlay.performClick();
+    }
+
+    @Override
+    public void onTrackNext() {
+
     }
 }

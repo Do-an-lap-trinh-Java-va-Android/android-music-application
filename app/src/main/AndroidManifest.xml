@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApplication">
 
+        <receiver android:name=".ui.playsong.NotificationActionService" />
+        <service android:name=".ui.playsong.OnClearFromRecentService" />
+
         <activity
             android:name=".ui.splash.SplashActivity"
             android:screenOrientation="portrait"
