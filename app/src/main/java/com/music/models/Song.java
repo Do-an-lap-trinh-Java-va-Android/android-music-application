@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.PropertyName;
+import com.music.utils.NumberUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -61,6 +62,11 @@ public class Song {
     private long like;
 
     /**
+     * Độ dài bài hát
+     */
+    private int duration;
+
+    /**
      * Đường dẫn bài hát
      */
     @NonNull
@@ -108,8 +114,42 @@ public class Song {
         this.otherName = otherName;
     }
 
+    /**
+     * Nối tên các nghệ sĩ lại và cách nhau bởi dấu phẩy
+     *
+     * @return Danh sách tên nghệ sĩ
+     */
     @NonNull
     public String getArtistsNames() {
         return TextUtils.join(", ", artists);
+    }
+
+    /**
+     * Định dạng lại lượt thích, phân cách nhau bởi dấu chấm
+     *
+     * @return Lượt thích đã format
+     */
+    @NonNull
+    public String getFormatLike() {
+        return NumberUtils.formatWithSuffix(like);
+    }
+
+    /**
+     * Định dạng lại lượt nghe, phân cách nhau bởi dấu chấm
+     *
+     * @return Lượt nghe đã format
+     */
+    @NonNull
+    public String getFormatListens() {
+        return NumberUtils.formatWithSuffix(listens);
+    }
+
+    /**
+     * Trả về thời lượng bài hát ở dạng mili giây
+     *
+     * @return Thời lượng bài hát ở dạng mili giây
+     */
+    public int getDuration() {
+        return duration * 1000;
     }
 }
