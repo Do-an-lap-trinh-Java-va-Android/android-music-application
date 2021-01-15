@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".Application"
@@ -14,15 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApplication">
 
-        <!-- Media Player Notification -->
-        <receiver android:name=".ui.playsong.notification.MediaPlayerNotificationReceiver" />
-        <service android:name=".ui.playsong.notification.OnClearFromRecentService" />
+        <service
+            android:name=".ui.playsong.playback.MediaPlayBackService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
 
-        <!-- Media Player Background -->
-        <receiver android:name=".ui.playsong.background.MediaPlayerReceiver" />
-        <service android:name=".ui.playsong.background.MediaPlayerService" />
-
-        <receiver android:name="androidx.media.session.MediaButtonReceiver" >
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

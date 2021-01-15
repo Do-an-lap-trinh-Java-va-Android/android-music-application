@@ -1,23 +1,24 @@
 package com.music.ui.playsong;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.Build;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,20 +29,13 @@ import com.bumptech.glide.Glide;
 import com.music.R;
 import com.music.databinding.FragmentPlaySongBinding;
 import com.music.models.Song;
-import com.music.ui.playsong.background.MediaPlayerReceiver;
-import com.music.ui.playsong.background.MediaPlayerService;
-import com.music.ui.playsong.notification.MediaPlayerNotification;
-import com.music.ui.playsong.notification.MediaPlayerNotificationReceiver;
-import com.music.ui.playsong.notification.OnClearFromRecentService;
+import com.music.ui.playsong.playback.MediaPlayBackService;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.util.Objects;
 
-import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @AndroidEntryPoint
 public class PlaySongFragment extends Fragment {
@@ -55,75 +49,96 @@ public class PlaySongFragment extends Fragment {
     @SuppressWarnings("FieldCanBeLocal")
     private PlaySongViewModel viewModel;
 
-    @NonNull
+    private MediaBrowserCompat mediaBrowser;
+
+    private MediaControllerCompat mediaController;
+
+    @Nullable
+    private MediaPlayer mediaPlayer;
+
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mediaPlayer = ((MediaPlayBackService.LocalBinder) service).getMediaPlayer();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mediaPlayer = null;
+        }
+    };
+
+    private final MediaBrowserCompat.ConnectionCallback connectionCallbacks = new MediaBrowserCompat.ConnectionCallback() {
+        @Override
+        public void onConnected() {
+            MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
+            mediaController = new MediaControllerCompat(requireContext(), token);
+            MediaControllerCompat.setMediaController(requireActivity(), mediaController);
+            mediaController.registerCallback(controllerCallback);
+        }
+    };
+
+    private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
+        @Override
+        public void onPlaybackStateChanged(PlaybackStateCompat state) {
+            switch (state.getState()) {
+                case PlaybackStateCompat.STATE_PAUSED:
+                    binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
+                    break;
+                case PlaybackStateCompat.STATE_PLAYING:
+                    binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
+                    break;
+            }
+        }
+
+        @Override
+        public void onMetadataChanged(MediaMetadataCompat metadata) {
+            binding.btnPlay.setOnClickListener(v -> {
+                int playBackState = MediaControllerCompat.getMediaController(requireActivity()).getPlaybackState().getState();
+
+                if (playBackState == PlaybackStateCompat.STATE_PLAYING) {
+                    mediaController.getTransportControls().pause();
+                    handler.removeCallbacks(runnable);
+                } else {
+                    mediaController.getTransportControls().play();
+                    handler.post(runnable);
+                }
+            });
+
+            binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int msec, boolean fromUser) {
+                    binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(
+                            mediaPlayer.getCurrentPosition(), "mm:ss"
+                    ));
+
+                    if (fromUser) {
+                        mediaPlayer.seekTo(msec);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) { }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) { }
+            });
+
+            binding.seekBar.setMax((int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
+            binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(
+                    metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION),
+                    "mm:ss"
+            ));
+        }
+    };
+
     private final Handler handler = new Handler(Looper.myLooper());
-
-    @SuppressWarnings("FieldCanBeLocal")
-    @Nullable
-    private NotificationManager notificationManager;
-
-    private Song song;
-
-    @Nullable
-    private MediaPlayerService mediaPlayerService;
-
-    @Inject
-    @ApplicationContext
-    Context applicationContext;
-
-    /**
-     * Lắng nghe các hành động từ thanh trình phát nhạc trên thanh thông báo
-     */
-    @NonNull
-    final BroadcastReceiver musicPlayerOnNotificationBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getStringExtra("actionName");
-
-            if (MediaPlayerNotification.ACTION_PLAY.equals(action)) {
-                binding.btnPlay.performClick();
-            }
-        }
-    };
-
-    /**
-     * Lắng nghe các hành động từ trình phát nhạc đang chạy ở nền, từ đó sẽ cập nhật giao diện phù hợp
-     */
-    @NonNull
-    private final BroadcastReceiver mediaPlayerInBackgroundBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getStringExtra("actionName");
-
-            if (MediaPlayerService.ACTION_PREPARED.equals(action)) {
-                // Độ dài của bài hát được gửi lên từ trình phát nhạc chạy dưới nền
-                int duration = intent.getIntExtra("duration", 0);
-
-                // Đặt max cho seekBar bằng với độ dài của bài hát
-                binding.seekBar.setMax(duration);
-
-                // Cập nhật độ dài của bài hát lên giao diện
-                binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(
-                        duration, "mm:ss", true
-                ));
-
-                // Giả lập thao tác click chuột vào nút btnPlay thay vì viết lại code
-                binding.btnPlay.performClick();
-            }
-        }
-    };
-
-    /**
-     * Mỗi 500ms sẽ tiến hành cập nhật thanh SeekBar
-     */
-    @NonNull
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (mediaPlayerService != null) {
-                binding.seekBar.setProgress(mediaPlayerService.getMediaPlayer().getCurrentPosition());
+            if (mediaPlayer != null) {
+                binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
-
             handler.postDelayed(this, 500);
         }
     };
@@ -131,35 +146,52 @@ public class PlaySongFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         args = PlaySongFragmentArgs.fromBundle(requireArguments());
 
-        // Khởi tạo kênh thông báo riêng cho trình phát nhạc
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    MediaPlayerNotification.CHANNEL_ID,
-                    "Trình phát nhạc",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
+        mediaBrowser = new MediaBrowserCompat(requireActivity(),
+                new ComponentName(requireActivity(), MediaPlayBackService.class),
+                connectionCallbacks,
+                null
+        );
 
-            notificationManager = applicationContext.getSystemService(NotificationManager.class);
+        Intent mediaPlayBackService = new Intent(requireContext(), MediaPlayBackService.class);
+        requireContext().stopService(mediaPlayBackService);
 
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
+        requireContext().bindService(
+                new Intent(requireContext(), MediaPlayBackService.class),
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+        );
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
+
+        mediaBrowser.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.VISIBLE);
+
+        if (MediaControllerCompat.getMediaController(requireActivity()) != null) {
+            MediaControllerCompat.getMediaController(requireActivity()).unregisterCallback(controllerCallback);
         }
 
-        requireActivity().registerReceiver(musicPlayerOnNotificationBroadcastReceiver,
-                new IntentFilter(MediaPlayerNotificationReceiver.INTENT_FILTER_NAME));
+        mediaBrowser.disconnect();
+    }
 
-        requireActivity().registerReceiver(mediaPlayerInBackgroundBroadcastReceiver,
-                new IntentFilter(MediaPlayerReceiver.INTENT_FILTER_NAME));
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        requireActivity().bindService(new Intent(requireActivity(), MediaPlayerService.class),
-                serviceConnection, Context.BIND_AUTO_CREATE);
-
-        requireActivity().startService(
-                new Intent(applicationContext, OnClearFromRecentService.class)
-        );
+        requireContext().unbindService(serviceConnection);
     }
 
     @Override
@@ -168,109 +200,28 @@ public class PlaySongFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaySongBinding.inflate(inflater, container, false);
 
-        /*
-            - Đăng ký sự kiện dừng/phát cho nút btnPlay
-            - Nếu bài hát đang phát thì khi nhấn vào sẽ dừng lại, ngược lại nếu đang dừng phát thì sẽ tiếp tục
-            phát tiếp bài hát
-        */
-        binding.btnPlay.setOnClickListener(view -> {
-            if (mediaPlayerService == null) return;
-
-            if (mediaPlayerService.getMediaPlayer().isPlaying()) {
-                // Dừng phát
-                mediaPlayerService.getMediaPlayer().pause();
-
-                // Cập nhật lại trình phát nhạc trên thanh thông báo
-                MediaPlayerNotification.createNotification(
-                        applicationContext, song, R.drawable.ic_outline_play_circle_light_64
-                );
-
-                // Hiển thị icon phát
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
-
-                // Dừng cập nhật thời gian nghe của bài hát trên thanh SeekBar
-                handler.removeCallbacks(runnable);
-            } else {
-                // Phát nhạc
-                mediaPlayerService.getMediaPlayer().start();
-
-                // Cập nhật lại trình phát nhạc trên thanh thông báo
-                MediaPlayerNotification.createNotification(
-                        applicationContext, song, R.drawable.ic_outline_pause_circle_light_64
-                );
-
-                // Hiển thị icon dừng
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
-
-                // Bắt đầu cập nhật thời gian đã nghe của bài hát trên thanh SeekBar
-                handler.postDelayed(runnable, 0);
-            }
-        });
-
-        // Cập nhật thanh thời gian phát bài hát
-        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mediaPlayerService == null) return;
-
-                // Cập nhật thời gian đã phát của bài hát
-                binding.tvCurrentPosition.setText(
-                        DurationFormatUtils.formatDuration(
-                                mediaPlayerService.getMediaPlayer().getCurrentPosition(),
-                                "mm:ss",
-                                true
-                        )
-                );
-
-                // Nếu phát hiện người dùng tua nhạc thì sẽ nhảy đến đoạn người dùng đã tua
-                if (fromUser) {
-                    mediaPlayerService.getMediaPlayer().seekTo(progress);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
-
         return binding.getRoot();
     }
-
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mediaPlayerService = ((MediaPlayerService.LocalBinder) service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) { }
-    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(PlaySongViewModel.class);
-
-        // Lấy thông tin bài hát
         viewModel.getInfoOfSong(args.getSongUid());
-
         viewModel.getSongMutableLiveData().observe(getViewLifecycleOwner(), response -> {
             if (binding == null) return;
 
             switch (response.status) {
                 case SUCCESS:
-                    this.song = response.data;
                     Song song = Objects.requireNonNull(response.data);
-
                     Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).circleCrop().into(binding.ivThumbnail);
                     binding.tvSongName.setText(song.getName());
                     binding.tvSongArtists.setText(song.getArtistsNames());
 
-                    Intent intentPlaySongInBackground = new Intent(requireActivity(), MediaPlayerService.class);
-                    intentPlaySongInBackground.setAction(MediaPlayerService.ACTION_PLAY);
-                    intentPlaySongInBackground.putExtra("song", song);
-                    requireActivity().startService(intentPlaySongInBackground);
+                    Intent mediaPlayBackService = new Intent(requireContext(), MediaPlayBackService.class);
+                    mediaPlayBackService.putExtra("song", song);
+                    requireContext().startService(mediaPlayBackService);
+
+                    mediaController.getTransportControls().playFromUri(Uri.parse(song.getMp3()), null);
 
                     binding.frmLoading.setVisibility(View.GONE);
                     break;
@@ -278,52 +229,9 @@ public class PlaySongFragment extends Fragment {
                     binding.frmLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
-                    Toast.makeText(requireActivity(), "Tải bài hát thất bại", Toast.LENGTH_SHORT).show();
                     binding.frmLoading.setVisibility(View.GONE);
                     break;
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        handler.postDelayed(runnable, 0);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        handler.removeCallbacks(runnable);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.VISIBLE);
-        handler.removeCallbacks(runnable);
-        requireActivity().unbindService(serviceConnection);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        binding = null;
-
-        requireActivity().unregisterReceiver(musicPlayerOnNotificationBroadcastReceiver);
-        requireActivity().unregisterReceiver(mediaPlayerInBackgroundBroadcastReceiver);
-
-        if (notificationManager != null) {
-            notificationManager.cancelAll();
-            notificationManager = null;
-        }
-
-        mediaPlayerService = null;
     }
 }
