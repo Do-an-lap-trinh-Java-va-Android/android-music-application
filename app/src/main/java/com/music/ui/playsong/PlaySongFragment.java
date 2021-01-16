@@ -104,6 +104,7 @@ public class PlaySongFragment extends Fragment {
                     handler.post(runnable);
                 }
             });
+            binding.btnPlay.performClick();
 
             binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
