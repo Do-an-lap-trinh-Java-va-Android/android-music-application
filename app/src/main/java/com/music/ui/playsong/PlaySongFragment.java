@@ -298,18 +298,26 @@ public class PlaySongFragment extends Fragment {
                         view.setBackground(gradientDrawable);
 
                         // Nếu màu gradientColors[0] quá tối thì sẽ chỉnh màu chữ thành trắng và ngược lại thành đen
-                        if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.25) {
+                        if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.3) {
                             binding.tvSongName.setTextColor(Color.WHITE);
                             binding.tvSongArtists.setTextColor(Color.WHITE);
                             binding.tvCurrentPosition.setTextColor(Color.WHITE);
                             binding.tvLengthOfSong.setTextColor(Color.WHITE);
                             binding.btnPlay.setColorFilter(getResources().getColor(R.color.gray_300));
+                            binding.btnRepeat.setColorFilter(getResources().getColor(R.color.gray_300));
+                            binding.btnShuffle.setColorFilter(getResources().getColor(R.color.gray_300));
+                            binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.gray_300));
+                            binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.gray_300));
                         } else {
                             binding.tvSongName.setTextColor(Color.BLACK);
                             binding.tvSongArtists.setTextColor(Color.BLACK);
                             binding.tvCurrentPosition.setTextColor(Color.BLACK);
                             binding.tvLengthOfSong.setTextColor(Color.BLACK);
                             binding.btnPlay.setColorFilter(getResources().getColor(R.color.black_800));
+                            binding.btnRepeat.setColorFilter(getResources().getColor(R.color.black_800));
+                            binding.btnShuffle.setColorFilter(getResources().getColor(R.color.black_800));
+                            binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.black_800));
+                            binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.black_800));
                         }
                     }
                 });
