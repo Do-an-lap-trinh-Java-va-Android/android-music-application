@@ -15,6 +15,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,13 +82,12 @@ public class PlaySongFragment extends Fragment {
     private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
-            switch (state.getState()) {
-                case PlaybackStateCompat.STATE_PAUSED:
-                    binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
-                    break;
-                case PlaybackStateCompat.STATE_PLAYING:
-                    binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
-                    break;
+            if (state.getState() == PlaybackStateCompat.STATE_PAUSED) {
+                binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
+            }
+
+            if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
+                binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
             }
         }
 
@@ -101,7 +101,7 @@ public class PlaySongFragment extends Fragment {
                     handler.removeCallbacks(runnable);
                 } else {
                     mediaController.getTransportControls().play();
-                    handler.post(runnable);
+                    handler.postDelayed(runnable, 0);
                 }
             });
             binding.btnPlay.performClick();
@@ -114,7 +114,7 @@ public class PlaySongFragment extends Fragment {
                     ));
 
                     if (fromUser) {
-                        mediaPlayer.seekTo(msec);
+                        mediaController.getTransportControls().seekTo(msec);
                     }
                 }
 
@@ -140,10 +140,11 @@ public class PlaySongFragment extends Fragment {
             if (mediaPlayer != null) {
                 binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
-            handler.postDelayed(this, 500);
+            handler.postDelayed(this, 100);
         }
     };
 
+    private static final String TAG = "PlaySongFragment";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,9 +156,6 @@ public class PlaySongFragment extends Fragment {
                 connectionCallbacks,
                 null
         );
-
-        Intent mediaPlayBackService = new Intent(requireContext(), MediaPlayBackService.class);
-        requireContext().stopService(mediaPlayBackService);
 
         requireContext().bindService(
                 new Intent(requireContext(), MediaPlayBackService.class),
@@ -225,6 +223,8 @@ public class PlaySongFragment extends Fragment {
                     Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).circleCrop().into(binding.ivThumbnail);
                     binding.tvSongName.setText(song.getName());
                     binding.tvSongArtists.setText(song.getArtistsNames());
+
+                    requireContext().stopService(new Intent(requireContext(), MediaPlayBackService.class));
 
                     Intent mediaPlayBackService = new Intent(requireContext(), MediaPlayBackService.class);
                     mediaPlayBackService.putExtra("song", song);

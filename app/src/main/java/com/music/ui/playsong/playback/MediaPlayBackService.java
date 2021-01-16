@@ -87,6 +87,17 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             stopForeground(false);
         }
 
+        @Override
+        public void onSeekTo(long pos) {
+            mediaPlayer.seekTo((int) pos);
+
+            if (mediaPlayer.isPlaying()) {
+                setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
+            } else {
+                setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
+            }
+        }
+
         @SneakyThrows
         @Override
         public void onPlayFromUri(Uri uri, Bundle extras) {
@@ -123,7 +134,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
         song = (Song) intent.getExtras().get("song");
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
@@ -165,7 +176,12 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
                         .build()
         );
         mediaPlayer.setVolume(1.0f, 1.0f);
-        // mediaPlayer.setOnCompletionListener(mp -> mp.seekTo(0));
+        mediaPlayer.setOnCompletionListener(mp -> {
+            if (mediaSession.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
+                mediaSession.getController().getTransportControls().seekTo(0);
+                mediaSession.getController().getTransportControls().pause();
+            }
+        });
     }
 
     private void initMediaSession() {
@@ -305,13 +321,15 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
         if (state == PlaybackStateCompat.STATE_PLAYING) {
             playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                                            PlaybackStateCompat.ACTION_PAUSE);
+                                            PlaybackStateCompat.ACTION_PAUSE |
+                                            PlaybackStateCompat.ACTION_SEEK_TO);
+            playBackStateBuilder.setState(state, mediaPlayer.getCurrentPosition(), 1.0f);
         } else {
             playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                                            PlaybackStateCompat.ACTION_PLAY);
+                                            PlaybackStateCompat.ACTION_PLAY |
+                                            PlaybackStateCompat.ACTION_SEEK_TO);
+            playBackStateBuilder.setState(state, mediaPlayer.getCurrentPosition(), 0f);
         }
-
-        playBackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
 
         mediaSession.setPlaybackState(playBackStateBuilder.build());
     }
