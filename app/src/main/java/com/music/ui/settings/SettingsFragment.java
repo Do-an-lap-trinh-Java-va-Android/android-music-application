@@ -1,5 +1,7 @@
 package com.music.ui.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -69,20 +71,29 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
     private void handleSwithTheme(@NonNull Preference preference, @NonNull Object newValue) {
         String theme = newValue.toString();
 
+        final SharedPreferences settingsSharedPreferences =
+                requireActivity().getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = settingsSharedPreferences.edit();
+
         switch (theme) {
             case "dark":
                 Log.i(TAG, "handleSwithTheme: Đã chuyển sang giao diện tối");
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                editor.putString("theme", "dark");
                 break;
             case "light":
                 Log.i(TAG, "handleSwithTheme: Đã chuyển sang giao diện sáng");
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                editor.putString("theme", "light");
                 break;
             default:
                 Log.i(TAG, "handleSwithTheme: Đã chuyển sang giao diện theo hệ thống");
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                editor.putString("theme", "auto");
                 break;
         }
+
+        editor.apply();
     }
 
     /**
