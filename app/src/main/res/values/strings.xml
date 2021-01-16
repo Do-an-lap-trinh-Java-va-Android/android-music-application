@@ -15,7 +15,6 @@
     <string name="confirm_password">Nhập lại mật khẩu</string>
     <string name="reenter_your_password">Nhập lại mật khẩu đã nhập</string>
     <string name="input_search_placehodler">Nhập tên bài hát, ca sĩ bạn muốn tìm kiếm</string>
-    <string name="chart">Bảng Xếp Hạng</string>
     <string name="login">Đăng nhập</string>
     <string name="hint_username">Tài khoản</string>
     <string name="hint_password">Mật khẩu</string>
@@ -26,4 +25,9 @@
         sử dụng bởi một tài khoản khác</string>
     <string name="setting">Cài Đặt</string>
     <string name="logout">Đăng xuất</string>
+
+    <!-- Menu (BottomNavigationView) -->
+    <string name="discover">Khám phá</string>
+    <string name="chart">Bảng xếp hạng</string>
+    <string name="personal">Cá Nhân</string>
 </resources>
