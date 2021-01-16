@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,12 @@ public class SongChartVerticalAdapter extends FirestorePagingAdapter<Song, SongC
     @Override
     protected void onBindViewHolder(@NonNull SongChartVerticalViewHolder holder, int position, @NonNull Song model) {
         holder.bindData(model);
+
+        holder.binding.songItem.setOnClickListener(view -> {
+            ChartFragmentDirections.ActionNavigationChartToPlaySongFragment action =
+                    ChartFragmentDirections.actionNavigationChartToPlaySongFragment(model.getId());
+            Navigation.findNavController(view).navigate(action);
+        });
     }
 
     @Override
