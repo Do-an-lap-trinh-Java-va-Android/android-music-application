@@ -1,6 +1,7 @@
 package com.music.ui.main;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        // Chỉnh màu StatusBar cho phiên bản Android 21, 22
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black_800));
+        }
+
         // Tùy chỉnh phông chữ tiêu đề của ToolBar
         binding.toolbar.setTitleTextAppearance(this, R.style.Theme_CustomTextAppearance_ExtraLarge);
 
@@ -82,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.removeAuthStateListener(authStateListener);
     }
 
-    @SuppressWarnings({"AssignmentToNull", "ConstantConditions"})
+    @SuppressWarnings({"AssignmentToNull"})
     @Override
     protected void onDestroy() {
         super.onDestroy();

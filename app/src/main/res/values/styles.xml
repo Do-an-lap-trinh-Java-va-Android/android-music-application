@@ -4,6 +4,7 @@
     <!-- Background Splash Screen -->
     <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <!-- Base -->
@@ -15,7 +16,7 @@
         <item name="android:textSize">@dimen/font_size_medium</item>
 
         <!-- Chỉnh màu status bar -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
 
         <!-- Chỉnh màu cursor và màu bôi đen -->
         <item name="colorAccent">@color/deep_purple_400</item>
