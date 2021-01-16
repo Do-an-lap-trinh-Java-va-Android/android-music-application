@@ -4,6 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +19,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +26,19 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.music.R;
 import com.music.databinding.FragmentPlaySongBinding;
 import com.music.models.Song;
 import com.music.ui.playsong.playback.MediaPlayBackService;
+import com.music.utils.UiModeUtils;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
@@ -144,7 +152,6 @@ public class PlaySongFragment extends Fragment {
         }
     };
 
-    private static final String TAG = "PlaySongFragment";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,7 +229,10 @@ public class PlaySongFragment extends Fragment {
             switch (response.status) {
                 case SUCCESS:
                     Song song = Objects.requireNonNull(response.data);
+
                     Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).circleCrop().into(binding.ivThumbnail);
+                    setBackgroundView(binding.frmLayout, song.getThumbnail());
+
                     binding.tvSongName.setText(song.getName());
                     binding.tvSongArtists.setText(song.getArtistsNames());
 
@@ -243,6 +253,57 @@ public class PlaySongFragment extends Fragment {
                     binding.frmLoading.setVisibility(View.GONE);
                     break;
             }
+        });
+    }
+
+    private void setBackgroundView(@NonNull View view, @NonNull String imageUrl) {
+        if (binding == null) return;
+
+        Glide.with(view.getContext()).asBitmap().load(imageUrl).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                Palette.from(resource).generate(palette -> {
+                    if (palette != null) {
+                        int defaultColor = getResources().getColor(R.color.blue_700);
+                        int[] gradientColors = new int[2];
+
+                        gradientColors[0] = palette.getDominantColor(defaultColor);
+
+                        if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.25) {
+                            gradientColors[0] = palette.getDarkVibrantColor(defaultColor);
+                        }
+
+                        if (UiModeUtils.isDarkMode(requireContext())) {
+                            gradientColors[1] = getResources().getColor(R.color.black_800);
+                        } else {
+                            gradientColors[1] = Color.WHITE;
+                        }
+
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                gradientColors
+                        );
+
+                        view.setBackground(gradientDrawable);
+
+                        // Nếu màu gradientColors[0] quá tối thì sẽ chỉnh màu chữ thành trắng và ngược lại thành đen
+                        if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.25) {
+                            binding.tvSongName.setTextColor(Color.WHITE);
+                            binding.tvSongArtists.setTextColor(Color.WHITE);
+                            binding.tvCurrentPosition.setTextColor(Color.WHITE);
+                            binding.tvLengthOfSong.setTextColor(Color.WHITE);
+                        } else {
+                            binding.tvSongName.setTextColor(Color.BLACK);
+                            binding.tvSongArtists.setTextColor(Color.BLACK);
+                            binding.tvCurrentPosition.setTextColor(Color.BLACK);
+                            binding.tvLengthOfSong.setTextColor(Color.BLACK);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) { }
         });
     }
 }
