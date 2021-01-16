@@ -1,17 +1,21 @@
 package com.music.ui.splash;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.music.Constant;
 import com.music.ui.login.LoginActivity;
 import com.music.ui.main.MainActivity;
 import com.music.utils.NetworkHelper;
+import com.music.utils.UiModeUtils;
 
 import javax.inject.Inject;
 
@@ -29,19 +33,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final String theme = getSharedPreferences("APP_SETTINGS", MODE_PRIVATE).getString("theme", "auto");
-
-        switch (theme) {
-            case "dark":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case "light":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            default:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-        }
+        handleChangeUiMode();
 
         // Kiểm tra kết nối Internet
         if (networkHelper.isNetworkNotAvailable()) {
@@ -63,5 +55,29 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         finish();
+    }
+
+    private void handleChangeUiMode() {
+        final SharedPreferences settingsSharedPreference = getSharedPreferences(
+                Constant.SETTING_SHARED_PREFERENCE_NAME,
+                Context.MODE_PRIVATE
+        );
+
+        final int theme = settingsSharedPreference.getInt(
+                Constant.SETTING_SHARED_PREFERENCE_THEME,
+                Configuration.UI_MODE_NIGHT_UNDEFINED
+        );
+
+        switch (theme) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                UiModeUtils.enableNightMode();
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                UiModeUtils.disableNightMode();
+                break;
+            default:
+                UiModeUtils.defaultNightMode();
+                break;
+        }
     }
 }

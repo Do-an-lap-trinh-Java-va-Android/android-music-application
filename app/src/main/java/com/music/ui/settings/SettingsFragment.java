@@ -2,11 +2,11 @@ package com.music.ui.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.Preference.OnPreferenceClickListener;
@@ -14,7 +14,9 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.music.Constant;
 import com.music.R;
+import com.music.utils.UiModeUtils;
 
 import javax.inject.Inject;
 
@@ -71,25 +73,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
     private void handleSwithTheme(@NonNull Preference preference, @NonNull Object newValue) {
         String theme = newValue.toString();
 
-        final SharedPreferences settingsSharedPreferences =
-                requireActivity().getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        final SharedPreferences settingsSharedPreferences = requireActivity().getSharedPreferences(
+                Constant.SETTING_SHARED_PREFERENCE_NAME,
+                Context.MODE_PRIVATE
+        );
+
         final SharedPreferences.Editor editor = settingsSharedPreferences.edit();
 
         switch (theme) {
             case "dark":
-                Log.i(TAG, "handleSwithTheme: Đã chuyển sang giao diện tối");
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                editor.putString("theme", "dark");
+                UiModeUtils.enableNightMode();
+                editor.putInt(Constant.SETTING_SHARED_PREFERENCE_THEME, Configuration.UI_MODE_NIGHT_YES);
                 break;
             case "light":
-                Log.i(TAG, "handleSwithTheme: Đã chuyển sang giao diện sáng");
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                editor.putString("theme", "light");
+                UiModeUtils.disableNightMode();
+                editor.putInt(Constant.SETTING_SHARED_PREFERENCE_THEME, Configuration.UI_MODE_NIGHT_NO);
                 break;
             default:
-                Log.i(TAG, "handleSwithTheme: Đã chuyển sang giao diện theo hệ thống");
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                editor.putString("theme", "auto");
+                UiModeUtils.defaultNightMode();
+                editor.putInt(Constant.SETTING_SHARED_PREFERENCE_THEME, Configuration.UI_MODE_NIGHT_UNDEFINED);
                 break;
         }
 
