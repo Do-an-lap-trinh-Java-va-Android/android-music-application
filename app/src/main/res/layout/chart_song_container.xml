@@ -51,7 +51,7 @@
         android:layout_toEndOf="@id/thumbnail"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/gray_200"
+        android:textColor="@color/gray_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toEndOf="@id/thumbnail"
