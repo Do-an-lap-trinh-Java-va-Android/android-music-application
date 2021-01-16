@@ -17,11 +17,10 @@ public class FirebaseModule {
     @Provides
     @Singleton
     public FirebaseFirestore provideFirebaseFirestore() {
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(false)   // Không cho phép Firebase truy cập offline
-                .build();
-
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
+
         fireStore.setFirestoreSettings(settings);
 
         return fireStore;
