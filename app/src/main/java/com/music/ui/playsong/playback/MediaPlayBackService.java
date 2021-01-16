@@ -58,6 +58,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     @NonNull
     private final IBinder binder = new LocalBinder();
 
+    @NonNull
     private final MediaSessionCompat.Callback callback = new Callback() {
         @Override
         public void onPlay() {
@@ -129,8 +130,14 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     public void onDestroy() {
         Log.i(TAG, "onDestroy: ");
         super.onDestroy();
-        mediaSession.release();
-        mediaPlayer.release();
+
+        if (mediaSession != null) {
+            mediaSession.release();
+        }
+
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
     }
 
     @Nullable
@@ -158,16 +165,15 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
                         .build()
         );
         mediaPlayer.setVolume(1.0f, 1.0f);
-//        mediaPlayer.setOnCompletionListener(mp -> mp.seekTo(0));
+        // mediaPlayer.setOnCompletionListener(mp -> mp.seekTo(0));
     }
 
     private void initMediaSession() {
         mediaSession = new MediaSessionCompat(getBaseContext(), TAG);
 
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(
-                        PlaybackStateCompat.ACTION_PLAY |
-                        PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                .setActions(PlaybackStateCompat.ACTION_PLAY |
+                            PlaybackStateCompat.ACTION_PLAY_PAUSE);
         mediaSession.setPlaybackState(stateBuilder.build());
 
         mediaSession.setCallback(callback);
@@ -177,6 +183,10 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
     private void initMediaSessionMetadata() {
         MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
+
+        if (song == null) return;
+        if (mediaSession == null) return;
+
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.getName());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.getArtistsNames());
         metadataBuilder.putString(
@@ -190,6 +200,8 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     }
 
     private void showPauseNotification() {
+        if (mediaSession == null) return;
+
         MediaControllerCompat controller = mediaSession.getController();
         MediaMetadataCompat mediaMetadata = controller.getMetadata();
         MediaDescriptionCompat description = mediaMetadata.getDescription();
@@ -239,6 +251,8 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     }
 
     private void showPlayingNotification() {
+        if (mediaSession == null) return;
+
         MediaControllerCompat controller = mediaSession.getController();
         MediaMetadataCompat mediaMetadata = controller.getMetadata();
         MediaDescriptionCompat description = mediaMetadata.getDescription();
@@ -285,16 +299,21 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     }
 
     private void setMediaPlaybackState(int state) {
-        PlaybackStateCompat.Builder playbackstateBuilder = new PlaybackStateCompat.Builder();
+        if (mediaSession == null) return;
+
+        PlaybackStateCompat.Builder playBackStateBuilder = new PlaybackStateCompat.Builder();
+
         if (state == PlaybackStateCompat.STATE_PLAYING) {
-            playbackstateBuilder.setActions(
-                    PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
+            playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                                            PlaybackStateCompat.ACTION_PAUSE);
         } else {
-            playbackstateBuilder.setActions(
-                    PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PLAY);
+            playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                                            PlaybackStateCompat.ACTION_PLAY);
         }
-        playbackstateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-        mediaSession.setPlaybackState(playbackstateBuilder.build());
+
+        playBackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+
+        mediaSession.setPlaybackState(playBackStateBuilder.build());
     }
 
     @Override
