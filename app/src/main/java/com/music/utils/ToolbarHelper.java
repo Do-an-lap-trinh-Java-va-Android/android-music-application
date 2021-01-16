@@ -11,7 +11,7 @@ public final class ToolbarHelper {
      * @param activity Activity cần hiển thị Toolbar
      */
     public static void showToolbar(@NonNull AppCompatActivity activity) {
-        if (activity != null && activity.getSupportActionBar() != null) {
+        if (activity.getSupportActionBar() != null) {
             activity.getSupportActionBar().show();
         }
     }
@@ -29,7 +29,7 @@ public final class ToolbarHelper {
      * @param activity Activity cần ẩn Toolbar
      */
     public static void hideToolbar(@NonNull AppCompatActivity activity) {
-        if (activity != null && activity.getSupportActionBar() != null) {
+        if (activity.getSupportActionBar() != null) {
             activity.getSupportActionBar().hide();
         }
     }

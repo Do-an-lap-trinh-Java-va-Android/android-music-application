@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public final class NumberUtils {
@@ -20,11 +21,19 @@ public final class NumberUtils {
 
     @NonNull
     public static String formatWithSuffix(long number) {
-        if (number == Long.MIN_VALUE) return formatWithSuffix(Long.MIN_VALUE + 1);
-        if (number < 0) return "-" + formatWithSuffix(-number);
-        if (number < 1000) return Long.toString(number);
+        if (number == Long.MIN_VALUE) {
+            return formatWithSuffix(Long.MIN_VALUE + 1);
+        }
 
-        Map.Entry<Long, String> e = suffixes.floorEntry(number);
+        if (number < 0) {
+            return "-" + formatWithSuffix(-number);
+        }
+
+        if (number < 1000) {
+            return Long.toString(number);
+        }
+
+        Map.Entry<Long, String> e = Objects.requireNonNull(suffixes.floorEntry(number));
         Long divideBy = e.getKey();
         String suffix = e.getValue();
 
