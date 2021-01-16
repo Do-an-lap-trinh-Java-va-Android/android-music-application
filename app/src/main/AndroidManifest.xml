@@ -18,7 +18,8 @@
 
         <service
             android:name=".ui.playsong.playback.MediaPlayBackService"
-            android:exported="false">
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>

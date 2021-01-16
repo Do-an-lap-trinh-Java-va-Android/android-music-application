@@ -44,7 +44,8 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     private static final String TAG = "MediaPlayBackService";
 
     public static final String CHANNEL_ID = "d6125a05-7632-409c-bf42-a17c18d9e97a";
-    private static final int NOTIFICATION_MUSIC_PLAYER_ID = 1;
+
+    private final int musicPlayBackIdNotification = 1;
 
     @Nullable
     private MediaPlayer mediaPlayer;
@@ -177,7 +178,9 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         );
         mediaPlayer.setVolume(1.0f, 1.0f);
         mediaPlayer.setOnCompletionListener(mp -> {
-            if (mediaSession.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
+            if (mediaSession != null &&
+                mediaSession.getController()
+                        .getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
                 mediaSession.getController().getTransportControls().seekTo(0);
                 mediaSession.getController().getTransportControls().pause();
             }
@@ -256,7 +259,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 builder.setLargeIcon(resource);
-                startForeground(NOTIFICATION_MUSIC_PLAYER_ID, builder.build());
+                startForeground(musicPlayBackIdNotification, builder.build());
             }
 
             @Override
@@ -304,7 +307,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 builder.setLargeIcon(resource);
-                startForeground(NOTIFICATION_MUSIC_PLAYER_ID, builder.build());
+                startForeground(musicPlayBackIdNotification, builder.build());
             }
 
             @Override
@@ -315,7 +318,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     }
 
     private void setMediaPlaybackState(int state) {
-        if (mediaSession == null) return;
+        if (mediaSession == null || mediaPlayer == null) return;
 
         PlaybackStateCompat.Builder playBackStateBuilder = new PlaybackStateCompat.Builder();
 

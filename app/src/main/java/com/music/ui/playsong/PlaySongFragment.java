@@ -157,6 +157,8 @@ public class PlaySongFragment extends Fragment {
                 null
         );
 
+        requireContext().stopService(new Intent(requireContext(), MediaPlayBackService.class));
+
         requireContext().bindService(
                 new Intent(requireContext(), MediaPlayBackService.class),
                 serviceConnection,
@@ -224,13 +226,13 @@ public class PlaySongFragment extends Fragment {
                     binding.tvSongName.setText(song.getName());
                     binding.tvSongArtists.setText(song.getArtistsNames());
 
-                    requireContext().stopService(new Intent(requireContext(), MediaPlayBackService.class));
-
                     Intent mediaPlayBackService = new Intent(requireContext(), MediaPlayBackService.class);
                     mediaPlayBackService.putExtra("song", song);
                     requireContext().startService(mediaPlayBackService);
 
-                    mediaController.getTransportControls().playFromUri(Uri.parse(song.getMp3()), null);
+                    if (mediaController != null) {
+                        mediaController.getTransportControls().playFromUri(Uri.parse(song.getMp3()), null);
+                    }
 
                     binding.frmLoading.setVisibility(View.GONE);
                     break;
