@@ -91,11 +91,11 @@ public class PlaySongFragment extends Fragment {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             if (state.getState() == PlaybackStateCompat.STATE_PAUSED) {
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
+                binding.btnPlay.setImageResource(R.drawable.ic_round_play_circle_64);
             }
 
             if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
+                binding.btnPlay.setImageResource(R.drawable.ic_round_pause_circle_64);
             }
         }
 
@@ -188,11 +188,11 @@ public class PlaySongFragment extends Fragment {
 
         if (mediaController != null) {
             if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PAUSED) {
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_play_circle_light_64);
+                binding.btnPlay.setImageResource(R.drawable.ic_round_play_circle_64);
             }
 
             if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
-                binding.btnPlay.setImageResource(R.drawable.ic_outline_pause_circle_light_64);
+                binding.btnPlay.setImageResource(R.drawable.ic_round_pause_circle_64);
             }
         }
 

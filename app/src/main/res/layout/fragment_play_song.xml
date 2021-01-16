@@ -94,7 +94,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/ic_outline_play_circle_light_64"
+                android:src="@drawable/ic_round_play_circle_64"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
     </LinearLayout>

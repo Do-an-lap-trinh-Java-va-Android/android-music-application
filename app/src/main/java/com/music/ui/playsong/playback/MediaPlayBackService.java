@@ -133,7 +133,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     public int onStartCommand(Intent intent, int flags, int startId) {
         MediaButtonReceiver.handleIntent(mediaSession, intent);
 
-        song = (Song) intent.getExtras().get("song");
+        song = (Song) intent.getParcelableExtra("song");
 
         return START_STICKY;
     }
@@ -244,12 +244,20 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
                 .setSmallIcon(R.drawable.ic_round_music_note_24)
                 .setShowWhen(false)
                 .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_outline_pause_circle_light_64, "Pause",
+                        R.drawable.ic_round_skip_previous_48, "Previous",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+                ))
+                .addAction(new NotificationCompat.Action(
+                        R.drawable.ic_round_pause_48, "Pause",
                         MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_PLAY_PAUSE))
                 )
+                .addAction(new NotificationCompat.Action(
+                        R.drawable.ic_round_skip_next_48, "Next",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                ))
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
-                        .setShowActionsInCompactView(0)
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setShowCancelButton(true)
                         .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_STOP))
                 )
@@ -288,16 +296,20 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
                 .setSmallIcon(R.drawable.ic_round_music_note_24)
                 .setShowWhen(false)
                 .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_launcher_background, "Close",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_STOP)
+                        R.drawable.ic_round_skip_previous_48, "Previous",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
                 ))
                 .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_outline_play_circle_light_64, "Play",
+                        R.drawable.ic_round_play_arrow_48, "Play",
                         MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_PLAY_PAUSE))
                 )
+                .addAction(new NotificationCompat.Action(
+                        R.drawable.ic_round_skip_next_48, "Next",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                ))
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
-                        .setShowActionsInCompactView(0, 1)
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setShowCancelButton(true)
                         .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_STOP))
                 )

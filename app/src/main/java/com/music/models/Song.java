@@ -1,5 +1,7 @@
 package com.music.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -12,7 +14,6 @@ import com.music.utils.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Song implements Serializable {
+public class Song implements Parcelable {
     /**
      * ID bài hát
      */
@@ -84,6 +85,52 @@ public class Song implements Serializable {
      */
     @NonNull
     private List<String> albums = Collections.emptyList();
+
+    protected Song(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        otherName = in.readString();
+        thumbnail = in.readString();
+        listens = in.readLong();
+        year = in.readInt();
+        like = in.readLong();
+        duration = in.readInt();
+        mp3 = in.readString();
+        artists = in.createStringArrayList();
+        albums = in.createStringArrayList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(otherName);
+        dest.writeString(thumbnail);
+        dest.writeLong(listens);
+        dest.writeInt(year);
+        dest.writeLong(like);
+        dest.writeInt(duration);
+        dest.writeString(mp3);
+        dest.writeStringList(artists);
+        dest.writeStringList(albums);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
 
     /**
      * Viết hoa ký tự đầu của mỗi từ trong tên bài hát
