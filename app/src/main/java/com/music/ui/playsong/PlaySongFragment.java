@@ -303,11 +303,13 @@ public class PlaySongFragment extends Fragment {
                             binding.tvSongArtists.setTextColor(Color.WHITE);
                             binding.tvCurrentPosition.setTextColor(Color.WHITE);
                             binding.tvLengthOfSong.setTextColor(Color.WHITE);
+                            binding.btnPlay.setColorFilter(getResources().getColor(R.color.gray_300));
                         } else {
                             binding.tvSongName.setTextColor(Color.BLACK);
                             binding.tvSongArtists.setTextColor(Color.BLACK);
                             binding.tvCurrentPosition.setTextColor(Color.BLACK);
                             binding.tvLengthOfSong.setTextColor(Color.BLACK);
+                            binding.btnPlay.setColorFilter(getResources().getColor(R.color.black_800));
                         }
                     }
                 });
