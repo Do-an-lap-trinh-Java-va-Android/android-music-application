@@ -175,6 +175,12 @@ public class PlaySongFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        handler.post(runnable);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -183,6 +189,8 @@ public class PlaySongFragment extends Fragment {
         if (MediaControllerCompat.getMediaController(requireActivity()) != null) {
             MediaControllerCompat.getMediaController(requireActivity()).unregisterCallback(controllerCallback);
         }
+
+        handler.removeCallbacks(runnable);
 
         mediaBrowser.disconnect();
     }
