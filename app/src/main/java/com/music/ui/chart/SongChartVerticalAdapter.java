@@ -1,6 +1,5 @@
 package com.music.ui.chart;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,12 @@ import com.firebase.ui.firestore.paging.LoadingState;
 import com.music.databinding.ChartSongContainerBinding;
 import com.music.models.Song;
 
+import java.lang.reflect.Array;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class SongChartVerticalAdapter extends FirestorePagingAdapter<Song, SongChartVerticalAdapter.SongChartVerticalViewHolder> {
+    @NonNull
     private static final String TAG = "SongChartHorizontalAdap";
 
     @NonNull
@@ -46,8 +50,19 @@ public class SongChartVerticalAdapter extends FirestorePagingAdapter<Song, SongC
         holder.bindData(model);
 
         holder.binding.songItem.setOnClickListener(view -> {
-            ChartFragmentDirections.ActionNavigationChartToPlaySongFragment action =
-                    ChartFragmentDirections.actionNavigationChartToPlaySongFragment(model.getId());
+            final Song[] playList = Objects.requireNonNull(getCurrentList())
+                    .snapshot()
+                    .stream()
+                    .map(song -> song.toObject(Song.class))
+                    .collect(Collectors.toList())
+                    .toArray((Song[]) Array.newInstance(Song.class, getItemCount()));
+
+            ChartFragmentDirections.ActionNavigationChartToNavigationPlaySongFragment action =
+                    ChartFragmentDirections.actionNavigationChartToNavigationPlaySongFragment(
+                            model,
+                            playList
+                    );
+
             Navigation.findNavController(view).navigate(action);
         });
     }
@@ -90,7 +105,7 @@ public class SongChartVerticalAdapter extends FirestorePagingAdapter<Song, SongC
 
         public void bindData(@NonNull Song song) {
             binding.name.setText(song.getName());
-            binding.artists.setText(TextUtils.join(", ", song.getArtists()));
+            binding.artists.setText(song.getArtistsNames());
             Glide.with(itemView).load(song.getThumbnail()).into(binding.thumbnail);
         }
     }

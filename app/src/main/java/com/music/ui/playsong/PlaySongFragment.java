@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -28,7 +29,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -42,7 +42,10 @@ import com.music.utils.UiModeUtils;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -51,12 +54,14 @@ public class PlaySongFragment extends Fragment {
     @Nullable
     private FragmentPlaySongBinding binding;
 
+    @NonNull
+    public FragmentPlaySongBinding getBinding() {
+        return Objects.requireNonNull(binding);
+    }
+
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private PlaySongFragmentArgs args;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private PlaySongViewModel viewModel;
 
     private MediaBrowserCompat mediaBrowser;
 
@@ -89,19 +94,46 @@ public class PlaySongFragment extends Fragment {
 
     private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
         @Override
-        public void onPlaybackStateChanged(PlaybackStateCompat state) {
-            if (state.getState() == PlaybackStateCompat.STATE_PAUSED) {
-                binding.btnPlay.setImageResource(R.drawable.ic_round_play_circle_64);
+        public void onSessionReady() {
+            final Song playNowSong = args.getPlayNowSong();
+
+            // Sắp xếp lại danh sách phát: Di chuyển bài hát đã chọn lên đầu danh sách để phát đầu tiên
+            final List<Song> sortedPlayList = Arrays.stream(args.getPlayList())
+//                    .sorted(Comparator.comparing(playNowSong::equals).reversed())
+                    .collect(Collectors.toList());
+
+            updateUI(playNowSong);
+
+            // Khởi động trình phát nhạc
+            requireContext().startService(new Intent(requireContext(), MediaPlayBackService.class));
+
+            // Thêm các bài hát vào hàng chờ
+            for (Song song : sortedPlayList) {
+                mediaController.addQueueItem(new MediaDescriptionCompat.Builder()
+                        .setMediaId(song.getId())
+                        .setTitle(song.getName())
+                        .setSubtitle(song.getArtistsNames())
+                        .setDescription(song.getFormatListens() + " lượt nghe")
+                        .setMediaUri(Uri.parse(song.getMp3()))
+                        .setIconUri(Uri.parse(song.getThumbnail()))
+                        .build()
+                );
             }
 
-            if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                binding.btnPlay.setImageResource(R.drawable.ic_round_pause_circle_64);
-            }
+            // Phát bài hát
+            mediaController.getTransportControls().playFromMediaId(playNowSong.getId(), null);
+        }
+
+        @Override
+        public void onPlaybackStateChanged(PlaybackStateCompat playbackStateCompat) {
+            handleUpdateImageSourceBtnTogglePlayPause(playbackStateCompat);
         }
 
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
-            binding.btnPlay.setOnClickListener(v -> {
+            updateUI(metadata.getDescription());
+
+            binding.btnTogglePlayPause.setOnClickListener(v -> {
                 int playBackState = MediaControllerCompat.getMediaController(requireActivity()).getPlaybackState().getState();
 
                 if (playBackState == PlaybackStateCompat.STATE_PLAYING) {
@@ -112,14 +144,17 @@ public class PlaySongFragment extends Fragment {
                     handler.postDelayed(runnable, 0);
                 }
             });
-            binding.btnPlay.performClick();
 
             binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int msec, boolean fromUser) {
-                    binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(
-                            mediaPlayer.getCurrentPosition(), "mm:ss"
-                    ));
+                    try {
+                        binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(
+                                mediaPlayer.getCurrentPosition(), "mm:ss"
+                        ));
+                    } catch (IllegalStateException ignored) {
+
+                    }
 
                     if (fromUser) {
                         mediaController.getTransportControls().seekTo(msec);
@@ -145,16 +180,23 @@ public class PlaySongFragment extends Fragment {
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (mediaPlayer != null) {
-                binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            try {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                }
+            } catch (IllegalStateException ignored) {
+
             }
+
             handler.postDelayed(this, 100);
         }
     };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = FragmentPlaySongBinding.inflate(inflater, container, false);
 
         args = PlaySongFragmentArgs.fromBundle(requireArguments());
 
@@ -164,13 +206,25 @@ public class PlaySongFragment extends Fragment {
                 null
         );
 
-        requireContext().stopService(new Intent(requireContext(), MediaPlayBackService.class));
-
         requireContext().bindService(
                 new Intent(requireContext(), MediaPlayBackService.class),
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
         );
+
+        binding.btnSkipToNext.setOnClickListener(view -> {
+            if (mediaController != null && mediaController.getTransportControls() != null) {
+                mediaController.getTransportControls().skipToNext();
+            }
+        });
+
+        binding.btnSkipToPrevious.setOnClickListener(vieww -> {
+            if (mediaController != null && mediaController.getTransportControls() != null) {
+                mediaController.getTransportControls().skipToPrevious();
+            }
+        });
+
+        return binding.getRoot();
     }
 
     @Override
@@ -187,13 +241,7 @@ public class PlaySongFragment extends Fragment {
         super.onResume();
 
         if (mediaController != null) {
-            if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PAUSED) {
-                binding.btnPlay.setImageResource(R.drawable.ic_round_play_circle_64);
-            }
-
-            if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
-                binding.btnPlay.setImageResource(R.drawable.ic_round_pause_circle_64);
-            }
+            handleUpdateImageSourceBtnTogglePlayPause(mediaController);
         }
 
         handler.post(runnable);
@@ -215,62 +263,62 @@ public class PlaySongFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-
-        requireContext().unbindService(serviceConnection);
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        binding = FragmentPlaySongBinding.inflate(inflater, container, false);
-
-        return binding.getRoot();
+    private void handleUpdateImageSourceBtnTogglePlayPause(@NonNull MediaControllerCompat mediaController) {
+        handleUpdateImageSourceBtnTogglePlayPause(mediaController.getPlaybackState());
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(PlaySongViewModel.class);
-        viewModel.getInfoOfSong(args.getSongUid());
-        viewModel.getSongMutableLiveData().observe(getViewLifecycleOwner(), response -> {
-            if (binding == null) return;
+    private void handleUpdateImageSourceBtnTogglePlayPause(@NonNull PlaybackStateCompat playbackStateCompat) {
+        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PAUSED) {
+            getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_play_circle_64);
+        }
 
-            switch (response.status) {
-                case SUCCESS:
-                    Song song = Objects.requireNonNull(response.data);
+        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PLAYING) {
+            getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_pause_circle_64);
+        }
 
-                    Glide.with(binding.ivThumbnail.getContext()).load(song.getThumbnail()).circleCrop().into(binding.ivThumbnail);
-                    setBackgroundView(binding.frmLayout, song.getThumbnail());
+        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT) {
+            updateUI(mediaController.getMetadata().getDescription());
+        }
 
-                    binding.tvSongName.setText(song.getName());
-                    binding.tvSongArtists.setText(song.getArtistsNames());
+        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS) {
+            updateUI(mediaController.getMetadata().getDescription());
+        }
+    }
 
-                    Intent mediaPlayBackService = new Intent(requireContext(), MediaPlayBackService.class);
-                    mediaPlayBackService.putExtra("song", song);
-                    requireContext().startService(mediaPlayBackService);
+    private void updateUI(@NonNull Song song) {
+        getBinding().tvSongName.setText(song.getName());
+        getBinding().tvSongArtists.setText(song.getArtistsNames());
+        setBackgroundView(getBinding().frmLayout, song.getThumbnail());
+        Glide.with(this)
+                .load(song.getThumbnail())
+                .circleCrop()
+                .into(getBinding().ivThumbnail);
+    }
 
-                    if (mediaController != null) {
-                        mediaController.getTransportControls().playFromUri(Uri.parse(song.getMp3()), null);
-                    }
-
-                    binding.frmLoading.setVisibility(View.GONE);
-                    break;
-                case LOADING:
-                    binding.frmLoading.setVisibility(View.VISIBLE);
-                    break;
-                case ERROR:
-                    binding.frmLoading.setVisibility(View.GONE);
-                    break;
-            }
-        });
+    private void updateUI(@NonNull MediaDescriptionCompat mediaDescriptionCompat) {
+        Glide.with(this)
+                .load(mediaDescriptionCompat.getIconUri())
+                .circleCrop()
+                .into(getBinding().ivThumbnail);
+        getBinding().tvSongName.setText(mediaDescriptionCompat.getTitle());
+        getBinding().tvSongArtists.setText(mediaDescriptionCompat.getSubtitle());
+        setBackgroundView(getBinding().frmLayout, String.valueOf(mediaDescriptionCompat.getIconUri()));
     }
 
     private void setBackgroundView(@NonNull View view, @NonNull String imageUrl) {
         if (binding == null) return;
 
-        Glide.with(view.getContext()).asBitmap().load(imageUrl).into(new CustomTarget<Bitmap>() {
+        Glide.with(this).asBitmap().override(100).load(imageUrl).into(new CustomTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 Palette.from(resource).generate(palette -> {
@@ -303,7 +351,7 @@ public class PlaySongFragment extends Fragment {
                             binding.tvSongArtists.setTextColor(Color.WHITE);
                             binding.tvCurrentPosition.setTextColor(Color.WHITE);
                             binding.tvLengthOfSong.setTextColor(Color.WHITE);
-                            binding.btnPlay.setColorFilter(getResources().getColor(R.color.gray_300));
+                            binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnRepeat.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnShuffle.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.gray_300));
@@ -313,7 +361,7 @@ public class PlaySongFragment extends Fragment {
                             binding.tvSongArtists.setTextColor(Color.BLACK);
                             binding.tvCurrentPosition.setTextColor(Color.BLACK);
                             binding.tvLengthOfSong.setTextColor(Color.BLACK);
-                            binding.btnPlay.setColorFilter(getResources().getColor(R.color.black_800));
+                            binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnRepeat.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnShuffle.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.black_800));

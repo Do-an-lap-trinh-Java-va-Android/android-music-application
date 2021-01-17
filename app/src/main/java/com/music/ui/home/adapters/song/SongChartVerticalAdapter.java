@@ -42,7 +42,7 @@ public class SongChartVerticalAdapter extends RecyclerView.Adapter<SongChartVert
 
         holder.binding.songContainer.setOnClickListener(view -> {
             HomeFragmentDirections.ActionNavigationHomeToPlaySongFragment action =
-                    HomeFragmentDirections.actionNavigationHomeToPlaySongFragment(song.getId());
+                    HomeFragmentDirections.actionNavigationHomeToPlaySongFragment(song, new Song[]{});
             Navigation.findNavController(view).navigate(action);
         });
     }

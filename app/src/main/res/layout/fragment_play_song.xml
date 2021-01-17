@@ -108,7 +108,7 @@
                 tools:ignore="ContentDescription" />
 
             <ImageButton
-                android:id="@+id/btn_play"
+                android:id="@+id/btn_toggle_play_pause"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:background="?attr/selectableItemBackgroundBorderless"

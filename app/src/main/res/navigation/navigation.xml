@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.music.ui.home.HomeFragment"
         android:label="Trang Chủ"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_play_song_fragment"
             app:destination="@id/navigation_play_song_fragment" />
@@ -19,9 +19,9 @@
         android:id="@+id/navigation_chart"
         android:name="com.music.ui.chart.ChartFragment"
         android:label="Bảng Xếp Hạng"
-        tools:layout="@layout/fragment_chart" >
+        tools:layout="@layout/fragment_chart">
         <action
-            android:id="@+id/action_navigation_chart_to_play_song_fragment"
+            android:id="@+id/action_navigation_chart_to_navigation_play_song_fragment"
             app:destination="@id/navigation_play_song_fragment" />
     </fragment>
 
@@ -40,10 +40,13 @@
         android:id="@+id/navigation_play_song_fragment"
         android:name="com.music.ui.playsong.PlaySongFragment"
         android:label=""
-        tools:layout="@layout/fragment_play_song" >
+        tools:layout="@layout/fragment_play_song">
         <argument
-            android:name="song_uid"
-            app:argType="string" />
+            android:name="play_now_song"
+            app:argType="com.music.models.Song" />
+        <argument
+            android:name="play_list"
+            app:argType="com.music.models.Song[]" />
     </fragment>
 
 </navigation>

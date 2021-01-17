@@ -2,6 +2,7 @@ package com.music.ui.playsong.playback;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,9 +35,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.music.R;
-import com.music.models.Song;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.SneakyThrows;
 
@@ -53,11 +55,12 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     @Nullable
     private MediaSessionCompat mediaSession;
 
-    @Nullable
-    private Song song;
-
     @NonNull
     private final IBinder binder = new LocalBinder();
+
+    @NonNull
+    private final List<MediaDescriptionCompat> playList = new ArrayList<>();
+    private int currentPosition = 0;
 
     @NonNull
     private final MediaSessionCompat.Callback callback = new Callback() {
@@ -74,10 +77,12 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         @Override
         public void onPause() {
             Log.i(TAG, "onPause: ");
-            mediaPlayer.pause();
-            setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
-            showPlayingNotification();
-            stopForeground(false);
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
+                showPlayingNotification();
+                stopForeground(false);
+            }
         }
 
         @Override
@@ -99,6 +104,53 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             }
         }
 
+        @Override
+        public void onAddQueueItem(MediaDescriptionCompat description) {
+            Log.i(TAG, "onAddQueueItem: Đã thêm bài hát: " + description.getTitle());
+            playList.add(description);
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            Log.i(TAG, "onSkipToPrevious: Bài hát trước: " + currentPosition);
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                mediaPlayer.reset();
+            }
+
+            currentPosition--;
+
+            if (currentPosition < 0) {
+                currentPosition = playList.size() - 1;
+            }
+
+            mediaSession.getController().getTransportControls().playFromUri(
+                    playList.get(currentPosition).getMediaUri(),
+                    null
+            );
+            setMediaPlaybackState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS);
+        }
+
+        @Override
+        public void onSkipToNext() {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                mediaPlayer.reset();
+            }
+
+            if (currentPosition >= playList.size() - 1) {
+                currentPosition = 0;
+            } else {
+                currentPosition++;
+            }
+
+            mediaSession.getController().getTransportControls().playFromUri(
+                    playList.get(currentPosition).getMediaUri(),
+                    null
+            );
+            setMediaPlaybackState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT);
+        }
+
         @SneakyThrows
         @Override
         public void onPlayFromUri(Uri uri, Bundle extras) {
@@ -116,8 +168,20 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(mp -> {
+                mediaSession.getController().getTransportControls().play();
                 initMediaSessionMetadata();
             });
+        }
+
+        @Override
+        public void onPlayFromMediaId(String mediaId, Bundle extras) {
+            for (MediaDescriptionCompat mediaDescriptionCompat : playList) {
+                if (Objects.requireNonNull(mediaDescriptionCompat.getMediaId()).equals(mediaId)) {
+                    mediaSession.getController().getTransportControls().playFromUri(mediaDescriptionCompat.getMediaUri(), null);
+                    currentPosition = playList.indexOf(mediaDescriptionCompat);
+                    break;
+                }
+            }
         }
     };
 
@@ -133,9 +197,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     public int onStartCommand(Intent intent, int flags, int startId) {
         MediaButtonReceiver.handleIntent(mediaSession, intent);
 
-        song = (Song) intent.getParcelableExtra("song");
-
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -189,6 +251,12 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
     private void initMediaSession() {
         mediaSession = new MediaSessionCompat(getBaseContext(), TAG);
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS);
+
+        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        mediaButtonIntent.setClass(getBaseContext(), MediaButtonReceiver.class);
+        PendingIntent mbrIntent = PendingIntent.getBroadcast(getBaseContext(), 0, mediaButtonIntent, 0);
+        mediaSession.setMediaButtonReceiver(mbrIntent);
 
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(PlaybackStateCompat.ACTION_PLAY |
@@ -201,19 +269,22 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     }
 
     private void initMediaSessionMetadata() {
+        initMediaSessionMetadata(playList.get(currentPosition));
+    }
+
+    private void initMediaSessionMetadata(@NonNull MediaDescriptionCompat media) {
+        if (mediaSession == null || mediaPlayer == null) {
+            return;
+        }
+
         MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
 
-        if (song == null) return;
-        if (mediaSession == null) return;
-
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.getName());
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.getArtistsNames());
-        metadataBuilder.putString(
-                MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION,
-                song.getFormatListens() + " lượt nghe"
-        );
-        metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.getDuration());
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, song.getThumbnail());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, media.getMediaId());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, (String) media.getTitle());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, (String) media.getSubtitle());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, (String) media.getDescription());
+        metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, String.valueOf(media.getIconUri()));
 
         mediaSession.setMetadata(metadataBuilder.build());
     }
@@ -337,12 +408,16 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         if (state == PlaybackStateCompat.STATE_PLAYING) {
             playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE |
                                             PlaybackStateCompat.ACTION_PAUSE |
-                                            PlaybackStateCompat.ACTION_SEEK_TO);
+                                            PlaybackStateCompat.ACTION_SEEK_TO |
+                                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
             playBackStateBuilder.setState(state, mediaPlayer.getCurrentPosition(), 1.0f);
         } else {
             playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE |
                                             PlaybackStateCompat.ACTION_PLAY |
-                                            PlaybackStateCompat.ACTION_SEEK_TO);
+                                            PlaybackStateCompat.ACTION_SEEK_TO |
+                                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
             playBackStateBuilder.setState(state, mediaPlayer.getCurrentPosition(), 0f);
         }
 
