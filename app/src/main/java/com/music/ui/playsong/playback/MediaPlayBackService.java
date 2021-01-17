@@ -37,6 +37,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.music.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -106,8 +107,17 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
         @Override
         public void onAddQueueItem(MediaDescriptionCompat description) {
-            Log.i(TAG, "onAddQueueItem: Đã thêm bài hát: " + description.getTitle());
+            for (Iterator<MediaDescriptionCompat> iterator = playList.iterator(); iterator.hasNext(); ) {
+                final MediaDescriptionCompat media = iterator.next();
+
+                if (media.toString().equals(description.toString())) {
+                    iterator.remove();
+                }
+            }
+
             playList.add(description);
+
+            Log.i(TAG, "onAddQueueItem: " + playList);
         }
 
         @Override
@@ -169,7 +179,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(mp -> {
                 mediaSession.getController().getTransportControls().play();
-                initMediaSessionMetadata();
+                initMediaSessionMetadata(playList.get(currentPosition));
             });
         }
 
@@ -266,10 +276,6 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         mediaSession.setCallback(callback);
 
         setSessionToken(mediaSession.getSessionToken());
-    }
-
-    private void initMediaSessionMetadata() {
-        initMediaSessionMetadata(playList.get(currentPosition));
     }
 
     private void initMediaSessionMetadata(@NonNull MediaDescriptionCompat media) {
