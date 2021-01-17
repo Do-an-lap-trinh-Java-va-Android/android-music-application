@@ -1,7 +1,6 @@
 package com.music.ui.home;
 
 import androidx.annotation.NonNull;
-import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,6 +13,11 @@ import com.music.repositories.SongRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class HomeViewModel extends ViewModel {
     @NonNull
     private final MutableLiveData<Resource<List<Album>>> albumSlider;
@@ -24,7 +28,7 @@ public class HomeViewModel extends ViewModel {
     @NonNull
     private final MutableLiveData<Resource<List<Song>>> newSongReleased;
 
-    @ViewModelInject
+    @Inject
     public HomeViewModel(@NonNull SongRepository songRepository, @NonNull AlbumRepository albumRepository) {
         // Lấy danh album để làm slider
         albumSlider = (MutableLiveData<Resource<List<Album>>>) albumRepository.getRecommendAlbums();
