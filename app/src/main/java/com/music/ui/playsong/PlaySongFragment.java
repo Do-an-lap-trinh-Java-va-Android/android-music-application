@@ -102,8 +102,6 @@ public class PlaySongFragment extends Fragment {
                     ArrayUtils.add(args.getPlayList(), playNowSong)
             ).distinct().collect(Collectors.toList());
 
-            updateUI(playNowSong);
-
             // Khởi động trình phát nhạc
             requireContext().startService(new Intent(requireContext(), MediaPlayBackService.class));
 
@@ -224,6 +222,8 @@ public class PlaySongFragment extends Fragment {
             }
         });
 
+        updateUI(args.getPlayNowSong());
+
         return binding.getRoot();
     }
 
@@ -278,20 +278,43 @@ public class PlaySongFragment extends Fragment {
     }
 
     private void handleUpdateImageSourceBtnTogglePlayPause(@NonNull PlaybackStateCompat playbackStateCompat) {
-        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PAUSED) {
-            getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_play_circle_64);
-        }
-
-        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PLAYING) {
-            getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_pause_circle_64);
-        }
-
-        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT) {
-            updateUI(mediaController.getMetadata().getDescription());
-        }
-
-        if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS) {
-            updateUI(mediaController.getMetadata().getDescription());
+        switch (playbackStateCompat.getState()) {
+            case PlaybackStateCompat.STATE_BUFFERING:
+                getBinding().prbBuffering.setVisibility(View.VISIBLE);
+                break;
+            case PlaybackStateCompat.STATE_CONNECTING:
+                getBinding().prbBuffering.setVisibility(View.VISIBLE);
+                break;
+            case PlaybackStateCompat.STATE_ERROR:
+                break;
+            case PlaybackStateCompat.STATE_FAST_FORWARDING:
+                break;
+            case PlaybackStateCompat.STATE_NONE:
+                break;
+            case PlaybackStateCompat.STATE_PAUSED:
+                getBinding().prbBuffering.setVisibility(View.GONE);
+                getBinding().btnTogglePlayPause.setVisibility(View.VISIBLE);
+                getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_play_circle_64);
+                break;
+            case PlaybackStateCompat.STATE_PLAYING:
+                getBinding().prbBuffering.setVisibility(View.GONE);
+                getBinding().btnTogglePlayPause.setVisibility(View.VISIBLE);
+                getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_pause_circle_64);
+                break;
+            case PlaybackStateCompat.STATE_REWINDING:
+                break;
+            case PlaybackStateCompat.STATE_SKIPPING_TO_NEXT:
+                getBinding().btnTogglePlayPause.setVisibility(View.GONE);
+                getBinding().prbBuffering.setVisibility(View.VISIBLE);
+                break;
+            case PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS:
+                getBinding().btnTogglePlayPause.setVisibility(View.GONE);
+                getBinding().prbBuffering.setVisibility(View.VISIBLE);
+                break;
+            case PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM:
+                break;
+            case PlaybackStateCompat.STATE_STOPPED:
+                break;
         }
     }
 
@@ -303,15 +326,16 @@ public class PlaySongFragment extends Fragment {
                 .load(song.getThumbnail())
                 .circleCrop()
                 .into(getBinding().ivThumbnail);
+        getBinding().frmLoading.setVisibility(View.GONE);
     }
 
     private void updateUI(@NonNull MediaDescriptionCompat mediaDescriptionCompat) {
+        getBinding().tvSongName.setText(mediaDescriptionCompat.getTitle());
+        getBinding().tvSongArtists.setText(mediaDescriptionCompat.getSubtitle());
         Glide.with(this)
                 .load(mediaDescriptionCompat.getIconUri())
                 .circleCrop()
                 .into(getBinding().ivThumbnail);
-        getBinding().tvSongName.setText(mediaDescriptionCompat.getTitle());
-        getBinding().tvSongArtists.setText(mediaDescriptionCompat.getSubtitle());
         setBackgroundView(getBinding().frmLayout, String.valueOf(mediaDescriptionCompat.getIconUri()));
     }
 

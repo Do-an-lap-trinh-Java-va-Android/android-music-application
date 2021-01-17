@@ -20,7 +20,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.google.android.material.imageview.ShapeableImageView
+            <ImageView
                 android:id="@+id/iv_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
                 android:paddingStart="@dimen/margin_padding_48dp"
                 android:paddingEnd="@dimen/margin_padding_48dp"
                 android:scaleType="center"
+                tools:ignore="ContentDescription"
                 tools:src="@drawable/purple_gradient_background" />
 
             <TextView
@@ -107,15 +108,29 @@
                 android:src="@drawable/ic_round_skip_previous_48"
                 tools:ignore="ContentDescription" />
 
-            <ImageButton
-                android:id="@+id/btn_toggle_play_pause"
+            <FrameLayout
                 android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/ic_round_play_circle_64"
-                tools:ignore="ContentDescription" />
+                android:layout_height="64dp">
+
+                <ImageButton
+                    android:id="@+id/btn_toggle_play_pause"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_round_play_circle_64"
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription"
+                    tools:visibility="visible" />
+
+                <ProgressBar
+                    android:id="@+id/prb_buffering"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    tools:visibility="gone" />
+            </FrameLayout>
 
             <ImageButton
                 android:id="@+id/btn_skip_to_next"
@@ -143,8 +158,9 @@
         android:id="@+id/frm_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorOnPrimary"
-        android:visibility="gone">
+        android:background="?android:colorBackground"
+        android:visibility="visible"
+        tools:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
