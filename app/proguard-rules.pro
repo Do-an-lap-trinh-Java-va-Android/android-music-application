@@ -23,18 +23,30 @@
 # Hỗ trợ Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {
- <init>(...);
+    <init>(...);
 }
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
+    **[] $VALUES;
+    public *;
 }
 -keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
-  *** rewind();
+    *** rewind();
 }
 
 # Hỗ trợ Firebase
 # Xem thêm: https://firebase.google.com/docs/database/android/start#proguard
 -keepattributes Signature
--keepattributes *Annotation*
+# -keepattributes *Annotation*
 -keepclassmembers class com.music.models.* { *; }
+
+# Hỗ trợ NavigationUI
+# Xem thêm: https://developer.android.com/guide/navigation/navigation-pass-data#proguard_considerations
+-keepnames class com.music.models.*
+
+# Xóa các đoạn mã ghi nhật ký của verbose, debug và info
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int d(...);
+    public static int i(...);
+}
