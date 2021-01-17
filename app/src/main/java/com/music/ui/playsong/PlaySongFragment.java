@@ -277,6 +277,7 @@ public class PlaySongFragment extends Fragment {
         handleUpdateImageSourceBtnTogglePlayPause(mediaController.getPlaybackState());
     }
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     private void handleUpdateImageSourceBtnTogglePlayPause(@NonNull PlaybackStateCompat playbackStateCompat) {
         switch (playbackStateCompat.getState()) {
             case PlaybackStateCompat.STATE_BUFFERING:
@@ -340,7 +341,7 @@ public class PlaySongFragment extends Fragment {
     }
 
     private void setBackgroundView(@NonNull View view, @NonNull String imageUrl) {
-        if (binding == null) return;
+        binding = getBinding();
 
         Glide.with(this).asBitmap().override(100).load(imageUrl).into(new CustomTarget<Bitmap>() {
             @Override
