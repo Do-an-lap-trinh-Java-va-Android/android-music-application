@@ -40,6 +40,7 @@ import com.music.models.Song;
 import com.music.ui.playsong.playback.MediaPlayBackService;
 import com.music.utils.UiModeUtils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.util.Arrays;
@@ -97,10 +98,9 @@ public class PlaySongFragment extends Fragment {
         public void onSessionReady() {
             final Song playNowSong = args.getPlayNowSong();
 
-            // Sắp xếp lại danh sách phát: Di chuyển bài hát đã chọn lên đầu danh sách để phát đầu tiên
-            final List<Song> sortedPlayList = Arrays.stream(args.getPlayList())
-//                    .sorted(Comparator.comparing(playNowSong::equals).reversed())
-                    .collect(Collectors.toList());
+            final List<Song> playList = Arrays.stream(
+                    ArrayUtils.add(args.getPlayList(), playNowSong)
+            ).distinct().collect(Collectors.toList());
 
             updateUI(playNowSong);
 
@@ -108,7 +108,7 @@ public class PlaySongFragment extends Fragment {
             requireContext().startService(new Intent(requireContext(), MediaPlayBackService.class));
 
             // Thêm các bài hát vào hàng chờ
-            for (Song song : sortedPlayList) {
+            for (Song song : playList) {
                 mediaController.addQueueItem(new MediaDescriptionCompat.Builder()
                         .setMediaId(song.getId())
                         .setTitle(song.getName())
