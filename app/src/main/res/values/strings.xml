@@ -30,4 +30,8 @@
     <string name="discover">Khám phá</string>
     <string name="chart">Bảng xếp hạng</string>
     <string name="personal">Cá Nhân</string>
+
+    <!--  Facebook app id -->
+    <string name="facebook_app_id">120961559875105</string>
+    <string name="fb_login_protocol_scheme">fb120961559875105</string>
 </resources>
