@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
@@ -380,25 +381,41 @@ public class PlaySongFragment extends Fragment {
 
                         // Nếu màu gradientColors[0] quá tối thì sẽ chỉnh màu chữ thành trắng và ngược lại thành đen
                         if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.3) {
-                            binding.tvSongName.setTextColor(Color.WHITE);
-                            binding.tvSongArtists.setTextColor(Color.WHITE);
-                            binding.tvCurrentPosition.setTextColor(Color.WHITE);
-                            binding.tvLengthOfSong.setTextColor(Color.WHITE);
+                            binding.tvSongName.setTextColor(getResources().getColor(R.color.gray_300));
+                            binding.tvSongArtists.setTextColor(getResources().getColor(R.color.gray_300));
+                            binding.tvCurrentPosition.setTextColor(getResources().getColor(R.color.gray_300));
+                            binding.tvLengthOfSong.setTextColor(getResources().getColor(R.color.gray_300));
                             binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnRepeat.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnShuffle.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.gray_300));
+                            getBinding().seekBar.getProgressDrawable().setColorFilter(
+                                    getResources().getColor(R.color.gray_300),
+                                    PorterDuff.Mode.SRC_IN
+                            );
+                            getBinding().seekBar.getThumb().setColorFilter(
+                                    getResources().getColor(R.color.gray_300),
+                                    PorterDuff.Mode.SRC_IN
+                            );
                         } else {
-                            binding.tvSongName.setTextColor(Color.BLACK);
-                            binding.tvSongArtists.setTextColor(Color.BLACK);
-                            binding.tvCurrentPosition.setTextColor(Color.BLACK);
-                            binding.tvLengthOfSong.setTextColor(Color.BLACK);
+                            binding.tvSongName.setTextColor(getResources().getColor(R.color.black_800));
+                            binding.tvSongArtists.setTextColor(getResources().getColor(R.color.black_800));
+                            binding.tvCurrentPosition.setTextColor(getResources().getColor(R.color.black_800));
+                            binding.tvLengthOfSong.setTextColor(getResources().getColor(R.color.black_800));
                             binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnRepeat.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnShuffle.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.black_800));
+                            getBinding().seekBar.getProgressDrawable().setColorFilter(
+                                    getResources().getColor(R.color.black_800),
+                                    PorterDuff.Mode.SRC_IN
+                            );
+                            getBinding().seekBar.getThumb().setColorFilter(
+                                    getResources().getColor(R.color.black_800),
+                                    PorterDuff.Mode.SRC_IN
+                            );
                         }
                     }
                 });
