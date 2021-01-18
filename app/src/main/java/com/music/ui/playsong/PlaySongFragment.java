@@ -64,13 +64,16 @@ public class PlaySongFragment extends Fragment {
     @NonNull
     private PlaySongFragmentArgs args;
 
+    @Nullable
     private MediaBrowserCompat mediaBrowser;
 
+    @Nullable
     private MediaControllerCompat mediaController;
 
     @Nullable
     private MediaPlayer mediaPlayer;
 
+    @NonNull
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -83,6 +86,7 @@ public class PlaySongFragment extends Fragment {
         }
     };
 
+    @NonNull
     private final MediaBrowserCompat.ConnectionCallback connectionCallbacks = new MediaBrowserCompat.ConnectionCallback() {
         @Override
         public void onConnected() {
@@ -93,6 +97,7 @@ public class PlaySongFragment extends Fragment {
         }
     };
 
+    @NonNull
     private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onSessionReady() {
@@ -174,7 +179,10 @@ public class PlaySongFragment extends Fragment {
         }
     };
 
+    @NonNull
     private final Handler handler = new Handler(Looper.myLooper());
+
+    @NonNull
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -233,7 +241,9 @@ public class PlaySongFragment extends Fragment {
 
         requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
 
-        mediaBrowser.connect();
+        if (mediaBrowser != null) {
+            mediaBrowser.connect();
+        }
     }
 
     @Override
@@ -259,18 +269,15 @@ public class PlaySongFragment extends Fragment {
 
         handler.removeCallbacks(runnable);
 
-        mediaBrowser.disconnect();
+        if (mediaBrowser != null) {
+            mediaBrowser.disconnect();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     private void handleUpdateImageSourceBtnTogglePlayPause(@NonNull MediaControllerCompat mediaController) {
