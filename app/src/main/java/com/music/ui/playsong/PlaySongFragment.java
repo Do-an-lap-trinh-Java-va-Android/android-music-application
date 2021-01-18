@@ -278,6 +278,7 @@ public class PlaySongFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        requireContext().unbindService(serviceConnection);
     }
 
     private void handleUpdateImageSourceBtnTogglePlayPause(@NonNull MediaControllerCompat mediaController) {
