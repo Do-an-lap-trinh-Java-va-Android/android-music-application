@@ -14,11 +14,11 @@
             },
             "oauth_client": [
                 {
-                    "client_id": "3442333075-qdfe31lcljfkbuc0tk9hr3pkpiv5c7q5.apps.googleusercontent.com",
+                    "client_id": "3442333075-35qevq7883g6j2h4ctu3i1tfb09og6fr.apps.googleusercontent.com",
                     "client_type": 1,
                     "android_info": {
                         "package_name": "com.music",
-                        "certificate_hash": "fab79cf8f42b42b3bff806f6606bef3be8083c28"
+                        "certificate_hash": "eace1e0fe3cbe56752e01b2374185af93f41be5c"
                     }
                 },
                 {
