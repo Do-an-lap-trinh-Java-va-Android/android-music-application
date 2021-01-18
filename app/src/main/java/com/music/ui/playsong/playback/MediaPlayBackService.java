@@ -1,9 +1,5 @@
 package com.music.ui.playsong.playback;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -11,7 +7,6 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -25,6 +20,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -263,11 +259,6 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         mediaSession = new MediaSessionCompat(getBaseContext(), TAG);
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS);
 
-        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-        mediaButtonIntent.setClass(getBaseContext(), MediaButtonReceiver.class);
-        PendingIntent mbrIntent = PendingIntent.getBroadcast(getBaseContext(), 0, mediaButtonIntent, 0);
-        mediaSession.setMediaButtonReceiver(mbrIntent);
-
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(PlaybackStateCompat.ACTION_PLAY |
                             PlaybackStateCompat.ACTION_PLAY_PAUSE);
@@ -296,66 +287,18 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
     }
 
     private void showPauseNotification() {
-        if (mediaSession == null) return;
-
-        MediaControllerCompat controller = mediaSession.getController();
-        MediaMetadataCompat mediaMetadata = controller.getMetadata();
-        MediaDescriptionCompat description = mediaMetadata.getDescription();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mediaPlaybackChannel =
-                    new NotificationChannel(CHANNEL_ID, "Media Playback", NotificationManager.IMPORTANCE_LOW);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.createNotificationChannel(mediaPlaybackChannel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext(), CHANNEL_ID);
-
-        builder.setContentTitle(description.getTitle())
-                .setContentText(description.getSubtitle())
-                .setSubText(description.getDescription())
-                .setLargeIcon(description.getIconBitmap())
-                .setContentIntent(controller.getSessionActivity())
-                .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_STOP))
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setSmallIcon(R.drawable.ic_round_music_note_24)
-                .setShowWhen(false)
-                .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_round_skip_previous_48, "Previous",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
-                ))
-                .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_round_pause_48, "Pause",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_PLAY_PAUSE))
-                )
-                .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_round_skip_next_48, "Next",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
-                ))
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setMediaSession(mediaSession.getSessionToken())
-                        .setShowActionsInCompactView(0, 1, 2)
-                        .setShowCancelButton(true)
-                        .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_STOP))
-                )
-                .setPriority(NotificationCompat.PRIORITY_LOW);
-
-        Glide.with(getApplicationContext()).asBitmap().load(description.getIconUri()).into(new CustomTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                builder.setLargeIcon(resource);
-                startForeground(musicPlayBackIdNotification, builder.build());
-            }
-
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-            }
-        });
+        createNotification("Pause", R.drawable.ic_round_pause_48);
     }
 
     private void showPlayingNotification() {
-        if (mediaSession == null) return;
+        createNotification("Play", R.drawable.ic_round_play_arrow_48);
+    }
+
+    private void createNotification(@NonNull String titleOfBtnTogglePlayPause,
+                                    @DrawableRes int iconBtnTogglePlayPause) {
+        if (mediaSession == null) {
+            return;
+        }
 
         MediaControllerCompat controller = mediaSession.getController();
         MediaMetadataCompat mediaMetadata = controller.getMetadata();
@@ -377,7 +320,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
                         MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
                 ))
                 .addAction(new NotificationCompat.Action(
-                        R.drawable.ic_round_play_arrow_48, "Play",
+                        iconBtnTogglePlayPause, titleOfBtnTogglePlayPause,
                         MediaButtonReceiver.buildMediaButtonPendingIntent(getBaseContext(), PlaybackStateCompat.ACTION_PLAY_PAUSE))
                 )
                 .addAction(new NotificationCompat.Action(
