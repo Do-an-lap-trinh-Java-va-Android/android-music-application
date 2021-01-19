@@ -158,11 +158,11 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             mediaPlayer.reset();
 
             try {
-                mediaPlayer.setDataSource(getBaseContext(), uri);
+                mediaPlayer.setDataSource(uri.toString());
             } catch (Exception e) {
                 mediaPlayer.release();
                 initMediaPlayer();
-                mediaPlayer.setDataSource(getBaseContext(), uri);
+                mediaPlayer.setDataSource(uri.toString());
             }
 
             mediaPlayer.prepareAsync();
