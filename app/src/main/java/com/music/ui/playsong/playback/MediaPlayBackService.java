@@ -123,10 +123,6 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         @Override
         public void onSkipToPrevious() {
             Log.i(TAG, "onSkipToPrevious: Bài hát trước: " + currentPosition);
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-                mediaPlayer.reset();
-            }
 
             currentPosition--;
 
@@ -143,11 +139,6 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
         @Override
         public void onSkipToNext() {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-                mediaPlayer.reset();
-            }
-
             if (currentPosition >= playList.size() - 1) {
                 currentPosition = 0;
             } else {
@@ -164,9 +155,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         @SneakyThrows
         @Override
         public void onPlayFromUri(Uri uri, Bundle extras) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.reset();
-            }
+            mediaPlayer.reset();
 
             try {
                 mediaPlayer.setDataSource(getBaseContext(), uri);
@@ -253,8 +242,7 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
             if (mediaSession != null &&
                 mediaSession.getController()
                         .getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
-                mediaSession.getController().getTransportControls().seekTo(0);
-                mediaSession.getController().getTransportControls().pause();
+                mediaSession.getController().getTransportControls().skipToNext();
             }
         });
     }

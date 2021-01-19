@@ -114,8 +114,6 @@ public class PlaySongFragment extends Fragment {
                     updateSeekbar(mediaMeta);
                     // Cập nhật lại icon của btnTogglePlayPause
                     handleUpdateImageSourceBtnTogglePlayPause(mediaController);
-                    // Cho chạy một handler để cập nhật tiến độ bài hát trên thanh Seekbar
-                    handler.postDelayed(runnable, 0);
                     return;
                 }
             }
@@ -164,12 +162,8 @@ public class PlaySongFragment extends Fragment {
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            try {
-                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                    binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                }
-            } catch (IllegalStateException ignored) {
-
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
 
             handler.postDelayed(this, 100);
@@ -201,23 +195,15 @@ public class PlaySongFragment extends Fragment {
 
             if (playBackState == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController.getTransportControls().pause();
-                handler.removeCallbacks(runnable);
             } else {
                 mediaController.getTransportControls().play();
-                handler.postDelayed(runnable, 0);
             }
         });
 
         getBinding().seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int msec, boolean fromUser) {
-                try {
-                    binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(
-                            mediaPlayer.getCurrentPosition(), "mm:ss"
-                    ));
-                } catch (IllegalStateException ignored) {
-
-                }
+                binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(msec, "mm:ss"));
 
                 if (fromUser) {
                     mediaController.getTransportControls().seekTo(msec);
@@ -266,8 +252,6 @@ public class PlaySongFragment extends Fragment {
         if (mediaController != null) {
             handleUpdateImageSourceBtnTogglePlayPause(mediaController);
         }
-
-        handler.post(runnable);
     }
 
     @Override
@@ -317,11 +301,17 @@ public class PlaySongFragment extends Fragment {
                 getBinding().prbBuffering.setVisibility(View.GONE);
                 getBinding().btnTogglePlayPause.setVisibility(View.VISIBLE);
                 getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_play_circle_64);
+
+                // Xóa cập nhật thời gian đã nghe của bài hát khi dừng phát
+                handler.removeCallbacks(runnable);
                 break;
             case PlaybackStateCompat.STATE_PLAYING:
                 getBinding().prbBuffering.setVisibility(View.GONE);
                 getBinding().btnTogglePlayPause.setVisibility(View.VISIBLE);
                 getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_pause_circle_64);
+
+                // Thực hiện cập nhật thời gian đã nghe của bài hát khi đang phát
+                handler.postDelayed(runnable, 0);
                 break;
             case PlaybackStateCompat.STATE_REWINDING:
                 break;
