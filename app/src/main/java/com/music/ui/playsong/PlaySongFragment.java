@@ -162,7 +162,7 @@ public class PlaySongFragment extends Fragment {
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            if (mediaPlayer != null) {
                 binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
 
@@ -303,7 +303,12 @@ public class PlaySongFragment extends Fragment {
                 getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_play_circle_64);
 
                 // Xóa cập nhật thời gian đã nghe của bài hát khi dừng phát
-                handler.removeCallbacks(runnable);
+                /*
+                 19/01/2021: Khi pause sẽ vẫn tiếp tục theo dõi cập nhật thời gian bài hát, mục địch của
+                 việc này là khi người dùng tua nhạc trên thanh thông báo thì ở bên player trong app vẫn sẽ
+                 được cập nhật dù đang ở trạng thái pause
+                 */
+                // handler.removeCallbacks(runnable);
                 break;
             case PlaybackStateCompat.STATE_PLAYING:
                 getBinding().prbBuffering.setVisibility(View.GONE);
