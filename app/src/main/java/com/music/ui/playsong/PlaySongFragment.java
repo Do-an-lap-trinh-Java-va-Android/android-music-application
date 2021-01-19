@@ -104,6 +104,23 @@ public class PlaySongFragment extends Fragment {
         public void onSessionReady() {
             final Song playNowSong = args.getPlayNowSong();
 
+            // Xử lý nghe tiếp tục bài hát nếu bài hát muốn nghe trùng với bài hát đang nghe
+            if (mediaController.getMetadata() != null) {
+                final MediaMetadataCompat mediaMeta = mediaController.getMetadata();
+                final String currentPlayingMediaId = mediaMeta.getDescription().getMediaId();
+
+                if (playNowSong.getId().equals(currentPlayingMediaId)) {
+                    // Cập nhật lại thời gian của bài hát trên Seekbar
+                    updateSeekbar(mediaMeta);
+                    // Cập nhật lại icon của btnTogglePlayPause
+                    handleUpdateImageSourceBtnTogglePlayPause(mediaController);
+                    // Cho chạy một handler để cập nhật tiến độ bài hát trên thanh Seekbar
+                    handler.postDelayed(runnable, 0);
+                    return;
+                }
+            }
+
+            // Xử lý nghe một bài hát khác
             final List<Song> playList = Arrays.stream(
                     ArrayUtils.add(args.getPlayList(), playNowSong)
             ).distinct().collect(Collectors.toList());
@@ -136,47 +153,7 @@ public class PlaySongFragment extends Fragment {
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             updateUI(metadata.getDescription());
-
-            binding.btnTogglePlayPause.setOnClickListener(v -> {
-                int playBackState = MediaControllerCompat.getMediaController(requireActivity()).getPlaybackState().getState();
-
-                if (playBackState == PlaybackStateCompat.STATE_PLAYING) {
-                    mediaController.getTransportControls().pause();
-                    handler.removeCallbacks(runnable);
-                } else {
-                    mediaController.getTransportControls().play();
-                    handler.postDelayed(runnable, 0);
-                }
-            });
-
-            binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int msec, boolean fromUser) {
-                    try {
-                        binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(
-                                mediaPlayer.getCurrentPosition(), "mm:ss"
-                        ));
-                    } catch (IllegalStateException ignored) {
-
-                    }
-
-                    if (fromUser) {
-                        mediaController.getTransportControls().seekTo(msec);
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) { }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) { }
-            });
-
-            binding.seekBar.setMax((int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
-            binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(
-                    metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION),
-                    "mm:ss"
-            ));
+            updateSeekbar(metadata);
         }
     };
 
@@ -219,13 +196,48 @@ public class PlaySongFragment extends Fragment {
                 Context.BIND_AUTO_CREATE
         );
 
-        binding.btnSkipToNext.setOnClickListener(view -> {
+        getBinding().btnTogglePlayPause.setOnClickListener(v -> {
+            int playBackState = mediaController.getPlaybackState().getState();
+
+            if (playBackState == PlaybackStateCompat.STATE_PLAYING) {
+                mediaController.getTransportControls().pause();
+                handler.removeCallbacks(runnable);
+            } else {
+                mediaController.getTransportControls().play();
+                handler.postDelayed(runnable, 0);
+            }
+        });
+
+        getBinding().seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int msec, boolean fromUser) {
+                try {
+                    binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(
+                            mediaPlayer.getCurrentPosition(), "mm:ss"
+                    ));
+                } catch (IllegalStateException ignored) {
+
+                }
+
+                if (fromUser) {
+                    mediaController.getTransportControls().seekTo(msec);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        getBinding().btnSkipToNext.setOnClickListener(view -> {
             if (mediaController != null && mediaController.getTransportControls() != null) {
                 mediaController.getTransportControls().skipToNext();
             }
         });
 
-        binding.btnSkipToPrevious.setOnClickListener(vieww -> {
+        getBinding().btnSkipToPrevious.setOnClickListener(vieww -> {
             if (mediaController != null && mediaController.getTransportControls() != null) {
                 mediaController.getTransportControls().skipToPrevious();
             }
@@ -347,6 +359,13 @@ public class PlaySongFragment extends Fragment {
                 .circleCrop()
                 .into(getBinding().ivThumbnail);
         setBackgroundView(getBinding().frmLayout, String.valueOf(mediaDescriptionCompat.getIconUri()));
+    }
+
+    private void updateSeekbar(@NonNull MediaMetadataCompat mediaMeta) {
+        binding.seekBar.setMax((int) mediaMeta.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
+        binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(
+                mediaMeta.getLong(MediaMetadataCompat.METADATA_KEY_DURATION), "mm:ss"
+        ));
     }
 
     private void setBackgroundView(@NonNull View view, @NonNull String imageUrl) {
