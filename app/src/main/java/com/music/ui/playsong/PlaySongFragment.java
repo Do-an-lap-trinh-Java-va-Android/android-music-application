@@ -121,8 +121,8 @@ public class PlaySongFragment extends Fragment {
                         .setTitle(song.getName())
                         .setSubtitle(song.getArtistsNames())
                         .setDescription(song.getFormatListens() + " lượt nghe")
-                        .setMediaUri(Uri.parse(song.getMp3()))
-                        .setIconUri(Uri.parse(song.getThumbnail()))
+                        .setMediaUri(song.getMp3())
+                        .setIconUri(song.getThumbnail())
                         .build()
                 );
             }
@@ -348,7 +348,7 @@ public class PlaySongFragment extends Fragment {
                 .load(mediaDescriptionCompat.getIconUri())
                 .circleCrop()
                 .into(getBinding().ivThumbnail);
-        setBackgroundView(getBinding().frmLayout, String.valueOf(mediaDescriptionCompat.getIconUri()));
+        setBackgroundView(getBinding().frmLayout, mediaDescriptionCompat.getIconUri());
     }
 
     private void updateSeekbar(@NonNull MediaMetadataCompat mediaMeta) {
@@ -358,7 +358,7 @@ public class PlaySongFragment extends Fragment {
         binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(duration, "mm:ss"));
     }
 
-    private void setBackgroundView(@NonNull View view, @NonNull String imageUrl) {
+    private void setBackgroundView(@NonNull View view, @NonNull Uri imageUrl) {
         binding = getBinding();
 
         Glide.with(this).asBitmap().override(100).load(imageUrl).into(new CustomTarget<Bitmap>() {
