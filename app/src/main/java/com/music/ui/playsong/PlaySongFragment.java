@@ -19,7 +19,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,17 +83,6 @@ public class PlaySongFragment extends Fragment {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mediaPlayer = null;
-        }
-    };
-
-    @NonNull
-    private final MediaBrowserCompat.ConnectionCallback connectionCallbacks = new MediaBrowserCompat.ConnectionCallback() {
-        @Override
-        public void onConnected() {
-            MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-            mediaController = new MediaControllerCompat(requireContext(), token);
-            MediaControllerCompat.setMediaController(requireActivity(), mediaController);
-            mediaController.registerCallback(controllerCallback);
         }
     };
 
@@ -180,7 +168,14 @@ public class PlaySongFragment extends Fragment {
 
         mediaBrowser = new MediaBrowserCompat(requireActivity(),
                 new ComponentName(requireActivity(), MediaPlayBackService.class),
-                connectionCallbacks,
+                new MediaBrowserCompat.ConnectionCallback() {
+                    @Override
+                    public void onConnected() {
+                        mediaController = new MediaControllerCompat(requireContext(), mediaBrowser.getSessionToken());
+                        MediaControllerCompat.setMediaController(requireActivity(), mediaController);
+                        mediaController.registerCallback(controllerCallback);
+                    }
+                },
                 null
         );
 
