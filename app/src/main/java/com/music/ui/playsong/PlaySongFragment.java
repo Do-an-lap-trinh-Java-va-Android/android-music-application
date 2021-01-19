@@ -357,10 +357,10 @@ public class PlaySongFragment extends Fragment {
     }
 
     private void updateSeekbar(@NonNull MediaMetadataCompat mediaMeta) {
-        binding.seekBar.setMax((int) mediaMeta.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
-        binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(
-                mediaMeta.getLong(MediaMetadataCompat.METADATA_KEY_DURATION), "mm:ss"
-        ));
+        final long duration = mediaMeta.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+
+        binding.seekBar.setMax((int) duration);
+        binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(duration, "mm:ss"));
     }
 
     private void setBackgroundView(@NonNull View view, @NonNull String imageUrl) {
