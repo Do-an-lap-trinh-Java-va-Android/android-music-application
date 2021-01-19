@@ -174,10 +174,14 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
         @Override
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
-            for (MediaDescriptionCompat mediaDescriptionCompat : playList) {
+            final int playListSize = playList.size();
+
+            for (int i = 0; i < playListSize; i++) {
+                MediaDescriptionCompat mediaDescriptionCompat = playList.get(i);
+
                 if (Objects.requireNonNull(mediaDescriptionCompat.getMediaId()).equals(mediaId)) {
                     mediaSession.getController().getTransportControls().playFromUri(mediaDescriptionCompat.getMediaUri(), null);
-                    currentPosition = playList.indexOf(mediaDescriptionCompat);
+                    currentPosition = i;
                     break;
                 }
             }
