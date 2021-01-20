@@ -414,7 +414,7 @@ public class PlaySongFragment extends Fragment {
                             binding.tvLengthOfSong.setTextColor(getResources().getColor(R.color.gray_300));
                             binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnRepeat.setColorFilter(getResources().getColor(R.color.gray_300));
-                            binding.btnShuffle.setColorFilter(getResources().getColor(R.color.gray_300));
+                            binding.btnHeart.setBackgroundResource(R.drawable.toggle_btn_favorite_light);
                             binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.gray_300));
                             binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.gray_300));
                             getBinding().seekBar.getProgressDrawable().setColorFilter(
@@ -432,7 +432,7 @@ public class PlaySongFragment extends Fragment {
                             binding.tvLengthOfSong.setTextColor(getResources().getColor(R.color.black_800));
                             binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnRepeat.setColorFilter(getResources().getColor(R.color.black_800));
-                            binding.btnShuffle.setColorFilter(getResources().getColor(R.color.black_800));
+                            binding.btnHeart.setBackgroundResource(R.drawable.toggle_btn_favorite_dark);
                             binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.black_800));
                             binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.black_800));
                             getBinding().seekBar.getProgressDrawable().setColorFilter(
