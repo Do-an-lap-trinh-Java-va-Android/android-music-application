@@ -254,6 +254,7 @@ public class PlaySongFragment extends Fragment {
         super.onStart();
 
         requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
+        requireActivity().findViewById(R.id.media_player).setVisibility(View.GONE);
 
         if (mediaBrowser != null) {
             mediaBrowser.connect();
@@ -274,6 +275,7 @@ public class PlaySongFragment extends Fragment {
         super.onStop();
 
         requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.media_player).setVisibility(View.VISIBLE);
 
         if (MediaControllerCompat.getMediaController(requireActivity()) != null) {
             MediaControllerCompat.getMediaController(requireActivity()).unregisterCallback(controllerCallback);

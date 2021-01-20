@@ -57,8 +57,8 @@ public class SongChartVerticalAdapter extends FirestorePagingAdapter<Song, SongC
                     .collect(Collectors.toList())
                     .toArray((Song[]) Array.newInstance(Song.class, getItemCount()));
 
-            ChartFragmentDirections.ActionNavigationChartToNavigationPlaySongFragment action =
-                    ChartFragmentDirections.actionNavigationChartToNavigationPlaySongFragment(
+            ChartFragmentDirections.ActionNavigationToPlaySongFragment action =
+                    ChartFragmentDirections.actionNavigationToPlaySongFragment(
                             model,
                             playList
                     );
