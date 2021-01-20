@@ -100,6 +100,12 @@ public class PlaySongFragment extends Fragment {
                 if (playNowSong.getId().equals(currentPlayingMediaId)) {
                     // Cập nhật lại thời gian của bài hát trên Seekbar
                     updateSeekbar(mediaMeta);
+
+                    // Nếu bài hát đang tạm dừng ở background và khi người dùng quay lại thì sẽ tiếp tục phát
+                    if (!mediaPlayer.isPlaying()) {
+                        mediaController.getTransportControls().play();
+                    }
+
                     // Cập nhật lại icon của btnTogglePlayPause
                     handleUpdateImageSourceBtnTogglePlayPause(mediaController);
                     return;
