@@ -16,7 +16,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -44,8 +43,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-
     @Nullable
     private ActivityMainBinding binding;
 
@@ -173,10 +170,6 @@ public class MainActivity extends AppCompatActivity {
             final Song song = new Song();
             song.setId(mediaDescription.getMediaId());
             song.setThumbnail(String.valueOf(mediaDescription.getIconUri()));
-
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("song", song);
-            bundle.putParcelableArray("playList", new Song[]{});
 
             final HomeFragmentDirections.ActionNavigationToPlaySongFragment action =
                     HomeFragmentDirections.actionNavigationToPlaySongFragment(song, new Song[]{});

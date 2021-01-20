@@ -141,13 +141,17 @@ public class PlaySongFragment extends Fragment {
 
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat playbackStateCompat) {
-            handleUpdateImageSourceBtnTogglePlayPause(playbackStateCompat);
+            if (binding != null) {
+                handleUpdateImageSourceBtnTogglePlayPause(playbackStateCompat);
+            }
         }
 
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
-            updateUI(metadata.getDescription());
-            updateSeekbar(metadata);
+            if (binding != null) {
+                updateUI(metadata.getDescription());
+                updateSeekbar(metadata);
+            }
         }
     };
 
@@ -187,6 +191,11 @@ public class PlaySongFragment extends Fragment {
                 null
         );
 
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         requireContext().bindService(
                 new Intent(requireContext(), MediaPlayBackService.class),
                 serviceConnection,
@@ -220,19 +229,19 @@ public class PlaySongFragment extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
-        getBinding().btnSkipToNext.setOnClickListener(view -> {
+        getBinding().btnSkipToNext.setOnClickListener(v -> {
             if (mediaController != null && mediaController.getTransportControls() != null) {
                 mediaController.getTransportControls().skipToNext();
             }
         });
 
-        getBinding().btnSkipToPrevious.setOnClickListener(vieww -> {
+        getBinding().btnSkipToPrevious.setOnClickListener(v -> {
             if (mediaController != null && mediaController.getTransportControls() != null) {
                 mediaController.getTransportControls().skipToPrevious();
             }
         });
 
-        getBinding().btnRepeat.setOnClickListener(view -> {
+        getBinding().btnRepeat.setOnClickListener(v -> {
             if (mediaController != null && mediaController.getTransportControls() != null) {
                 if (mediaController.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                     getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_one_24);
@@ -245,8 +254,6 @@ public class PlaySongFragment extends Fragment {
         });
 
         updateUI(args.getPlayNowSong());
-
-        return binding.getRoot();
     }
 
     @Override
