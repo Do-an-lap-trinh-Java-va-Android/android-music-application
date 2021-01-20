@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -98,7 +100,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSessionReady() {
             if (mediaController.getTransportControls() != null && mediaController.getMetadata() != null) {
-                getBinding().mediaPlayer.setVisibility(View.VISIBLE);
+                if (navController.getCurrentDestination().getId() == R.id.navigation_play_song_fragment) {
+                    getBinding().mediaPlayer.setVisibility(View.GONE);
+                } else {
+                    getBinding().mediaPlayer.setVisibility(View.VISIBLE);
+                }
+
                 final MediaMetadataCompat metaData = mediaController.getMetadata();
                 final MediaDescriptionCompat mediaDescription = mediaController.getMetadata().getDescription();
                 getBinding().songTitle.setText(mediaDescription.getTitle());
