@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -113,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 getBinding().prbSongTimePlayed.setMax((int) metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
                 Glide.with(MainActivity.this).load(mediaDescription.getIconUri())
                         .circleCrop().into(getBinding().songThumbnail);
+                handler.postDelayed(runnable, 0);
             }
         }
 
@@ -190,8 +189,23 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth.addAuthStateListener(authStateListener);
 
-        if (mediaBrowser != null) {
+        if (mediaBrowser != null && !mediaBrowser.isConnected()) {
             mediaBrowser.connect();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mediaController != null) {
+            if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PAUSED) {
+                handler.removeCallbacks(runnable);
+            }
+
+            if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
+                handler.postDelayed(runnable, 100);
+            }
         }
     }
 
@@ -216,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
         handler.removeCallbacks(runnable);
 
-        if (mediaBrowser != null) {
+        if (mediaBrowser != null && mediaBrowser.isConnected()) {
             mediaBrowser.disconnect();
         }
     }
