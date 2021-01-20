@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_to_play_song_fragment"
-            app:destination="@id/navigation_play_song_fragment" />
+            app:destination="@id/navigation_play_song_fragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
@@ -22,7 +26,11 @@
         tools:layout="@layout/fragment_chart">
         <action
             android:id="@+id/action_navigation_to_play_song_fragment"
-            app:destination="@id/navigation_play_song_fragment" />
+            app:destination="@id/navigation_play_song_fragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
@@ -32,7 +40,11 @@
         tools:layout="@layout/fragment_account">
         <action
             android:id="@+id/action_navigation_to_play_song_fragment"
-            app:destination="@id/navigation_play_song_fragment" />
+            app:destination="@id/navigation_play_song_fragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
@@ -41,7 +53,11 @@
         android:label="@string/setting">
         <action
             android:id="@+id/action_navigation_to_play_song_fragment"
-            app:destination="@id/navigation_play_song_fragment" />
+            app:destination="@id/navigation_play_song_fragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
