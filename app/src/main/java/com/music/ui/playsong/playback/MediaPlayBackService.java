@@ -138,6 +138,21 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         }
 
         @Override
+        public void onSetRepeatMode(int repeatMode) {
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                Log.i(TAG, "onSetRepeatMode: Lặp lại danh sách phát bài hát");
+                mediaPlayer.setLooping(false);
+            }
+
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+                Log.i(TAG, "onSetRepeatMode: Lặp lại bài hát");
+                mediaPlayer.setLooping(true);
+            }
+
+            mediaSession.setRepeatMode(repeatMode);
+        }
+
+        @Override
         public void onSkipToNext() {
             if (currentPosition >= playList.size() - 1) {
                 currentPosition = 0;
@@ -259,6 +274,8 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
                 .setActions(PlaybackStateCompat.ACTION_PLAY |
                             PlaybackStateCompat.ACTION_PLAY_PAUSE);
         mediaSession.setPlaybackState(stateBuilder.build());
+
+        mediaSession.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
 
         mediaSession.setCallback(callback);
 

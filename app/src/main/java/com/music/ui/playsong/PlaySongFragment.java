@@ -224,6 +224,18 @@ public class PlaySongFragment extends Fragment {
             }
         });
 
+        getBinding().btnRepeat.setOnClickListener(view -> {
+            if (mediaController != null && mediaController.getTransportControls() != null) {
+                if (mediaController.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                    getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_one_24);
+                    mediaController.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
+                } else {
+                    getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_24);
+                    mediaController.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
+                }
+            }
+        });
+
         updateUI(args.getPlayNowSong());
 
         return binding.getRoot();
