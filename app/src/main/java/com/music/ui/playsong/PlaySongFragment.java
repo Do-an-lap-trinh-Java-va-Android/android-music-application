@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
@@ -27,6 +27,8 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.palette.graphics.Palette;
@@ -381,69 +383,66 @@ public class PlaySongFragment extends Fragment {
 
         Glide.with(this).asBitmap().override(100).load(imageUrl).into(new CustomTarget<Bitmap>() {
             @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                Palette.from(resource).generate(palette -> {
-                    if (palette != null) {
-                        int defaultColor = getResources().getColor(R.color.blue_700);
-                        int[] gradientColors = new int[2];
+            public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                Palette.from(bitmap).generate(palette -> {
+                    if (palette == null) {
+                        return;
+                    }
 
-                        gradientColors[0] = palette.getDominantColor(defaultColor);
+                    final int defaultColor = getResources().getColor(R.color.blue_700);
+                    final int grayColor = getResources().getColor(R.color.gray_300);
+                    final int blackColor = getResources().getColor(R.color.black_800);
 
-                        if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.25) {
-                            gradientColors[0] = palette.getDarkVibrantColor(defaultColor);
-                        }
+                    int[] colors = new int[]{
+                            // Màu nằm bên dưới
+                            palette.getDominantColor(defaultColor),
+                            // Màu nằm bên trên, màu này bắt buộc phải khớp với màu của thanh ActionBar
+                            UiModeUtils.isLightMode(requireContext()) ? Color.WHITE : blackColor
+                    };
 
-                        if (UiModeUtils.isDarkMode(requireContext())) {
-                            gradientColors[1] = getResources().getColor(R.color.black_800);
-                        } else {
-                            gradientColors[1] = Color.WHITE;
-                        }
+                    // Nếu màu chủ đạo quá tối thì sẽ lấy màu khác
+                    if (ColorUtils.calculateLuminance(colors[0]) < 0.25) {
+                        colors[0] = palette.getDarkVibrantColor(defaultColor);
+                    }
 
-                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                gradientColors
+                    // Hiển thị background gradient với màu đi từ dưới lên trên
+                    view.setBackground(new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors));
+
+                    // Nếu màu colors[0] quá tối thì sẽ chỉnh màu chữ thành trắng và ngược lại thành đen
+                    if (ColorUtils.calculateLuminance(colors[0]) < 0.3) {
+                        final ColorFilter colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                                grayColor,
+                                BlendModeCompat.SRC_IN
                         );
 
-                        view.setBackground(gradientDrawable);
+                        binding.tvSongName.setTextColor(grayColor);
+                        binding.tvSongArtists.setTextColor(grayColor);
+                        binding.tvCurrentPosition.setTextColor(grayColor);
+                        binding.tvLengthOfSong.setTextColor(grayColor);
+                        binding.btnTogglePlayPause.setColorFilter(grayColor);
+                        binding.btnRepeat.setColorFilter(grayColor);
+                        binding.btnSkipToNext.setColorFilter(grayColor);
+                        binding.btnSkipToPrevious.setColorFilter(grayColor);
+                        binding.seekBar.getProgressDrawable().setColorFilter(colorFilter);
+                        binding.seekBar.getThumb().setColorFilter(colorFilter);
+                        binding.btnHeart.setBackgroundResource(R.drawable.toggle_btn_favorite_light);
+                    } else {
+                        final ColorFilter colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                                blackColor,
+                                BlendModeCompat.SRC_IN
+                        );
 
-                        // Nếu màu gradientColors[0] quá tối thì sẽ chỉnh màu chữ thành trắng và ngược lại thành đen
-                        if (ColorUtils.calculateLuminance(gradientColors[0]) < 0.3) {
-                            binding.tvSongName.setTextColor(getResources().getColor(R.color.gray_300));
-                            binding.tvSongArtists.setTextColor(getResources().getColor(R.color.gray_300));
-                            binding.tvCurrentPosition.setTextColor(getResources().getColor(R.color.gray_300));
-                            binding.tvLengthOfSong.setTextColor(getResources().getColor(R.color.gray_300));
-                            binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.gray_300));
-                            binding.btnRepeat.setColorFilter(getResources().getColor(R.color.gray_300));
-                            binding.btnHeart.setBackgroundResource(R.drawable.toggle_btn_favorite_light);
-                            binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.gray_300));
-                            binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.gray_300));
-                            getBinding().seekBar.getProgressDrawable().setColorFilter(
-                                    getResources().getColor(R.color.gray_300),
-                                    PorterDuff.Mode.SRC_IN
-                            );
-                            getBinding().seekBar.getThumb().setColorFilter(
-                                    getResources().getColor(R.color.gray_300),
-                                    PorterDuff.Mode.SRC_IN
-                            );
-                        } else {
-                            binding.tvSongName.setTextColor(getResources().getColor(R.color.black_800));
-                            binding.tvSongArtists.setTextColor(getResources().getColor(R.color.black_800));
-                            binding.tvCurrentPosition.setTextColor(getResources().getColor(R.color.black_800));
-                            binding.tvLengthOfSong.setTextColor(getResources().getColor(R.color.black_800));
-                            binding.btnTogglePlayPause.setColorFilter(getResources().getColor(R.color.black_800));
-                            binding.btnRepeat.setColorFilter(getResources().getColor(R.color.black_800));
-                            binding.btnHeart.setBackgroundResource(R.drawable.toggle_btn_favorite_dark);
-                            binding.btnSkipToNext.setColorFilter(getResources().getColor(R.color.black_800));
-                            binding.btnSkipToPrevious.setColorFilter(getResources().getColor(R.color.black_800));
-                            getBinding().seekBar.getProgressDrawable().setColorFilter(
-                                    getResources().getColor(R.color.black_800),
-                                    PorterDuff.Mode.SRC_IN
-                            );
-                            getBinding().seekBar.getThumb().setColorFilter(
-                                    getResources().getColor(R.color.black_800),
-                                    PorterDuff.Mode.SRC_IN
-                            );
-                        }
+                        binding.tvSongName.setTextColor(blackColor);
+                        binding.tvSongArtists.setTextColor(blackColor);
+                        binding.tvCurrentPosition.setTextColor(blackColor);
+                        binding.tvLengthOfSong.setTextColor(blackColor);
+                        binding.btnTogglePlayPause.setColorFilter(blackColor);
+                        binding.btnRepeat.setColorFilter(blackColor);
+                        binding.btnSkipToNext.setColorFilter(blackColor);
+                        binding.btnSkipToPrevious.setColorFilter(blackColor);
+                        binding.seekBar.getProgressDrawable().setColorFilter(colorFilter);
+                        binding.seekBar.getThumb().setColorFilter(colorFilter);
+                        binding.btnHeart.setBackgroundResource(R.drawable.toggle_btn_favorite_dark);
                     }
                 });
             }
