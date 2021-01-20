@@ -84,15 +84,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private final FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
-        if (firebaseAuth.getCurrentUser() == null) {
-            Intent intent = new Intent(this, LoginActivity.class).addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    };
-
     @NonNull
     private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
         @Override
@@ -155,6 +146,27 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mediaPlayer = null;
+        }
+    };
+
+    private final FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
+        if (firebaseAuth.getCurrentUser() == null) {
+            handler.removeCallbacks(runnable);
+
+            if (mediaController != null) {
+                mediaController.getTransportControls().stop();
+                mediaController.unregisterCallback(controllerCallback);
+            }
+
+            if (mediaBrowser != null) {
+                mediaBrowser.disconnect();
+                mediaPlayer.release();
+            }
+
+            Intent intent = new Intent(this, LoginActivity.class).addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     };
 

@@ -90,8 +90,8 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
         public void onStop() {
             Log.i(TAG, "onStop: onStop");
             mediaSession.setActive(false);
-            mediaPlayer.stop();
-            stopForeground(false);
+            stopForeground(true);
+            stopSelf();
         }
 
         @Override
@@ -272,7 +272,8 @@ public class MediaPlayBackService extends MediaBrowserServiceCompat {
 
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(PlaybackStateCompat.ACTION_PLAY |
-                            PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                            PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                            PlaybackStateCompat.ACTION_STOP);
         mediaSession.setPlaybackState(stateBuilder.build());
 
         mediaSession.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
