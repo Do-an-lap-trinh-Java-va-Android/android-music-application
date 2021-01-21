@@ -6,10 +6,8 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.PropertyName;
 import com.music.utils.NumberUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,11 +16,16 @@ import org.apache.commons.text.WordUtils;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder(setterPrefix = "set", builderMethodName = "Builder")
 public class Song implements Parcelable {
     /**
      * ID bài hát
@@ -35,12 +38,14 @@ public class Song implements Parcelable {
      * Tên bài hát
      */
     @NonNull
+    @Builder.Default
     private String name = StringUtils.EMPTY;
 
     /**
      * Đường dẫn hình ảnh
      */
     @NonNull
+    @Builder.Default
     private Uri thumbnail = Uri.EMPTY;
 
     /**
@@ -67,21 +72,24 @@ public class Song implements Parcelable {
      * Đường dẫn bài hát
      */
     @NonNull
+    @Builder.Default
     private Uri mp3 = Uri.EMPTY;
 
     /**
      * Danh sách nghệ sĩ
      */
     @NonNull
+    @Singular
     private List<String> artists = Collections.emptyList();
 
     /**
      * Danh sách album mà bài hát này thuộc về
      */
     @NonNull
+    @Singular
     private List<String> albums = Collections.emptyList();
 
-    protected Song(Parcel in) {
+    protected Song(@NonNull Parcel in) {
         id = in.readString();
         name = in.readString();
         thumbnail = in.readParcelable(Uri.class.getClassLoader());

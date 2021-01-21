@@ -172,9 +172,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             final MediaDescriptionCompat mediaDescription = mediaController.getMetadata().getDescription();
-            final Song song = new Song();
-            song.setId(Objects.requireNonNull(mediaDescription.getMediaId()));
-            song.setThumbnail(String.valueOf(mediaDescription.getIconUri()));
+
+            final Song song = Song.Builder()
+                    .setId(Objects.requireNonNull(mediaDescription.getMediaId()))
+                    .setThumbnail(mediaDescription.getIconUri())
+                    .build();
 
             final HomeFragmentDirections.ActionNavigationToPlaySongFragment action =
                     HomeFragmentDirections.actionNavigationToPlaySongFragment(song, new Song[]{});
