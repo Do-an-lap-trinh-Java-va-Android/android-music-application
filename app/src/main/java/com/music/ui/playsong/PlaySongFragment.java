@@ -183,9 +183,11 @@ public class PlaySongFragment extends Fragment {
                 new MediaBrowserCompat.ConnectionCallback() {
                     @Override
                     public void onConnected() {
-                        mediaController = new MediaControllerCompat(requireContext(), mediaBrowser.getSessionToken());
-                        MediaControllerCompat.setMediaController(requireActivity(), mediaController);
-                        mediaController.registerCallback(controllerCallback);
+                        if (mediaBrowser != null) {
+                            mediaController = new MediaControllerCompat(requireContext(), mediaBrowser.getSessionToken());
+                            MediaControllerCompat.setMediaController(requireActivity(), mediaController);
+                            mediaController.registerCallback(controllerCallback);
+                        }
                     }
                 },
                 null
@@ -203,6 +205,10 @@ public class PlaySongFragment extends Fragment {
         );
 
         getBinding().btnTogglePlayPause.setOnClickListener(v -> {
+            if (mediaController == null) {
+                return;
+            }
+
             int playBackState = mediaController.getPlaybackState().getState();
 
             if (playBackState == PlaybackStateCompat.STATE_PLAYING) {
@@ -215,9 +221,9 @@ public class PlaySongFragment extends Fragment {
         getBinding().seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int msec, boolean fromUser) {
-                binding.tvCurrentPosition.setText(DurationFormatUtils.formatDuration(msec, "mm:ss"));
+                getBinding().tvCurrentPosition.setText(DurationFormatUtils.formatDuration(msec, "mm:ss"));
 
-                if (fromUser) {
+                if (fromUser && mediaController != null) {
                     mediaController.getTransportControls().seekTo(msec);
                 }
             }
@@ -242,14 +248,16 @@ public class PlaySongFragment extends Fragment {
         });
 
         getBinding().btnRepeat.setOnClickListener(v -> {
-            if (mediaController != null && mediaController.getTransportControls() != null) {
-                if (mediaController.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
-                    getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_one_24);
-                    mediaController.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
-                } else {
-                    getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_24);
-                    mediaController.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
-                }
+            if (mediaController == null || mediaController.getTransportControls() == null) {
+                return;
+            }
+
+            if (mediaController.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_one_24);
+                mediaController.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
+            } else {
+                getBinding().btnRepeat.setImageResource(R.drawable.ic_round_repeat_24);
+                mediaController.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
             }
         });
 
@@ -263,7 +271,7 @@ public class PlaySongFragment extends Fragment {
         requireActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
         requireActivity().findViewById(R.id.media_player).setVisibility(View.GONE);
 
-        if (mediaBrowser != null) {
+        if (mediaBrowser != null && !mediaBrowser.isConnected()) {
             mediaBrowser.connect();
         }
     }
@@ -290,7 +298,7 @@ public class PlaySongFragment extends Fragment {
 
         handler.removeCallbacks(runnable);
 
-        if (mediaBrowser != null) {
+        if (mediaBrowser != null && mediaBrowser.isConnected()) {
             mediaBrowser.disconnect();
         }
     }
@@ -377,14 +385,14 @@ public class PlaySongFragment extends Fragment {
                 .load(mediaDescriptionCompat.getIconUri())
                 .circleCrop()
                 .into(getBinding().ivThumbnail);
-        setBackgroundView(getBinding().frmLayout, mediaDescriptionCompat.getIconUri());
+        setBackgroundView(getBinding().frmLayout, Objects.requireNonNull(mediaDescriptionCompat.getIconUri()));
     }
 
     private void updateSeekbar(@NonNull MediaMetadataCompat mediaMeta) {
         final long duration = mediaMeta.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
 
-        binding.seekBar.setMax((int) duration);
-        binding.tvLengthOfSong.setText(DurationFormatUtils.formatDuration(duration, "mm:ss"));
+        getBinding().seekBar.setMax((int) duration);
+        getBinding().tvLengthOfSong.setText(DurationFormatUtils.formatDuration(duration, "mm:ss"));
     }
 
     private void setBackgroundView(@NonNull View view, @NonNull Uri imageUrl) {
