@@ -14,5 +14,10 @@
         "request": "^2.88.2",
         "request-promise": "^4.2.6",
         "tough-cookie-file-store": "^2.0.2"
+    },
+    "devDependencies": {
+        "@types/request-promise": "^4.1.47",
+        "@types/tough-cookie-file-store": "^2.0.1",
+        "firebase": "^8.2.3"
     }
 }

@@ -1,21 +1,11 @@
 const fs = require("fs");
 const { deleteCollection, insert } = require('./helpers');
 const firebase = require("firebase");
-const { exit } = require("process");
-const { info } = require("console");
 require("firebase/firestore");
 
-const firebaseConfig = {
-    apiKey: "AIzaSyB7BTkV7sFIqy2nQf5j8TxnhaI1s40Qw8w",
-    authDomain: "do-an-android-java-2372b.firebaseapp.com",
-    projectId: "do-an-android-java-2372b",
-    storageBucket: "do-an-android-java-2372b.appspot.com",
-    messagingSenderId: "3442333075",
-    appId: "1:3442333075:web:c1ba6ae24b1e8fa79fc466",
-    measurementId: "G-Z0VN0BJNX4"
-};
+const { FIREBASE_CONFIG, MIGRATION_PATH } = require('./config');
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(FIREBASE_CONFIG);
 
 const db = firebase.firestore();
 
@@ -42,8 +32,7 @@ const collections = [
     },
 ];
 
-let songs = JSON.parse(fs.readFileSync("./data/songs.json"));
-songs = [...songs].map(song => Object.assign({}, song, {year: 2019}));
+let songs = JSON.parse(fs.readFileSync(`${MIGRATION_PATH}/songs.json`));
 
 (async () => {
     await deleteCollection(db, "collections");

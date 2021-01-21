@@ -1,17 +1,13 @@
 let request = require("request-promise");
-const {FileCookieStore} = require('tough-cookie-file-store');
+const { FileCookieStore } = require('tough-cookie-file-store');
 const fs = require('fs');
-
+const { URL_API, API_KEY, SERCRET_KEY, COOKIE_PATH, COOKIE_FILE_NAME } = require('../config');
 const encrypt = require('./encrypt');
 
-const URL_API = 'https://zingmp3.vn';
-const API_KEY = 'kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw';
-const SERCRET_KEY = '882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW';
-const cookiePath = 'ZingMp3.json';
+if (!fs.existsSync(COOKIE_PATH)) fs.mkdirSync(COOKIE_PATH);
+if (!fs.existsSync(COOKIE_FILE_NAME)) fs.closeSync(fs.openSync(COOKIE_FILE_NAME, 'w'));
 
-if (!fs.existsSync(cookiePath)) fs.closeSync(fs.openSync(cookiePath, 'w'));
-
-let cookiejar = request.jar(new FileCookieStore(cookiePath));
+let cookiejar = request.jar(new FileCookieStore(COOKIE_FILE_NAME));
 
 request = request.defaults({
     qs: {
@@ -21,8 +17,8 @@ request = request.defaults({
     json: true,
     jar: cookiejar
 });
-class ZingMp3 {
 
+class ZingMp3 {
     static getFullInfo(id) {
         return new Promise(async (resolve, reject) => {
             try {
