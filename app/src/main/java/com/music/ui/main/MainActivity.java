@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -88,20 +89,9 @@ public class MainActivity extends AppCompatActivity {
     private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onSessionReady() {
-            if (mediaController.getTransportControls() != null && mediaController.getMetadata() != null) {
-                if (navController.getCurrentDestination().getId() == R.id.navigation_play_song_fragment) {
-                    getBinding().mediaPlayer.setVisibility(View.GONE);
-                } else {
-                    getBinding().mediaPlayer.setVisibility(View.VISIBLE);
-                }
-
-                final MediaMetadataCompat metaData = mediaController.getMetadata();
-                final MediaDescriptionCompat mediaDescription = mediaController.getMetadata().getDescription();
-                getBinding().songTitle.setText(mediaDescription.getTitle());
-                getBinding().songArtists.setText(mediaDescription.getSubtitle());
-                getBinding().prbSongTimePlayed.setMax((int) metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
-                Glide.with(MainActivity.this).load(mediaDescription.getIconUri())
-                        .circleCrop().into(getBinding().songThumbnail);
+            if (mediaController.getMetadata() != null) {
+                handleHideShowBottomMediaPlayer();
+                setupUI(mediaController.getMetadata());
                 handler.postDelayed(runnable, 0);
             }
         }
@@ -120,19 +110,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onMetadataChanged(MediaMetadataCompat metaData) {
             // Ẩn phần BottomMediaPlayer nếu đang ở trang nghe nhạc
-            if (navController.getCurrentDestination().getId() == R.id.navigation_play_song_fragment) {
-                getBinding().mediaPlayer.setVisibility(View.GONE);
-            } else {
-                getBinding().mediaPlayer.setVisibility(View.VISIBLE);
-            }
+            handleHideShowBottomMediaPlayer();
 
-            final MediaDescriptionCompat mediaDescription = metaData.getDescription();
-
-            getBinding().songTitle.setText(mediaDescription.getTitle());
-            getBinding().songArtists.setText(mediaDescription.getSubtitle());
-            getBinding().prbSongTimePlayed.setMax((int) metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
-
-            Glide.with(MainActivity.this).load(mediaDescription.getIconUri()).into(getBinding().songThumbnail);
+            // Cập nhật giao diện của BottomMediaPlayer
+            setupUI(metaData);
         }
     };
 
@@ -151,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
         if (firebaseAuth.getCurrentUser() == null) {
+            // Ngừng phát nhạc và giải phóng bộ nhớ
             handler.removeCallbacks(runnable);
 
             if (mediaController != null) {
@@ -163,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 mediaPlayer.release();
             }
 
+            // Chuyển về trang đăng nhập
             Intent intent = new Intent(this, LoginActivity.class).addFlags(
                     Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -184,9 +167,13 @@ public class MainActivity extends AppCompatActivity {
         initNavigationUI();
 
         getBinding().mediaPlayer.setOnClickListener(view -> {
+            if (mediaController == null || navController == null) {
+                return;
+            }
+
             final MediaDescriptionCompat mediaDescription = mediaController.getMetadata().getDescription();
             final Song song = new Song();
-            song.setId(mediaDescription.getMediaId());
+            song.setId(Objects.requireNonNull(mediaDescription.getMediaId()));
             song.setThumbnail(String.valueOf(mediaDescription.getIconUri()));
 
             final HomeFragmentDirections.ActionNavigationToPlaySongFragment action =
@@ -265,14 +252,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void initToolBar() {
         // Tùy chỉnh phông chữ tiêu đề của ToolBar
-        binding.toolbar.setTitleTextAppearance(this, R.style.Theme_CustomTextAppearance_ExtraLarge);
+        getBinding().toolbar.setTitleTextAppearance(this, R.style.Theme_CustomTextAppearance_ExtraLarge);
     }
 
     private void initNavigationUI() {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
+        NavigationUI.setupWithNavController(getBinding().bottomNavigationView, navController);
     }
 
     private void initMediaPlayer() {
@@ -281,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 new MediaBrowserCompat.ConnectionCallback() {
                     @Override
                     public void onConnected() {
-                        final MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
+                        final MediaSessionCompat.Token token = Objects.requireNonNull(mediaBrowser).getSessionToken();
                         mediaController = new MediaControllerCompat(MainActivity.this, token);
                         MediaControllerCompat.setMediaController(MainActivity.this, mediaController);
                         mediaController.registerCallback(controllerCallback);
@@ -295,5 +282,32 @@ public class MainActivity extends AppCompatActivity {
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
         );
+    }
+
+    private void setupUI(@NonNull MediaMetadataCompat metaData) {
+        final MediaDescriptionCompat mediaDescription = metaData.getDescription();
+
+        getBinding().songTitle.setText(mediaDescription.getTitle());
+        getBinding().songArtists.setText(mediaDescription.getSubtitle());
+        getBinding().prbSongTimePlayed.setMax((int) metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
+
+        Glide.with(MainActivity.this)
+                .load(mediaDescription.getIconUri())
+                .circleCrop()
+                .into(getBinding().songThumbnail);
+    }
+
+    private void handleHideShowBottomMediaPlayer() {
+        if (navController == null) {
+            return;
+        }
+
+        final NavDestination currentDestination = navController.getCurrentDestination();
+
+        if (currentDestination != null && currentDestination.getId() == R.id.navigation_play_song_fragment) {
+            getBinding().mediaPlayer.setVisibility(View.GONE);
+        } else {
+            getBinding().mediaPlayer.setVisibility(View.VISIBLE);
+        }
     }
 }
