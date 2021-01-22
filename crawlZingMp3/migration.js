@@ -33,6 +33,7 @@ const collections = [
 ];
 
 let songs = JSON.parse(fs.readFileSync(`${MIGRATION_PATH}/songs.json`));
+let artists = JSON.parse(fs.readFileSync(`${MIGRATION_PATH}/artists.json`));
 
 (async () => {
     await deleteCollection(db, "collections");
@@ -46,6 +47,9 @@ let songs = JSON.parse(fs.readFileSync(`${MIGRATION_PATH}/songs.json`));
 
     await insert(db, "songs", songs);
     console.info("Đã tạo collection 'songs' thành công");
-    
+
+    await insert(db, "artists", artists);
+    console.info("Đã tạo collection 'artists' thành công");
+
     console.log("Hoàn tất");
 })();

@@ -108,8 +108,6 @@ class ZingMp3 {
                     },
                 });
 
-                console.log(data);
-
                 if (data.err) reject(data);
                 resolve(data.data);
             } catch (error) {
