@@ -33,4 +33,8 @@ async function getTop100() {
         });
 }
 
-getTop100();
+(async () => {
+    const response = await ZingMp3.getInfoArtist("Huy-Vac");
+    console.log(response);
+})();
+

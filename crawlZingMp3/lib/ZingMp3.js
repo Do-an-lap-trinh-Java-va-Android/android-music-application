@@ -77,6 +77,16 @@ class ZingMp3 {
         });
     }
 
+    static getInfoArtist(alias) {
+        return this.requestZing2({
+            path: '/api/v2/artist/getDetail',
+            qs: {
+                alias,
+                version: "1.0.19"
+            }
+        });
+    }
+
     static async getCookie() {
         if (!cookiejar._jar.store.idx['zingmp3.vn']) await request.get(URL_API);
     }
@@ -92,9 +102,36 @@ class ZingMp3 {
                 const data = await request({
                     uri: URL_API + path,
                     qs: {
+                        ...qs,
                         ctime: this.time,
                         sig,
-                        ...qs
+                    },
+                });
+
+                console.log(data);
+
+                if (data.err) reject(data);
+                resolve(data.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    static requestZing2({ path, qs }) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.getCookie();
+                let param = new URLSearchParams(qs).toString();
+
+                let sig = this.hashParam2(path, param);
+
+                const data = await request({
+                    uri: URL_API + path,
+                    qs: {
+                        ...qs,
+                        ctime: this.time,
+                        sig,
                     },
                 });
 
@@ -107,8 +144,15 @@ class ZingMp3 {
     }
 
     static hashParam(path, param = '') {
-        this.time = Math.floor(Date.now() / 1000);
+        this.time = Math.round((new Date).getTime() / 1e3);
         const hash256 = encrypt.getHash256(`ctime=${this.time}${param}`);
+        return encrypt.getHmac512(path + hash256, SERCRET_KEY);
+    }
+
+    // Để lấy thông tin ca sĩ thì phải xài hàm hash này
+    static hashParam2(path, param = '') {
+        this.time = Math.round((new Date).getTime() / 1e3);
+        const hash256 = encrypt.getHash256(`ctime=${this.time}version=1.0.19`);
         return encrypt.getHmac512(path + hash256, SERCRET_KEY);
     }
 }
