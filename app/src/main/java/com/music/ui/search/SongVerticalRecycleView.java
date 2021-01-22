@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -33,6 +34,11 @@ public class SongVerticalRecycleView extends RecyclerView.Adapter<SongVerticalRe
     @Override
     public void onBindViewHolder(@NonNull SongVerticalViewHolder holder, int position) {
         holder.setSong(songs.get(position));
+        holder.binding.songItem.setOnClickListener(v -> {
+            final SearchFragmentDirections.ActionNavigationToPlaySongFragment action =
+                    SearchFragmentDirections.actionNavigationToPlaySongFragment(songs.get(position), new Song[]{});
+            Navigation.findNavController(v).navigate(action);
+        });
     }
 
     @Override
