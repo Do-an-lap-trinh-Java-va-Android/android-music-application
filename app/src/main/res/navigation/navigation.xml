@@ -80,6 +80,10 @@
         android:id="@+id/navigation_search_fragment"
         android:name="com.music.ui.search.SearchFragment"
         android:label="Tìm kiếm"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_navigation_to_play_song_fragment"
+            app:destination="@id/navigation_play_song_fragment" />
+    </fragment>
 
 </navigation>
