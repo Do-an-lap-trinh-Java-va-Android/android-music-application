@@ -15,9 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.music.R;
 import com.music.databinding.FragmentSearchBinding;
+import com.music.models.Artist;
+import com.music.ui.home.adapters.song.SongChartVerticalItemDecoration;
 import com.music.utils.ToolbarHelper;
 
 import java.util.Objects;
@@ -65,8 +68,13 @@ public class SearchFragment extends Fragment implements TextWatcher {
                     }
 
                     binding.layoutResultFindSong.setVisibility(View.VISIBLE);
-                    binding.lvSongs.setAdapter(new SongVerticalArrayAdapter(requireActivity(),
-                            R.layout.search_item_layout, response.data));
+
+                    final LinearLayoutManager linearLayoutManager =
+                            new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+                    binding.rvSongs.setHasFixedSize(true);
+                    binding.rvSongs.setLayoutManager(linearLayoutManager);
+                    binding.rvSongs.setAdapter(new SongVerticalRecycleView(response.data));
                     break;
                 case LOADING:
                     binding.layoutResultFindSong.setVisibility(View.GONE);
@@ -90,8 +98,13 @@ public class SearchFragment extends Fragment implements TextWatcher {
                     }
 
                     binding.layoutResultFindArtist.setVisibility(View.VISIBLE);
-                    binding.lvArtists.setAdapter(new ArtistVerticalArrayAdapter(requireActivity(),
-                            R.layout.search_item_layout, response.data));
+
+                    final LinearLayoutManager linearLayoutManager =
+                            new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+                    binding.rvArtists.setHasFixedSize(true);
+                    binding.rvArtists.setLayoutManager(linearLayoutManager);
+                    binding.rvArtists.setAdapter(new ArtistVerticalRecycleView(response.data));
                     break;
                 case LOADING:
                     binding.layoutResultFindSong.setVisibility(View.GONE);
