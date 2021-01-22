@@ -60,16 +60,15 @@
     </FrameLayout>
 
     <!-- Danh sách bài hát có chứa từ khóa tìm kiếm -->
-
     <LinearLayout
         android:id="@+id/layout_result_find_song"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="-16dp"
         android:layout_marginEnd="-16dp"
-        android:layout_weight="1"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -80,6 +79,7 @@
             android:gravity="center_vertical"
             android:paddingStart="@dimen/margin_padding_16dp"
             android:paddingTop="@dimen/margin_padding_16dp"
+            android:paddingEnd="16dp"
             android:paddingBottom="@dimen/margin_padding_16dp">
 
             <TextView
@@ -97,5 +97,61 @@
             android:layout_height="wrap_content"
             android:divider="@null"
             android:dividerHeight="0dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:text="Xem thêm"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/font_size_small" />
+    </LinearLayout>
+
+    <!-- Danh sách ca sĩ có từ khóa phù hợp -->
+    <LinearLayout
+        android:id="@+id/layout_result_find_artist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-16dp"
+        android:layout_marginEnd="-16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/margin_padding_16dp"
+            android:paddingTop="@dimen/margin_padding_16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="@dimen/margin_padding_16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Ca sĩ"
+                android:textSize="@dimen/font_size_extra_large"
+                app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_white_26" />
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/lv_artists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:text="Xem thêm"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/font_size_small" />
     </LinearLayout>
 </LinearLayout>

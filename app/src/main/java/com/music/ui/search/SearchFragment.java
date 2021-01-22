@@ -61,14 +61,36 @@ public class SearchFragment extends Fragment implements TextWatcher {
                     binding.frmLoading.setVisibility(View.GONE);
 
                     if (Objects.requireNonNull(response.data).isEmpty()) {
-                        Toast.makeText(
-                                requireActivity(), "Không tìm thấy bài hát có từ khóa cần tìm",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        Toast.makeText(requireActivity(), "Không tìm thấy bài hát có từ khóa cần tìm", Toast.LENGTH_SHORT).show();
                     }
 
                     binding.layoutResultFindSong.setVisibility(View.VISIBLE);
                     binding.lvSongs.setAdapter(new SongVerticalArrayAdapter(requireActivity(),
+                            R.layout.search_item_layout, response.data));
+                    break;
+                case LOADING:
+                    binding.layoutResultFindSong.setVisibility(View.GONE);
+                    binding.frmLoading.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    Toast.makeText(requireActivity(), response.message, Toast.LENGTH_SHORT).show();
+                    binding.frmLoading.setVisibility(View.GONE);
+                    break;
+            }
+        });
+
+        viewModel.getArtists().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case SUCCESS:
+                    binding.frmLoading.setVisibility(View.GONE);
+
+                    if (Objects.requireNonNull(response.data).isEmpty()) {
+                        Toast.makeText(requireActivity(), "Không tìm thấy nghệ sĩ có từ khóa cần tìm",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    binding.layoutResultFindArtist.setVisibility(View.VISIBLE);
+                    binding.lvArtists.setAdapter(new ArtistVerticalArrayAdapter(requireActivity(),
                             R.layout.search_item_layout, response.data));
                     break;
                 case LOADING:
@@ -118,6 +140,7 @@ public class SearchFragment extends Fragment implements TextWatcher {
 
         debounceRunnable = () -> {
             viewModel.searchSongByName(s.toString());
+            viewModel.searchArtistByName(s.toString());
         };
 
         handler.postDelayed(debounceRunnable, 500);
