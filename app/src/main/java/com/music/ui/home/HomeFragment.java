@@ -10,10 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 
+import com.music.R;
 import com.music.databinding.FragmentHomeBinding;
 import com.music.ui.home.adapters.AlbumSliderVerticalAdapter;
 import com.music.ui.home.adapters.song.SongChartVerticalAdapter;
@@ -43,9 +45,16 @@ public class HomeFragment extends Fragment {
         initAlbumSliderViewPager();
         initTopSongRecyclerView();
 
+        binding.edtSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                Navigation.findNavController(v).navigate(R.id.navigation_search_fragment);
+            }
+        });
+
         return binding.getRoot();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -102,13 +111,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ToolbarHelper.hideToolbar(getActivity());
+        ToolbarHelper.hideToolbar(requireActivity());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ToolbarHelper.showToolbar(getActivity());
+        ToolbarHelper.showToolbar(requireActivity());
     }
 
     /**

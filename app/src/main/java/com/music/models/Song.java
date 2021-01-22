@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
 @Data
 @NoArgsConstructor
@@ -32,6 +31,7 @@ public class Song implements Parcelable {
      */
     @NonNull
     @DocumentId
+    @Builder.Default
     private String id = StringUtils.EMPTY;
 
     /**
@@ -79,14 +79,14 @@ public class Song implements Parcelable {
      * Danh sách nghệ sĩ
      */
     @NonNull
-    @Singular
+    @Builder.Default
     private List<String> artists = Collections.emptyList();
 
     /**
      * Danh sách album mà bài hát này thuộc về
      */
     @NonNull
-    @Singular
+    @Builder.Default
     private List<String> albums = Collections.emptyList();
 
     protected Song(@NonNull Parcel in) {

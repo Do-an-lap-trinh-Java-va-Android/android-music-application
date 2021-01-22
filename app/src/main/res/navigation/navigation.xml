@@ -17,6 +17,9 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_navigation_home_to_searchFragment"
+            app:destination="@id/navigation_search_fragment" />
     </fragment>
 
     <fragment
@@ -72,5 +75,11 @@
             android:name="play_list"
             app:argType="com.music.models.Song[]" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_search_fragment"
+        android:name="com.music.ui.search.SearchFragment"
+        android:label="Tìm kiếm"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>

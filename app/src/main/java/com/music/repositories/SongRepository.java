@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -118,5 +119,9 @@ public class SongRepository {
         });
 
         return resource;
+    }
+
+    public Task<QuerySnapshot> searchSongByName(@NonNull String name) {
+        return database.collection("songs").whereGreaterThanOrEqualTo("name", name).limit(4).get();
     }
 }
