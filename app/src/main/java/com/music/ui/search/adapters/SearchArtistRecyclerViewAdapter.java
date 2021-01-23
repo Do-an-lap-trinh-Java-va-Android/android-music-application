@@ -1,4 +1,4 @@
-package com.music.ui.search;
+package com.music.ui.search.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,16 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.music.databinding.SearchItemLayoutBinding;
+import com.music.databinding.SearchArtistItemLayoutBinding;
 import com.music.models.Artist;
 
 import java.util.List;
 
-public class ArtistVerticalRecycleView extends RecyclerView.Adapter<ArtistVerticalRecycleView.ArtistVerticalViewHolder> {
+public class SearchArtistRecyclerViewAdapter extends RecyclerView.Adapter<SearchArtistRecyclerViewAdapter.ArtistVerticalViewHolder> {
     @NonNull
-    private List<Artist> artists;
+    private final List<Artist> artists;
 
-    public ArtistVerticalRecycleView(@NonNull List<Artist> artists) {
+    public SearchArtistRecyclerViewAdapter(@NonNull List<Artist> artists) {
         this.artists = artists;
     }
 
@@ -24,7 +24,7 @@ public class ArtistVerticalRecycleView extends RecyclerView.Adapter<ArtistVertic
     @Override
     public ArtistVerticalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ArtistVerticalViewHolder(
-                SearchItemLayoutBinding.inflate(
+                SearchArtistItemLayoutBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
         );
@@ -42,15 +42,15 @@ public class ArtistVerticalRecycleView extends RecyclerView.Adapter<ArtistVertic
 
     static class ArtistVerticalViewHolder extends RecyclerView.ViewHolder {
         @NonNull
-        private final SearchItemLayoutBinding binding;
+        private final SearchArtistItemLayoutBinding binding;
 
-        public ArtistVerticalViewHolder(@NonNull SearchItemLayoutBinding binding) {
+        public ArtistVerticalViewHolder(@NonNull SearchArtistItemLayoutBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
         public void setArtist(@NonNull Artist artist) {
-            Glide.with(binding.getRoot()).load(artist.getThumbnail()).into(binding.thumbnail);
+            Glide.with(itemView).load(artist.getThumbnail()).into(binding.thumbnail);
             binding.name.setText(artist.getName());
         }
     }

@@ -19,10 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.music.R;
 import com.music.databinding.FragmentSearchBinding;
-import com.music.models.Artist;
-import com.music.ui.home.adapters.song.SongChartVerticalItemDecoration;
+import com.music.ui.search.adapters.SearchArtistRecyclerViewAdapter;
+import com.music.ui.search.adapters.SearchSongRecyclerViewAdapter;
 import com.music.utils.ToolbarHelper;
 
+import java.util.Collections;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -32,10 +33,16 @@ public class SearchFragment extends Fragment implements TextWatcher {
     @Nullable
     private FragmentSearchBinding binding;
 
+    @NonNull
+    public FragmentSearchBinding getBinding() {
+        return Objects.requireNonNull(binding);
+    }
+
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private SearchViewModel viewModel;
 
+    @NonNull
     private final Handler handler = new Handler(Looper.myLooper());
 
     @Nullable
@@ -45,6 +52,9 @@ public class SearchFragment extends Fragment implements TextWatcher {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
+
+        setupSearchSongRecyclerView();
+        setupSearchArtistRecyclerView();
 
         binding.btnBack.setOnClickListener(v -> Navigation.findNavController(requireView()).popBackStack());
 
@@ -61,28 +71,17 @@ public class SearchFragment extends Fragment implements TextWatcher {
         viewModel.getSongs().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case SUCCESS:
-                    binding.frmLoading.setVisibility(View.GONE);
-
-                    if (Objects.requireNonNull(response.data).isEmpty()) {
-                        Toast.makeText(requireActivity(), "Không tìm thấy bài hát có từ khóa cần tìm", Toast.LENGTH_SHORT).show();
-                    }
-
-                    binding.layoutResultFindSong.setVisibility(View.VISIBLE);
-
-                    final LinearLayoutManager linearLayoutManager =
-                            new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
-                    binding.rvSongs.setHasFixedSize(true);
-                    binding.rvSongs.setLayoutManager(linearLayoutManager);
-                    binding.rvSongs.setAdapter(new SongVerticalRecycleView(response.data));
+                    getBinding().frmLoading.setVisibility(View.GONE);
+                    getBinding().layoutResultFindSong.setVisibility(View.VISIBLE);
+                    getBinding().rvSongs.setAdapter(new SearchSongRecyclerViewAdapter(Objects.requireNonNull(response.data)));
                     break;
                 case LOADING:
-                    binding.layoutResultFindSong.setVisibility(View.GONE);
-                    binding.frmLoading.setVisibility(View.VISIBLE);
+                    getBinding().layoutResultFindSong.setVisibility(View.GONE);
+                    getBinding().frmLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Toast.makeText(requireActivity(), response.message, Toast.LENGTH_SHORT).show();
-                    binding.frmLoading.setVisibility(View.GONE);
+                    getBinding().frmLoading.setVisibility(View.GONE);
                     break;
             }
         });
@@ -90,29 +89,17 @@ public class SearchFragment extends Fragment implements TextWatcher {
         viewModel.getArtists().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case SUCCESS:
-                    binding.frmLoading.setVisibility(View.GONE);
-
-                    if (Objects.requireNonNull(response.data).isEmpty()) {
-                        Toast.makeText(requireActivity(), "Không tìm thấy nghệ sĩ có từ khóa cần tìm",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    binding.layoutResultFindArtist.setVisibility(View.VISIBLE);
-
-                    final LinearLayoutManager linearLayoutManager =
-                            new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
-                    binding.rvArtists.setHasFixedSize(true);
-                    binding.rvArtists.setLayoutManager(linearLayoutManager);
-                    binding.rvArtists.setAdapter(new ArtistVerticalRecycleView(response.data));
+                    getBinding().frmLoading.setVisibility(View.GONE);
+                    getBinding().layoutResultFindArtist.setVisibility(View.VISIBLE);
+                    getBinding().rvArtists.setAdapter(new SearchArtistRecyclerViewAdapter(Objects.requireNonNull(response.data)));
                     break;
                 case LOADING:
-                    binding.layoutResultFindSong.setVisibility(View.GONE);
-                    binding.frmLoading.setVisibility(View.VISIBLE);
+                    getBinding().layoutResultFindSong.setVisibility(View.GONE);
+                    getBinding().frmLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Toast.makeText(requireActivity(), response.message, Toast.LENGTH_SHORT).show();
-                    binding.frmLoading.setVisibility(View.GONE);
+                    getBinding().frmLoading.setVisibility(View.GONE);
                     break;
             }
         });
@@ -141,13 +128,31 @@ public class SearchFragment extends Fragment implements TextWatcher {
         binding = null;
     }
 
+    private void setupSearchSongRecyclerView() {
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+        getBinding().rvSongs.setHasFixedSize(true);
+        getBinding().rvSongs.setLayoutManager(linearLayoutManager);
+        getBinding().rvSongs.setAdapter(new SearchArtistRecyclerViewAdapter(Collections.emptyList()));
+    }
+
+    private void setupSearchArtistRecyclerView() {
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
+
+        getBinding().rvArtists.setHasFixedSize(true);
+        getBinding().rvArtists.setLayoutManager(linearLayoutManager);
+        getBinding().rvArtists.setAdapter(new SearchSongRecyclerViewAdapter(Collections.emptyList()));
+    }
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (debounceRunnable != null) {
             handler.removeCallbacks(debounceRunnable);
         }
 
-        if (s.toString().trim().length() == 0) {
+        if (s.toString().trim().isEmpty()) {
             return;
         }
 
