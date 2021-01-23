@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_padding_16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_baseline_arrow_back_black_24"
+                android:src="@drawable/ic_baseline_arrow_back_white_24"
                 tools:ignore="ContentDescription" />
 
             <EditText
@@ -93,7 +93,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:text="@string/song"
                     android:textSize="@dimen/font_size_extra_large"
-                    app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_black_26" />
+                    app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_white_26" />
             </FrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -131,7 +131,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:text="@string/artist"
                     android:textSize="@dimen/font_size_extra_large"
-                    app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_black_26" />
+                    app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_white_26" />
             </FrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
