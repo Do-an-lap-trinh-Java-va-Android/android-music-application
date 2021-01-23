@@ -122,6 +122,10 @@ public class SongRepository {
     }
 
     public Task<QuerySnapshot> searchSongByName(@NonNull String name) {
-        return database.collection("songs").whereGreaterThanOrEqualTo("name", name).limit(4).get();
+        return database.collection("songs")
+                .whereGreaterThanOrEqualTo("name", name)
+                .whereLessThanOrEqualTo("name", name + "\uF7FF")
+                .limit(8)
+                .get();
     }
 }

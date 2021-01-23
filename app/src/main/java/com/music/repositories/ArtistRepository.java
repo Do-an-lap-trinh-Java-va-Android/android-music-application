@@ -22,6 +22,10 @@ public class ArtistRepository {
     }
 
     public Task<QuerySnapshot> searchByName(@NonNull String name) {
-        return database.collection("artists").whereGreaterThanOrEqualTo("name", name).limit(8).get();
+        return database.collection("artists")
+                .whereGreaterThanOrEqualTo("name", name)
+                .whereLessThanOrEqualTo("name", name + "\uF7FF")
+                .limit(8)
+                .get();
     }
 }
