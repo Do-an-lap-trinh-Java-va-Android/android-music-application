@@ -1,6 +1,8 @@
 package com.music.models;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
@@ -9,14 +11,12 @@ import com.google.firebase.firestore.PropertyName;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Artist {
+public class Artist implements Parcelable {
     /**
      * ID nghệ sĩ
      */
@@ -60,6 +60,28 @@ public class Artist {
     @NonNull
     private String national = StringUtils.EMPTY;
 
+    protected Artist(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        realName = in.readString();
+        biography = in.readString();
+        cover = in.readParcelable(Uri.class.getClassLoader());
+        thumbnail = in.readParcelable(Uri.class.getClassLoader());
+        national = in.readString();
+    }
+
+    public static final Creator<Artist> CREATOR = new Creator<Artist>() {
+        @Override
+        public Artist createFromParcel(Parcel in) {
+            return new Artist(in);
+        }
+
+        @Override
+        public Artist[] newArray(int size) {
+            return new Artist[size];
+        }
+    };
+
     @NonNull
     @PropertyName("real_name")
     public String getRealName() {
@@ -77,5 +99,21 @@ public class Artist {
 
     public void setThumbnail(@NonNull String thumbnail) {
         this.thumbnail = Uri.parse(thumbnail);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(realName);
+        dest.writeString(biography);
+        dest.writeParcelable(cover, flags);
+        dest.writeParcelable(thumbnail, flags);
+        dest.writeString(national);
     }
 }

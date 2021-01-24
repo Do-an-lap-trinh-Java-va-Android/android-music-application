@@ -84,6 +84,23 @@
         <action
             android:id="@+id/action_navigation_to_play_song_fragment"
             app:destination="@id/navigation_play_song_fragment" />
+        <action
+            android:id="@+id/action_navigation_to_artist_fragment"
+            app:destination="@id/navigation_artist_fragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_artist_fragment"
+        android:name="com.music.ui.artist.ArtistFragment"
+        android:label="fragment_artist"
+        tools:layout="@layout/fragment_artist" >
+        <argument
+            android:name="artist"
+            app:argType="com.music.models.Artist" />
     </fragment>
 
 </navigation>
