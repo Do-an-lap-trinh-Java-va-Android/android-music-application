@@ -56,7 +56,7 @@ public class UserRepository {
                         String exceptionMessage = application.getString(R.string.the_email_address_is_already_in_use_by_another_account);
                         resultMutableLiveData.setValue(Resource.error(exceptionMessage, null));
                     } else {
-                        resultMutableLiveData.setValue(Resource.error(e.getMessage(), null));
+                        resultMutableLiveData.setValue(Resource.error(Objects.requireNonNull(e.getMessage()), null));
                     }
                 });
 
@@ -83,7 +83,11 @@ public class UserRepository {
             if (task.isSuccessful()) {
                 resultMutableLiveData.setValue(Resource.success(null));
             } else {
-                resultMutableLiveData.setValue(Resource.error(Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage()), null));
+                if (task.getException() != null && task.getException().getMessage() != null) {
+                    resultMutableLiveData.setValue(Resource.error(task.getException().getMessage(), null));
+                } else {
+                    resultMutableLiveData.setValue(Resource.error("Đã có lỗi không rõ xảy ra", null));
+                }
             }
         });
 
