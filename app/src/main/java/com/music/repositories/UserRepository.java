@@ -1,11 +1,14 @@
 package com.music.repositories;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -14,6 +17,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.music.R;
 import com.music.exceptions.NotLoginException;
@@ -26,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -162,41 +167,37 @@ public class UserRepository {
                     if (task.isSuccessful() && task.getResult() != null) {
                         final List<DocumentSnapshot> documents = task.getResult().getDocuments();
 
-                        documents.get(0).toObject(History.class).getSongReference().get().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful() && task1.getResult() != null) {
-                                final Song song = task1.getResult().toObject(Song.class);
+                        for (DocumentSnapshot document : documents) {
+                            final AsyncTask<History, Integer, Song> execute = new RunInBackground().execute(document.toObject(History.class));
+                            try {
+                                final Song song = execute.get();
                                 songs.add(song);
                                 resultMutableLiveData.setValue(Resource.success(songs));
-
-                                documents.get(1).toObject(History.class).getSongReference().get().addOnCompleteListener(task2 -> {
-                                    if (task2.isSuccessful() && task2.getResult() != null) {
-                                        final Song song2 = task2.getResult().toObject(Song.class);
-                                        songs.add(song2);
-                                        resultMutableLiveData.setValue(Resource.success(songs));
-
-                                        documents.get(2).toObject(History.class).getSongReference().get().addOnCompleteListener(task3 -> {
-                                            if (task3.isSuccessful() && task3.getResult() != null) {
-                                                final Song song3 = task3.getResult().toObject(Song.class);
-                                                songs.add(song3);
-                                                resultMutableLiveData.setValue(Resource.success(songs));
-
-                                                documents.get(3).toObject(History.class).getSongReference().get().addOnCompleteListener(task4 -> {
-                                                    if (task4.isSuccessful() && task4.getResult() != null) {
-                                                        final Song song4 =
-                                                                task4.getResult().toObject(Song.class);
-                                                        songs.add(song4);
-                                                        resultMutableLiveData.setValue(Resource.success(songs));
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
                             }
-                        });
+                        }
                     }
                 });
 
         return resultMutableLiveData;
+    }
+
+    public static class RunInBackground extends AsyncTask<History, Integer, Song> {
+        @Override
+        protected Song doInBackground(History... history) {
+            final Task<DocumentSnapshot> documentSnapshotTask = history[0].getSongReference().get();
+
+            Song song = null;
+
+            try {
+                DocumentSnapshot documentSnapshot = Tasks.await(documentSnapshotTask);
+                song = documentSnapshot.toObject(Song.class);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return song;
+        }
     }
 }
