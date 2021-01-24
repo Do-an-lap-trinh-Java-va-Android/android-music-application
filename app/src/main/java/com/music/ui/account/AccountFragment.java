@@ -14,19 +14,28 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.music.R;
 import com.music.databinding.FragmentAccountBinding;
+import com.music.ui.home.adapters.song.SongChartVerticalAdapter;
+import com.music.ui.home.adapters.song.SongChartVerticalItemDecoration;
+
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class AccountFragment extends Fragment {
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
+    @Nullable
     private FragmentAccountBinding binding;
+
+    @NonNull
+    public FragmentAccountBinding getBinding() {
+        return Objects.requireNonNull(binding);
+    }
 
     @SuppressWarnings({"NotNullFieldNotInitialized", "FieldCanBeLocal"})
     @NonNull
@@ -49,13 +58,35 @@ public class AccountFragment extends Fragment {
 
         FirebaseUser user = viewModel.getCurrentUser();
 
-        Glide.with(binding.ivUserAvatar.getContext())
+        Glide.with(this)
                 .load(user.getPhotoUrl())
                 .circleCrop()
                 .fallback(R.drawable.purple_gradient_background)
-                .into(binding.ivUserAvatar);
+                .into(getBinding().ivUserAvatar);
 
-        binding.tvHelloUser.setText(user.getDisplayName());
+        getBinding().tvHelloUser.setText(user.getDisplayName());
+
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+
+        getBinding().rvHistory.setHasFixedSize(true);
+        getBinding().rvHistory.setLayoutManager(linearLayoutManager);
+        getBinding().rvHistory.addItemDecoration(new SongChartVerticalItemDecoration());
+
+        viewModel.getHistories().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case SUCCESS:
+                    getBinding().rvHistory.setAdapter(new SongChartVerticalAdapter(Objects.requireNonNull(response.data)));
+                    getBinding().prbLoading.setVisibility(View.GONE);
+                    break;
+                case LOADING:
+                    getBinding().prbLoading.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    break;
+            }
+        });
     }
 
     @Override
@@ -73,7 +104,6 @@ public class AccountFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings({"AssignmentToNull", "ConstantConditions"})
     @Override
     public void onDestroyView() {
         super.onDestroyView();

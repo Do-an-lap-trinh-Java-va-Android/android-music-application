@@ -11,15 +11,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 import com.music.R;
 import com.music.exceptions.NotLoginException;
-import com.music.models.CustomUser;
+import com.music.models.History;
 import com.music.models.Song;
 import com.music.network.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -119,28 +123,15 @@ public class UserRepository {
             throw new NotLoginException();
         }
 
-        /*
-            HACK: Hiện tại cần phải lấy lịch sử nghe nhạc cũ rồi thêm vào bài hát đang nghe mới cập nhật lên,
-            tốn 2 truy vấn chỉ để cập nhật lịch sử nghe nhạc
-         */
-        db.collection("users").document(user.getUid()).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        final CustomUser customUser = task.getResult().toObject(CustomUser.class);
+        final Map<String, Object> history2 = new HashMap<>();
+        history2.put("song_reference", db.collection("songs").document(songId));
+        history2.put("listened_at", Timestamp.now().getSeconds());
 
-                        if (customUser != null) {
-                            Map<String, Object> historyDetail = new HashMap<>();
-                            historyDetail.put("song", db.collection("songs").document(songId));
-                            historyDetail.put("listened_at", Timestamp.now().getSeconds());
-
-                            customUser.getSongs().put(songId, historyDetail);
-
-                            db.collection("users")
-                                    .document(user.getUid())
-                                    .set(customUser, SetOptions.merge());
-                        }
-                    }
-                });
+        db.collection("users")
+                .document(user.getUid())
+                .collection("histories")
+                .document(songId)
+                .set(history2, SetOptions.merge());
     }
 
     /**
@@ -148,5 +139,64 @@ public class UserRepository {
      */
     public void updateHistory(@NonNull Song song) {
         updateHistory(song.getId());
+    }
+
+    public LiveData<Resource<List<Song>>> getHistories() {
+        final MutableLiveData<Resource<List<Song>>> resultMutableLiveData =
+                new MutableLiveData<>(Resource.loading("Đang lấy lịch sử nghe nhạc"));
+        final List<Song> songs = new ArrayList<>();
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user == null) {
+            throw new NotLoginException();
+        }
+
+        db.collection("users")
+                .document(user.getUid())
+                .collection("histories")
+                .orderBy("listened_at", Query.Direction.DESCENDING)
+                .limit(6)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+
+                        documents.get(0).toObject(History.class).getSongReference().get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful() && task1.getResult() != null) {
+                                final Song song = task1.getResult().toObject(Song.class);
+                                songs.add(song);
+                                resultMutableLiveData.setValue(Resource.success(songs));
+
+                                documents.get(1).toObject(History.class).getSongReference().get().addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful() && task2.getResult() != null) {
+                                        final Song song2 = task2.getResult().toObject(Song.class);
+                                        songs.add(song2);
+                                        resultMutableLiveData.setValue(Resource.success(songs));
+
+                                        documents.get(2).toObject(History.class).getSongReference().get().addOnCompleteListener(task3 -> {
+                                            if (task3.isSuccessful() && task3.getResult() != null) {
+                                                final Song song3 = task3.getResult().toObject(Song.class);
+                                                songs.add(song3);
+                                                resultMutableLiveData.setValue(Resource.success(songs));
+
+                                                documents.get(3).toObject(History.class).getSongReference().get().addOnCompleteListener(task4 -> {
+                                                    if (task4.isSuccessful() && task4.getResult() != null) {
+                                                        final Song song4 =
+                                                                task4.getResult().toObject(Song.class);
+                                                        songs.add(song4);
+                                                        resultMutableLiveData.setValue(Resource.success(songs));
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+        return resultMutableLiveData;
     }
 }
