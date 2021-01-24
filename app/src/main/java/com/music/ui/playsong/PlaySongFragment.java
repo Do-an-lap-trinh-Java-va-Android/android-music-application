@@ -31,6 +31,7 @@ import androidx.core.graphics.BlendModeColorFilterCompat;
 import androidx.core.graphics.BlendModeCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +40,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.music.R;
 import com.music.databinding.FragmentPlaySongBinding;
 import com.music.models.Song;
+import com.music.repositories.UserRepository;
 import com.music.ui.playsong.playback.MediaPlayBackService;
 import com.music.utils.UiModeUtils;
 
@@ -49,6 +51,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -65,6 +69,10 @@ public class PlaySongFragment extends Fragment {
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private PlaySongFragmentArgs args;
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private PlaySongViewModel viewModel;
 
     @Nullable
     private MediaBrowserCompat mediaBrowser;
@@ -175,6 +183,8 @@ public class PlaySongFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaySongBinding.inflate(inflater, container, false);
+
+        viewModel = new ViewModelProvider(this).get(PlaySongViewModel.class);
 
         args = PlaySongFragmentArgs.fromBundle(requireArguments());
 
@@ -343,6 +353,7 @@ public class PlaySongFragment extends Fragment {
                 // handler.removeCallbacks(runnable);
                 break;
             case PlaybackStateCompat.STATE_PLAYING:
+                viewModel.updateHistory(mediaController.getMetadata().getDescription().getMediaId());
                 getBinding().prbBuffering.setVisibility(View.GONE);
                 getBinding().btnTogglePlayPause.setVisibility(View.VISIBLE);
                 getBinding().btnTogglePlayPause.setImageResource(R.drawable.ic_round_pause_circle_64);
