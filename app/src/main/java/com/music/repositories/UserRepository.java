@@ -164,7 +164,7 @@ public class UserRepository {
                 .limit(6)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
                         final List<DocumentSnapshot> documents = task.getResult().getDocuments();
 
                         for (DocumentSnapshot document : documents) {
@@ -177,6 +177,8 @@ public class UserRepository {
                                 e.printStackTrace();
                             }
                         }
+                    } else {
+                        resultMutableLiveData.setValue(Resource.error("Khong co danh sach bai hat", null));
                     }
                 });
 

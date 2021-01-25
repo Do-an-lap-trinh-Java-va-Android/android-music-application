@@ -84,6 +84,7 @@ public class AccountFragment extends Fragment {
                     getBinding().prbLoading.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
+                    getBinding().prbLoading.setVisibility(View.GONE);
                     break;
             }
         });
