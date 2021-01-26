@@ -1,23 +1,23 @@
-# Đồ án lập trình Android và Java
+# Đồ án lập trình Android và Java (NGỪNG PHÁT TRIỂN)
 
-# Xây Dựng Ứng Dụng Nghe Nhạc Trực Tuyến
+## Xây Dựng Ứng Dụng Nghe Nhạc Trực Tuyến
 
-## Thông tin đồ án
+### Thông tin đồ án
 - Ngày bắt đầu: `17/12/2020`
 - Ngày kết thúc: `25/01/2021`
 - Đồ án sẽ được lưu trữ và ngừng phát triển từ ngày `26/01/2021`
-- Mọi bài hát trên ứng dụng đều được crawl từ ZingMp3 với mục đích phục vụ cho môn học.
+- Mọi bài hát trên ứng dụng đều được crawl từ ZingMp3 và được lưu trữ trên Firebase với mục đích phục vụ cho môn học.
 
-## Thành viên
+### Thành viên
 - Chu Cẩm Phong (Nhóm trưởng)
 - Nguyễn Xuân Hòa
 - Châu Quốc Khải
 
-## Tài khoản
+### Tài khoản
 Email: nhomjava999@gmail.com
-Password: nhomjava
+Mật khẩu: xxxxxxxx
 
-## Một số hình của dự án
+### Một số hình của dự án
 ![image](https://user-images.githubusercontent.com/58473133/105784379-4533c880-5fab-11eb-8a80-00dae6fcc711.png)
 ![image](https://user-images.githubusercontent.com/58473133/105784424-5da3e300-5fab-11eb-8ccb-fd800e04fd1e.png)
 ![image](https://user-images.githubusercontent.com/58473133/105784466-744a3a00-5fab-11eb-9e5c-dc3cd5bdb75d.png)
