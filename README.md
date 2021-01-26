@@ -9,7 +9,7 @@
 - Mọi bài hát trên ứng dụng đều được crawl từ ZingMp3 và được lưu trữ trên Firebase với mục đích phục vụ cho môn học.
 
 ### Thành viên
-- Chu Cẩm Phong (Nhóm trưởng)
+- Chu Cẩm Phong (Nhóm trưởng) - chucamphong1999@gmail.com
 - Nguyễn Xuân Hòa
 - Châu Quốc Khải
 
