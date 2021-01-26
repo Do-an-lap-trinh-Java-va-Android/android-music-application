@@ -2,6 +2,12 @@
 
 # Xây Dựng Ứng Dụng Nghe Nhạc Trực Tuyến
 
+## Thông tin đồ án
+- Ngày bắt đầu: `17/12/2020`
+- Ngày kết thúc: `25/01/2021`
+- Đồ án sẽ được lưu trữ và ngừng phát triển từ ngày `26/01/2021`
+- Mọi bài hát trên ứng dụng đều được crawl từ ZingMp3 với mục đích phục vụ cho môn học.
+
 ## Thành viên
 - Chu Cẩm Phong (Nhóm trưởng)
 - Nguyễn Xuân Hòa
